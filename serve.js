@@ -1,20 +1,19 @@
 express = require('express'),
 app     = express(),
 http    = require('http').Server(app),
-io      = require('socket.io')(http),
-//$       = require('jquery');
+io      = require('socket.io')(http);
 
 STATIC = {
 	MAX_PLAYERS : 4,
 	DOMINO 		: [
-					[0,0,0], [0,1,1], [0,2,2], [0,3,3], [0,4,4], [0,5,5], [0,6,6],
-					[1,1,7], [1,2,8], [1,3,9], [1,4,10], [1,5,11], [1,6,12],
-					[2,2,13], [2,3,14], [2,4,15], [2,5,16], [2,6,17],
-					[3,3,18], [3,4,19], [3,5,20], [3,6,21],
-					[4,4,22], [4,5,23], [4,6,24],
-					[5,5,25], [5,6,26],
-					[6,6,27]
-                ]
+								[0,0,0], [0,1,1], [0,2,2], [0,3,3], [0,4,4], [0,5,5], [0,6,6],
+								[1,1,7], [1,2,8], [1,3,9], [1,4,10], [1,5,11], [1,6,12],
+								[2,2,13], [2,3,14], [2,4,15], [2,5,16], [2,6,17],
+								[3,3,18], [3,4,19], [3,5,20], [3,6,21],
+								[4,4,22], [4,5,23], [4,6,24],
+								[5,5,25], [5,6,26],
+								[6,6,27]
+              ]
 }
 
 //Routes
@@ -92,11 +91,17 @@ io.on('connection', function(socket){
 			match.players[3].pieces = shufflePieces[3];
 
 			//Turn each player
-			match.players[0].turn = 0;
-			match.players[1].turn = 1;
-			match.players[2].turn = 2;
-			match.players[3].turn = 3;
+			// 0 1 2 3
+			nextTurn = 0;
+			for(i = 0; i < 4; i++)
+			{
+				if(searchPiece(match.players[i].pieces, 27))
+					match.players[i].turn = 0;
+				else
+					match.players[i].turn = ++nextTurn;
 
+					console.log(i+" "+match.players[i].turn);
+			}
 			matchs.progress.push(match);
 			io.to(match.id).emit('startMatch', {players:match.players});
 
@@ -133,6 +138,17 @@ io.on('connection', function(socket){
 		}
 	});
 });
+
+function searchPiece(array, value)
+{
+	result = null;
+	for(i = 0; i < array.length; i++)
+	{
+		if(array[i][2] == 27)
+			result = array[i];
+	}
+	return result;
+}
 
 http.listen(3000, function()
 {

@@ -1,7 +1,7 @@
 MenuState = (function(){
 
 	function preload(){
-		game.load.spritesheet('start', '/assets/sprites/start_200x75.png',200,75);
+		this.load.spritesheet('start', 'assets/sprites/start.png',100,50);
 	}
 
 	function create(){
@@ -10,7 +10,7 @@ MenuState = (function(){
 	}
 
 	function update(){
-		
+
 	}
 
 	return {preload: preload, create:create, update:update};

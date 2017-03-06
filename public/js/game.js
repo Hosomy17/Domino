@@ -103,7 +103,6 @@ GameState = (function(){
         this.load.spritesheet('table', 'assets/sprites/table.png');//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< spritesheet??????
         this.load.spritesheet('blank', 'assets/sprites/blank.png');//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< spritesheet??????
         this.load.spritesheet('pass', 'assets/sprites/pass.png',90,30);
-
 	}
 
 	function create(){
@@ -250,8 +249,11 @@ GameState = (function(){
           //Set input listener
           sprite.piece = piece;
           sprite.inputEnabled = true;
-          sprite.events.onInputDown.add(function(obj){
-              if(_turn == Link.getPlayer().turn){
+          sprite.events.onInputDown.add(
+          function(obj)
+          {
+              if(_turn == Link.getPlayer().turn)
+              {
                   _selectedPiece = obj;
                   showBlanks();
               }
@@ -261,13 +263,12 @@ GameState = (function(){
           _hand.addChild(sprite);
       }
 
-      //btn = add.button(pass)
-      //btn.clickdown = funciton(){
-      //Link.sendMove({piece:null,direction:null});
-    //}
+      buttonExit = game.add.button(game.world.width - 100, game.world.height - 50, 'pass', skipMove, this, 0, 1, 2);//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< pocição
+      //buttonExit.anchor.set(0.5);
   }
 
-  function showBlanks(){
+  function showBlanks()
+  {
     _edges.center.blank.visible       = false;
     _edges.up.blank.side.visible      = false;
     _edges.down.blank.side.visible    = false;
@@ -277,22 +278,33 @@ GameState = (function(){
     _edges.down.blank.normal.visible  = false;
     _edges.left.blank.normal.visible  = false;
     _edges.right.blank.normal.visible = false;
-    //&& _selectedPiece.piece[0] + _selectedPiece.piece[1] == 12
-    if(_flagStart){
-      _edges.center.blank.normal.visible = true;
+    if(_flagStart)
+    {
+      _edges.center.blank.normal.visible = (_selectedPiece.piece[0] + _selectedPiece.piece[1] == 12) ? true : false;
     }
-    else if (_selectedPiece.piece[0] == _selectedPiece.piece[1]){
+    else if (_selectedPiece.piece[0] == _selectedPiece.piece[1])
+    {
       _edges.up.blank.side.visible    = (_selectedPiece.piece[0] == _edges.up.open) ? true : false;
       _edges.down.blank.side.visible  = (_selectedPiece.piece[0] == _edges.down.open) ? true : false;
       _edges.left.blank.side.visible  = (_selectedPiece.piece[0] == _edges.left.open) ? true : false;
       _edges.right.blank.side.visible = (_selectedPiece.piece[0] == _edges.right.open) ? true : false;
     }
-    else {
+    else
+    {
       _edges.up.blank.normal.visible    = (_selectedPiece.piece[0] == _edges.up.open || _selectedPiece.piece[1] == _edges.up.open) ? true : false;
       _edges.down.blank.normal.visible  = (_selectedPiece.piece[0] == _edges.down.open || _selectedPiece.piece[1] == _edges.down.open) ? true : false;
       _edges.left.blank.normal.visible  = (_selectedPiece.piece[0] == _edges.left.open || _selectedPiece.piece[1] == _edges.left.open) ? true : false;
       _edges.right.blank.normal.visible = (_selectedPiece.piece[0] == _edges.right.open || _selectedPiece.piece[1] == _edges.right.open) ? true : false;
     }
+  }
+
+  function skipMove()
+  {
+    if(_turn != Link.getPlayer().turn){
+        return 0;
+    }
+    /////////////////////////////////////////////////////////////////////////////VERIFICAR SE NÃO TEM OPÇÕES SE TIVER FAZER HIGHLIGHT
+    finishSelect(null,null);
   }
 
   function finishSelect(piece, direction)
@@ -311,12 +323,13 @@ GameState = (function(){
     Link.sendMove(move);
   }
 
-  function drawMove(data){
+  function drawMove(data)
+  {
     _turn++;
 
     if(data.move.piece == null)
       return 0;
-      
+
     orientation = (data.move.piece[0] == data.move.piece[1] ) ? 'side' : 'normal';
     edges = _edges[data.move.direction];
 
@@ -334,6 +347,7 @@ GameState = (function(){
     if(_turn >= STATIC.TOTAL_PLAYERS)
       _turn = 0;
 
+    //Move blank to the next edge
     edges.nextPosition(edges.blank, orientation);
 
     if(_flagStart){
@@ -346,8 +360,6 @@ GameState = (function(){
 
     sprite.anchor.set(0.5);//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<angle
     _table.addChild(sprite);
-
-    //Move blank to the next edge
     //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<TENTAR MELHOR ISSO
   }
 
