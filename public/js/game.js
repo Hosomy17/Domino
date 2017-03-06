@@ -12,6 +12,7 @@ GameState = (function(){
   var _table;
   var _selectedPiece;
   var _flagStart = true;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>SOCORRO
+  var _maxPieceRow = 0;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>maior numero de peças em uma fila
 
   var _edges = {
       center : {
@@ -120,7 +121,7 @@ GameState = (function(){
   function loadTable(){
       _table = game.add.sprite(game.world.centerX,game.world.centerY,'table');
       _table.anchor.set(0.5);
-      _table.scale.set(0.3);
+      _table.scale.set(1);
 
       sprite = game.add.sprite(0,0,'blank');
       sprite.anchor.set(0.5);
@@ -336,7 +337,8 @@ GameState = (function(){
     sprite = game.add.sprite(edges.blank[orientation].x,edges.blank[orientation].y,'domino',data.move.piece[2]);//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<melhorar atributos
     sprite.angle = edges.blank[orientation].angle;
 
-    if(edges.open == data.move.piece[0]){
+    edges.total++;
+    if(edges.open == data.move.piece[0]){//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<roda se o lado for o outro
       sprite.angle += 180;
       edges.open = data.move.piece[1];
     }
@@ -358,9 +360,16 @@ GameState = (function(){
       _edges.right.open = data.move.piece[0];
     }
 
-    sprite.anchor.set(0.5);//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<angle
+    sprite.anchor.set(0.5);
     _table.addChild(sprite);
-    //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<TENTAR MELHOR ISSO
+      if(_maxPieceRow < edges.total)
+      {
+        _maxPieceRow = edges.total;
+        tableScale = _table.scale;
+        if(tableScale.x > 0.6)
+          _table.scale.set(tableScale.x - 0.15);
+          //game.add.tween(_table.scale).to( { x: tableScale.x-0.1, y: tableScale.y-0.1,}, 4000, Phaser.Easing.Linear.None, true);
+      }
   }
 
   return {preload: preload, create:create, update:update};
