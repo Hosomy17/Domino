@@ -1,4 +1,4 @@
-var game = new Phaser.Game(1024, 800, Phaser.AUTO, 'phaser-game', {preload:preload,create:create,update:update});
+var game = new Phaser.Game(1000, 1000, Phaser.AUTO, 'phaser-game', {preload:preload,create:create,update:update});
 
 function preload(){
 	game.load.script('menu','/js/menu.js');

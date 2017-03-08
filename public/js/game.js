@@ -16,21 +16,21 @@ GameState = (function(){
 
   var _edges = {
       center : {
-        blank: {
+        blank : {
           normal : null,
-          side : null,
+          side   : null,
         },
-        open : null,
-        total: 0,
+        open    : null,
+        total   : 0,
         nextPosition : function(blank, orietantion){}
       },
       up : {
-        blank: {
+        blank : {
           normal : null,
-          side : null,
+          side   : null,
         },
-        open : null,
-        total: 0,
+        open     : null,
+        total    : 0,
         nextPosition : function(blank, orietantion) {
           if(orietantion == 'normal'){
             blank.side.y = blank.normal.y - (STATIC.WIDTH_PIECE+ STATIC.HEIGHT_PIECE)/2;
@@ -43,12 +43,12 @@ GameState = (function(){
         }
       },
       down : {
-        blank: {
+        blank : {
           normal : null,
-          side : null,
+          side   : null,
         },
-        open : null,
-        total: 0,
+        open     : null,
+        total    : 0,
         nextPosition : function(blank, orietantion) {
           if(orietantion == 'normal'){
             blank.side.y = blank.normal.y + (STATIC.WIDTH_PIECE+ STATIC.HEIGHT_PIECE)/2;
@@ -61,12 +61,12 @@ GameState = (function(){
         }
       },
       right : {
-        blank: {
+        blank : {
           normal : null,
-          side : null,
+          side   : null,
         },
-        open : null,
-        total: 0,
+        open     : null,
+        total    : 0,
         nextPosition : function(blank, orietantion) {
           if(orietantion == 'normal'){
             blank.side.x = blank.normal.x + (STATIC.WIDTH_PIECE + STATIC.HEIGHT_PIECE)/2;
@@ -79,12 +79,12 @@ GameState = (function(){
         }
       },
       left : {
-        blank: {
+        blank : {
           normal : null,
-          side : null,
+          side   : null,
         },
-        open : null,
-        total: 0,
+        open     : null,
+        total    : 0,
         nextPosition : function(blank, orietantion) {
           if(orietantion == 'normal'){
             blank.side.x = blank.normal.x - (STATIC.WIDTH_PIECE + STATIC.HEIGHT_PIECE)/2;
@@ -97,6 +97,13 @@ GameState = (function(){
         }
       }
   };
+
+  var _formulaPositions = {
+    up    : _edges.up.nextPosition,
+    right : _edges.right.nextPosition,
+    down  : _edges.down.nextPosition,
+    left  : _edges.left.nextPosition
+  }
 
 	function preload(){
         this.load.spritesheet('domino', 'assets/sprites/domino.png',STATIC.WIDTH_PIECE,STATIC.HEIGHT_PIECE);//<<<<<<<<<<<<<<<<<<<<<<<< dimenção
@@ -112,7 +119,7 @@ GameState = (function(){
 	}
 
 	function update(){
-        move = Link.getLastMove()
+        move = Link.getLastMove();
         if(move){
             drawMove(move);
         }
@@ -310,15 +317,15 @@ GameState = (function(){
 
   function finishSelect(piece, direction)
   {
-    _edges.center.blank.normal.visible = false;
-    _edges.up.blank.side.visible       = false;
-    _edges.down.blank.side.visible     = false;
-    _edges.left.blank.side.visible     = false;
-    _edges.right.blank.side.visible    = false;
-    _edges.up.blank.normal.visible     = false;
-    _edges.down.blank.normal.visible   = false;
-    _edges.left.blank.normal.visible   = false;
-    _edges.right.blank.normal.visible  = false;
+    // _edges.center.blank.normal.visible = false;
+    // _edges.up.blank.side.visible       = false;
+    // _edges.down.blank.side.visible     = false;
+    // _edges.left.blank.side.visible     = false;
+    // _edges.right.blank.side.visible    = false;
+    // _edges.up.blank.normal.visible     = false;
+    // _edges.down.blank.normal.visible   = false;
+    // _edges.left.blank.normal.visible   = false;
+    // _edges.right.blank.normal.visible  = false;
 
     move = {piece:piece, direction:direction};
     Link.sendMove(move);
@@ -328,45 +335,86 @@ GameState = (function(){
   {
     _turn++;
 
+    if(_turn >= STATIC.TOTAL_PLAYERS)
+      _turn = 0;
+
     if(data.move.piece == null)
       return 0;
 
     orientation = (data.move.piece[0] == data.move.piece[1] ) ? 'side' : 'normal';
-    edges = _edges[data.move.direction];
+    edge = _edges[data.move.direction];
 
-    sprite = game.add.sprite(edges.blank[orientation].x,edges.blank[orientation].y,'domino',data.move.piece[2]);//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<melhorar atributos
-    sprite.angle = edges.blank[orientation].angle;
+    sprite = game.add.sprite(edge.blank[orientation].x,edge.blank[orientation].y,'domino',data.move.piece[2]);//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<melhorar atributos
+    sprite.angle = edge.blank[orientation].angle;
 
-    edges.total++;
-    if(edges.open == data.move.piece[0]){//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<roda se o lado for o outro
+    edge.total++;
+    if(edge.open == data.move.piece[0])//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<roda se o lado for o outro
+    {
       sprite.angle += 180;
-      edges.open = data.move.piece[1];
+      edge.open = data.move.piece[1];
     }
     else{
-      edges.open = data.move.piece[0];
+      edge.open = data.move.piece[0];
     }
 
-    if(_turn >= STATIC.TOTAL_PLAYERS)
-      _turn = 0;
+    if(edge.total == 7)
+    {
+      edge.blank.normal.angle += 90;
+      edge.blank.side.angle += 90;
+      switch (data.move.direction) {
+        case 'up':
+          edge.nextPosition = _formulaPositions.right;
+           edge.blank.normal.x -= STATIC.WIDTH_PIECE/2;
+           edge.blank.side.x   -= STATIC.WIDTH_PIECE/2;
+           edge.blank.normal.y -= STATIC.WIDTH_PIECE/2;
+           edge.blank.side.y   -= STATIC.WIDTH_PIECE;
+        break;
+        case 'right':
+          edge.nextPosition = _formulaPositions.down;
+          edge.blank.normal.y -= STATIC.WIDTH_PIECE/2;
+          edge.blank.side.y   -= STATIC.WIDTH_PIECE/2;
+          edge.blank.normal.x += STATIC.WIDTH_PIECE/2;
+          edge.blank.side.x   += STATIC.WIDTH_PIECE;
+        break;
+        case 'down':
+          edge.nextPosition = _formulaPositions.left;
+          edge.blank.normal.x += STATIC.WIDTH_PIECE/2;
+          edge.blank.side.x   += STATIC.WIDTH_PIECE/2;
+          edge.blank.normal.y += STATIC.WIDTH_PIECE/2;
+          edge.blank.side.y   += STATIC.WIDTH_PIECE;
+        break;
+        case 'left':
+          edge.nextPosition = _formulaPositions.up;
+          edge.blank.normal.y += STATIC.WIDTH_PIECE/2;
+          edge.blank.side.y   += STATIC.WIDTH_PIECE/2;
+          edge.blank.normal.x -= STATIC.WIDTH_PIECE/2;
+          edge.blank.side.x   -= STATIC.WIDTH_PIECE;
+        break;
+      }
+    }
 
     //Move blank to the next edge
-    edges.nextPosition(edges.blank, orientation);
+    edge.nextPosition(edge.blank, orientation);
+
+
 
     if(_flagStart){
       _flagStart = false;
-      _edges.up.open = data.move.piece[0];
-      _edges.down.open = data.move.piece[0];
-      _edges.left.open = data.move.piece[0];
+      _edges.up.open    = data.move.piece[0];
+      _edges.down.open  = data.move.piece[0];
+      _edges.left.open  = data.move.piece[0];
       _edges.right.open = data.move.piece[0];
     }
 
     sprite.anchor.set(0.5);
     _table.addChild(sprite);
-      if(_maxPieceRow < edges.total)
+
+    //Zoom out
+      if(_maxPieceRow < edge.total)
       {
-        _maxPieceRow = edges.total;
+        _maxPieceRow = edge.total;
         tableScale = _table.scale;
-        if(tableScale.x > 0.6)
+        if(tableScale.x > 0.5)
           _table.scale.set(tableScale.x - 0.15);
           //game.add.tween(_table.scale).to( { x: tableScale.x-0.1, y: tableScale.y-0.1,}, 4000, Phaser.Easing.Linear.None, true);
       }
