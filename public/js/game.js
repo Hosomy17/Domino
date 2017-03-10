@@ -13,6 +13,7 @@ GameState = (function(){
   var _selectedPiece;
   var _flagStart = true;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>SOCORRO
   var _maxPieceRow = 0;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>maior numero de peças em uma fila
+  var _scaleTable = 1;
 
   var _edges = {
       center : {
@@ -111,10 +112,12 @@ GameState = (function(){
         this.load.spritesheet('table', 'assets/sprites/table.png');//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< spritesheet??????
         this.load.spritesheet('blank', 'assets/sprites/blank.png');//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< spritesheet??????
         this.load.spritesheet('pass', 'assets/sprites/pass.png',90,30);
+
 	}
 
 	function create(){
         loadTable();
+
         loadHand();
 	}
 
@@ -237,6 +240,15 @@ GameState = (function(){
       _table.addChild(sprite);
       _edges.left.blank.side = sprite;
 
+      style = { font: "65px Arial", fill: "#ff0044", align: "center" };
+      text = game.add.text(-400, 0, "0", style);
+      _table.addChild(text);
+      text = game.add.text( 400, 0, "0", style);
+      _table.addChild(text);
+      text = game.add.text(0, -400, "0", style);
+      _table.addChild(text);
+      //bmpText.inputEnabled = true;
+
   }
 
   function loadHand(){
@@ -270,7 +282,6 @@ GameState = (function(){
           //Add to hand
           _hand.addChild(sprite);
       }
-
       buttonExit = game.add.button(game.world.width - 100, game.world.height - 50, 'pass', skipMove, this, 0, 1, 2);//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< pocição
       //buttonExit.anchor.set(0.5);
   }
@@ -357,8 +368,28 @@ GameState = (function(){
       edge.open = data.move.piece[0];
     }
 
-    if(edge.total == 7)
+    if(edge.total == 7 && (data.move.direction == 'right' || data.move.direction == 'left'))
     {
+      edge.blank.normal.angle += 90;
+      edge.blank.side.angle += 90;
+      switch (data.move.direction) {
+        case 'right':
+          edge.nextPosition = _formulaPositions.down;
+          edge.blank.normal.y -= STATIC.WIDTH_PIECE/2;
+          edge.blank.side.y   -= STATIC.WIDTH_PIECE/2;
+          edge.blank.normal.x += STATIC.WIDTH_PIECE/2;
+          edge.blank.side.x   += STATIC.WIDTH_PIECE;
+        break;
+        case 'left':
+          edge.nextPosition = _formulaPositions.up;
+          edge.blank.normal.y += STATIC.WIDTH_PIECE/2;
+          edge.blank.side.y   += STATIC.WIDTH_PIECE/2;
+          edge.blank.normal.x -= STATIC.WIDTH_PIECE/2;
+          edge.blank.side.x   -= STATIC.WIDTH_PIECE;
+        break;
+      }
+    }
+    else if (edge.total == 5 &&  (data.move.direction == 'up' || data.move.direction == 'down')) {
       edge.blank.normal.angle += 90;
       edge.blank.side.angle += 90;
       switch (data.move.direction) {
@@ -369,26 +400,12 @@ GameState = (function(){
            edge.blank.normal.y -= STATIC.WIDTH_PIECE/2;
            edge.blank.side.y   -= STATIC.WIDTH_PIECE;
         break;
-        case 'right':
-          edge.nextPosition = _formulaPositions.down;
-          edge.blank.normal.y -= STATIC.WIDTH_PIECE/2;
-          edge.blank.side.y   -= STATIC.WIDTH_PIECE/2;
-          edge.blank.normal.x += STATIC.WIDTH_PIECE/2;
-          edge.blank.side.x   += STATIC.WIDTH_PIECE;
-        break;
         case 'down':
           edge.nextPosition = _formulaPositions.left;
           edge.blank.normal.x += STATIC.WIDTH_PIECE/2;
           edge.blank.side.x   += STATIC.WIDTH_PIECE/2;
           edge.blank.normal.y += STATIC.WIDTH_PIECE/2;
           edge.blank.side.y   += STATIC.WIDTH_PIECE;
-        break;
-        case 'left':
-          edge.nextPosition = _formulaPositions.up;
-          edge.blank.normal.y += STATIC.WIDTH_PIECE/2;
-          edge.blank.side.y   += STATIC.WIDTH_PIECE/2;
-          edge.blank.normal.x -= STATIC.WIDTH_PIECE/2;
-          edge.blank.side.x   -= STATIC.WIDTH_PIECE;
         break;
       }
     }
@@ -414,9 +431,10 @@ GameState = (function(){
       {
         _maxPieceRow = edge.total;
         tableScale = _table.scale;
-        if(tableScale.x > 0.5)
-          _table.scale.set(tableScale.x - 0.15);
-          //game.add.tween(_table.scale).to( { x: tableScale.x-0.1, y: tableScale.y-0.1,}, 4000, Phaser.Easing.Linear.None, true);
+        if(_scaleTable > 0.6)
+          //_table.scale.set(tableScale.x - 0.1);
+          _scaleTable -= 0.1;
+          game.add.tween(_table.scale).to( { x: _scaleTable, y: _scaleTable,}, 500, Phaser.Easing.Linear.None, true);
       }
   }
 
