@@ -99,8 +99,6 @@ io.on('connection', function(socket){
 					match.players[i].turn = 0;
 				else
 					match.players[i].turn = ++nextTurn;
-
-					console.log(i+" "+match.players[i].turn);
 			}
 			matchs.progress.push(match);
 			io.to(match.id).emit('startMatch', {players:match.players});

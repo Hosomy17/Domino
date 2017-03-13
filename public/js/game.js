@@ -14,6 +14,11 @@ GameState = (function(){
   var _flagStart = true;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>SOCORRO
   var _maxPieceRow = 0;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>maior numero de peças em uma fila
   var _scaleTable = 1;
+  var _text0;
+  var _text1;
+  var _text2;
+  var _text3;
+
 
   var _edges = {
       center : {
@@ -22,6 +27,7 @@ GameState = (function(){
           side   : null,
         },
         open    : null,
+        points  : 0,
         total   : 0,
         nextPosition : function(blank, orietantion){}
       },
@@ -31,6 +37,7 @@ GameState = (function(){
           side   : null,
         },
         open     : null,
+        points  : 0,
         total    : 0,
         nextPosition : function(blank, orietantion) {
           if(orietantion == 'normal'){
@@ -49,6 +56,7 @@ GameState = (function(){
           side   : null,
         },
         open     : null,
+        points  : 0,
         total    : 0,
         nextPosition : function(blank, orietantion) {
           if(orietantion == 'normal'){
@@ -67,6 +75,7 @@ GameState = (function(){
           side   : null,
         },
         open     : null,
+        points  : 0,
         total    : 0,
         nextPosition : function(blank, orietantion) {
           if(orietantion == 'normal'){
@@ -85,6 +94,7 @@ GameState = (function(){
           side   : null,
         },
         open     : null,
+        points  : 0,
         total    : 0,
         nextPosition : function(blank, orietantion) {
           if(orietantion == 'normal'){
@@ -124,7 +134,7 @@ GameState = (function(){
 	function update(){
         move = Link.getLastMove();
         if(move){
-            drawMove(move);
+            doMove(move);
         }
 	}
 
@@ -241,12 +251,14 @@ GameState = (function(){
       _edges.left.blank.side = sprite;
 
       style = { font: "65px Arial", fill: "#ff0044", align: "center" };
-      text = game.add.text(-400, 0, "0", style);
-      _table.addChild(text);
-      text = game.add.text( 400, 0, "0", style);
-      _table.addChild(text);
-      text = game.add.text(0, -400, "0", style);
-      _table.addChild(text);
+      _text0 = game.add.text(-400, 0, "0", style);
+      _table.addChild(_text0);
+      _text1 = game.add.text( 400, 0, "0", style);
+      _table.addChild(_text1);
+      _text2 = game.add.text(0, -400, "0", style);
+      _table.addChild(_text2);
+      _text3 = game.add.text(0, 400, "0", style);
+      _table.addChild(_text3);
       //bmpText.inputEnabled = true;
 
   }
@@ -328,30 +340,62 @@ GameState = (function(){
 
   function finishSelect(piece, direction)
   {
-    // _edges.center.blank.normal.visible = false;
-    // _edges.up.blank.side.visible       = false;
-    // _edges.down.blank.side.visible     = false;
-    // _edges.left.blank.side.visible     = false;
-    // _edges.right.blank.side.visible    = false;
-    // _edges.up.blank.normal.visible     = false;
-    // _edges.down.blank.normal.visible   = false;
-    // _edges.left.blank.normal.visible   = false;
-    // _edges.right.blank.normal.visible  = false;
+    _edges.center.blank.normal.visible = false;
+    _edges.up.blank.side.visible       = false;
+    _edges.down.blank.side.visible     = false;
+    _edges.left.blank.side.visible     = false;
+    _edges.right.blank.side.visible    = false;
+    _edges.up.blank.normal.visible     = false;
+    _edges.down.blank.normal.visible   = false;
+    _edges.left.blank.normal.visible   = false;
+    _edges.right.blank.normal.visible  = false;
 
     move = {piece:piece, direction:direction};
     Link.sendMove(move);
   }
 
-  function drawMove(data)
+  function doMove(data)
   {
+
+    if(data.move.piece == null)
+      return 0;
+
+    drawMove(data);
+
+    calculatePoints();
+
+
+    if(_flagStart){
+      _flagStart = false;
+      _edges.up.open     = data.move.piece[0];
+      _edges.down.open   = data.move.piece[0];
+      _edges.left.open   = data.move.piece[0];
+      _edges.right.open  = data.move.piece[0];
+      _edges.center.open = data.move.piece[0];
+    }
+
     _turn++;
 
     if(_turn >= STATIC.TOTAL_PLAYERS)
       _turn = 0;
 
-    if(data.move.piece == null)
-      return 0;
+    sprite.anchor.set(0.5);
+    _table.addChild(sprite);
 
+    //Zoom out
+      if(_maxPieceRow < edge.total)
+      {
+        _maxPieceRow = edge.total;
+        tableScale = _table.scale;
+        if(_scaleTable > 0.6)
+          //_table.scale.set(tableScale.x - 0.1);
+          _scaleTable -= 0.1;
+          game.add.tween(_table.scale).to( { x: _scaleTable, y: _scaleTable,}, 500, Phaser.Easing.Linear.None, true);
+      }
+  }
+
+  function drawMove(data)
+  {
     orientation = (data.move.piece[0] == data.move.piece[1] ) ? 'side' : 'normal';
     edge = _edges[data.move.direction];
 
@@ -363,10 +407,14 @@ GameState = (function(){
     {
       sprite.angle += 180;
       edge.open = data.move.piece[1];
+      edge.points = data.move.piece[1];
     }
     else{
       edge.open = data.move.piece[0];
+      edge.points = data.move.piece[0];
     }
+
+    edge.points = (data.move.piece[0]==data.move.piece[1]) ? edge.points * 2 : edge.points;
 
     if(edge.total == 7 && (data.move.direction == 'right' || data.move.direction == 'left'))
     {
@@ -412,30 +460,10 @@ GameState = (function(){
 
     //Move blank to the next edge
     edge.nextPosition(edge.blank, orientation);
+  }
 
-
-
-    if(_flagStart){
-      _flagStart = false;
-      _edges.up.open    = data.move.piece[0];
-      _edges.down.open  = data.move.piece[0];
-      _edges.left.open  = data.move.piece[0];
-      _edges.right.open = data.move.piece[0];
-    }
-
-    sprite.anchor.set(0.5);
-    _table.addChild(sprite);
-
-    //Zoom out
-      if(_maxPieceRow < edge.total)
-      {
-        _maxPieceRow = edge.total;
-        tableScale = _table.scale;
-        if(_scaleTable > 0.6)
-          //_table.scale.set(tableScale.x - 0.1);
-          _scaleTable -= 0.1;
-          game.add.tween(_table.scale).to( { x: _scaleTable, y: _scaleTable,}, 500, Phaser.Easing.Linear.None, true);
-      }
+  function calculatePoints(){
+    _text0.text = _edges.center.points + _edges.up.points + _edges.right.points + _edges.down.points + _edges.left.points;
   }
 
   return {preload: preload, create:create, update:update};
