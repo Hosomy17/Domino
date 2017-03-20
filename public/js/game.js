@@ -8,16 +8,16 @@ GameState = (function(){
   }
 
   var _turn = 0;
+  var _countPass = 0;
   var _hand;
   var _table;
+  var _hud;
   var _selectedPiece;
   var _flagStart = true;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>SOCORRO
   var _maxPieceRow = 0;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>maior numero de peças em uma fila
   var _scaleTable = 1;
-  var _text0;
-  var _text1;
-  var _text2;
-  var _text3;
+  var _players = [];
+
 
 
   var _edges = {
@@ -29,6 +29,7 @@ GameState = (function(){
         open    : null,
         points  : 0,
         total   : 0,
+        block   : false,
         nextPosition : function(blank, orietantion){}
       },
       up : {
@@ -39,7 +40,7 @@ GameState = (function(){
         open     : null,
         points  : 0,
         total    : 0,
-        nextPosition : function(blank, orietantion) {
+        nextPosition : function(blank, orietantion){
           if(orietantion == 'normal'){
             blank.side.y = blank.normal.y - (STATIC.WIDTH_PIECE+ STATIC.HEIGHT_PIECE)/2;
             blank.normal.y -= STATIC.HEIGHT_PIECE;
@@ -117,25 +118,24 @@ GameState = (function(){
   }
 
 	function preload(){
-        this.load.spritesheet('domino', 'assets/sprites/domino.png',STATIC.WIDTH_PIECE,STATIC.HEIGHT_PIECE);//<<<<<<<<<<<<<<<<<<<<<<<< dimenção
-        this.load.spritesheet('hand', 'assets/sprites/hand.png');//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< spritesheet??????
-        this.load.spritesheet('table', 'assets/sprites/table.png');//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< spritesheet??????
-        this.load.spritesheet('blank', 'assets/sprites/blank.png');//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< spritesheet??????
-        this.load.spritesheet('pass', 'assets/sprites/pass.png',90,30);
-
+    this.load.spritesheet('domino', 'assets/sprites/domino.png',STATIC.WIDTH_PIECE,STATIC.HEIGHT_PIECE);//<<<<<<<<<<<<<<<<<<<<<<<< dimenção
+    this.load.spritesheet('hand', 'assets/sprites/hand.png');//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< spritesheet??????
+    this.load.spritesheet('table', 'assets/sprites/table.png');//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< spritesheet??????
+    this.load.spritesheet('blank', 'assets/sprites/blank.png');//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< spritesheet??????
+    this.load.spritesheet('pass', 'assets/sprites/pass.png',90,30);
 	}
 
 	function create(){
-        loadTable();
-
-        loadHand();
+    loadTable();
+    loadHud();
+    loadHand();
 	}
 
 	function update(){
-        move = Link.getLastMove();
-        if(move){
-            doMove(move);
-        }
+    move = Link.getLastMove();
+    if(move){
+      doMove(move);
+    }
 	}
 
   function loadTable(){
@@ -249,18 +249,42 @@ GameState = (function(){
       });
       _table.addChild(sprite);
       _edges.left.blank.side = sprite;
+  }
 
-      style = { font: "65px Arial", fill: "#ff0044", align: "center" };
-      _text0 = game.add.text(-400, 0, "0", style);
-      _table.addChild(_text0);
-      _text1 = game.add.text( 400, 0, "0", style);
-      _table.addChild(_text1);
-      _text2 = game.add.text(0, -400, "0", style);
-      _table.addChild(_text2);
-      _text3 = game.add.text(0, 400, "0", style);
-      _table.addChild(_text3);
-      //bmpText.inputEnabled = true;
-
+  function loadHud(){
+    _hud = game.add.sprite(game.world.centerX,game.world.centerY);
+    style = { font: "40px Arial", fill: "#ffffff", align: "center" };
+    turn = Link.getPlayer().turn;
+    for(i = 0;i < 4;i++)
+    {
+      //text = game.add.text(0, 0, "pts 0 / ctn 6", style);
+      text = game.add.text(0, 0, turn, style);
+      text.anchor.set(0.5);
+      if(turn == 0)
+      {
+        text.addColor('#6A5ACD', 0);
+      }
+      _hud.addChild(text);
+      _players[turn] = {id:turn, text : text, points : 0, ctn : 7};
+      turn++;
+      if(turn >= 4)
+        turn = 0;
+    }
+    ///////////////////////////////////////////////////////////400???
+    _players[turn].text.y = 200;  //Down
+    turn++;
+    if(turn >= 4)
+      turn = 0;
+    _players[turn].text.x = -200; //Left
+    turn++;
+    if(turn >= 4)
+      turn = 0;
+    _players[turn].text.y = -200; //Up
+    turn++;
+    if(turn >= 4)
+      turn = 0;
+    _players[turn].text.x = 200;  //Right
+    //bmpText.inputEnabled = true;
   }
 
   function loadHand(){
@@ -315,15 +339,21 @@ GameState = (function(){
     }
     else if (_selectedPiece.piece[0] == _selectedPiece.piece[1])
     {
-      _edges.up.blank.side.visible    = (_selectedPiece.piece[0] == _edges.up.open) ? true : false;
-      _edges.down.blank.side.visible  = (_selectedPiece.piece[0] == _edges.down.open) ? true : false;
+      if(_edges.left.total > 0 && _edges.right.total > 0)
+      {
+        _edges.up.blank.side.visible    = (_selectedPiece.piece[0] == _edges.up.open) ? true : false;
+        _edges.down.blank.side.visible  = (_selectedPiece.piece[0] == _edges.down.open) ? true : false;
+      }
       _edges.left.blank.side.visible  = (_selectedPiece.piece[0] == _edges.left.open) ? true : false;
       _edges.right.blank.side.visible = (_selectedPiece.piece[0] == _edges.right.open) ? true : false;
     }
     else
     {
-      _edges.up.blank.normal.visible    = (_selectedPiece.piece[0] == _edges.up.open || _selectedPiece.piece[1] == _edges.up.open) ? true : false;
-      _edges.down.blank.normal.visible  = (_selectedPiece.piece[0] == _edges.down.open || _selectedPiece.piece[1] == _edges.down.open) ? true : false;
+      if(_edges.left.total > 0 && _edges.right.total > 0)
+      {
+        _edges.up.blank.normal.visible    = (_selectedPiece.piece[0] == _edges.up.open || _selectedPiece.piece[1] == _edges.up.open) ? true : false;
+        _edges.down.blank.normal.visible  = (_selectedPiece.piece[0] == _edges.down.open || _selectedPiece.piece[1] == _edges.down.open) ? true : false;
+      }
       _edges.left.blank.normal.visible  = (_selectedPiece.piece[0] == _edges.left.open || _selectedPiece.piece[1] == _edges.left.open) ? true : false;
       _edges.right.blank.normal.visible = (_selectedPiece.piece[0] == _edges.right.open || _selectedPiece.piece[1] == _edges.right.open) ? true : false;
     }
@@ -356,14 +386,29 @@ GameState = (function(){
 
   function doMove(data)
   {
+    _players[_turn].text.addColor('#ffffff', 0);
+
+    if(++_turn >= STATIC.TOTAL_PLAYERS)
+      _turn = 0;
+
+    _players[_turn].text.addColor('#6A5ACD', 0);
 
     if(data.move.piece == null)
+    {
+      _countPass
       return 0;
+    }
+
 
     drawMove(data);
 
-    calculatePoints();
-
+    _players[data.player.turn].ctn--;
+    points = calculatePoints();
+    if(points % 5 == 0)
+    {
+      _players[data.player.turn].points += points;
+    }
+    _players[data.player.turn].text.text = "pts "+_players[data.player.turn].points+" / ctn "+_players[data.player.turn].ctn;
 
     if(_flagStart){
       _flagStart = false;
@@ -374,24 +419,19 @@ GameState = (function(){
       _edges.center.open = data.move.piece[0];
     }
 
-    _turn++;
-
-    if(_turn >= STATIC.TOTAL_PLAYERS)
-      _turn = 0;
-
     sprite.anchor.set(0.5);
     _table.addChild(sprite);
 
     //Zoom out
-      if(_maxPieceRow < edge.total)
-      {
-        _maxPieceRow = edge.total;
-        tableScale = _table.scale;
-        if(_scaleTable > 0.6)
-          //_table.scale.set(tableScale.x - 0.1);
-          _scaleTable -= 0.1;
-          game.add.tween(_table.scale).to( { x: _scaleTable, y: _scaleTable,}, 500, Phaser.Easing.Linear.None, true);
-      }
+    if(_maxPieceRow < edge.total)
+    {
+      _maxPieceRow = edge.total;
+      tableScale = _table.scale;
+      if(_scaleTable > 0.6)
+        //_table.scale.set(tableScale.x - 0.1);
+        _scaleTable -= 0.1;
+      game.add.tween(_table.scale).to( { x: _scaleTable, y: _scaleTable,}, 500, Phaser.Easing.Linear.None, true);
+    }
   }
 
   function drawMove(data)
@@ -463,7 +503,11 @@ GameState = (function(){
   }
 
   function calculatePoints(){
-    _text0.text = _edges.center.points + _edges.up.points + _edges.right.points + _edges.down.points + _edges.left.points;
+
+    _edges.center.points *= (_edges.left.total > 0 && _edges.right.total > 0) ? 0 : 1;
+
+    points = _edges.center.points + _edges.up.points + _edges.right.points + _edges.down.points + _edges.left.points;
+    return points;
   }
 
   return {preload: preload, create:create, update:update};
