@@ -17,6 +17,7 @@ GameState = (function(){
   var _maxPieceRow = 0;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>maior numero de peças em uma fila
   var _scaleTable = 1;
   var _players = [];
+  var _score = [];
 
 
 
@@ -133,9 +134,8 @@ GameState = (function(){
 
 	function update(){
     move = Link.getLastMove();
-    if(move){
+    if(move)
       doMove(move);
-    }
 	}
 
   function loadTable(){
@@ -253,38 +253,29 @@ GameState = (function(){
 
   function loadHud(){
     _hud = game.add.sprite(game.world.centerX,game.world.centerY);
-    style = { font: "40px Arial", fill: "#ffffff", align: "center" };
     turn = Link.getPlayer().turn;
-    for(i = 0;i < 4;i++)
-    {
-      //text = game.add.text(0, 0, "pts 0 / ctn 6", style);
-      text = game.add.text(0, 0, turn, style);
-      text.anchor.set(0.5);
-      if(turn == 0)
-      {
-        text.addColor('#6A5ACD', 0);
-      }
-      _hud.addChild(text);
-      _players[turn] = {id:turn, text : text, points : 0, ctn : 7};
+
+    for(i = 0;i < 4;i++){
+      _players[turn] = {id:turn, points : 0, ctn : 7};
       turn++;
       if(turn >= 4)
         turn = 0;
     }
-    ///////////////////////////////////////////////////////////400???
-    _players[turn].text.y = 200;  //Down
-    turn++;
-    if(turn >= 4)
-      turn = 0;
-    _players[turn].text.x = -200; //Left
-    turn++;
-    if(turn >= 4)
-      turn = 0;
-    _players[turn].text.y = -200; //Up
-    turn++;
-    if(turn >= 4)
-      turn = 0;
-    _players[turn].text.x = 200;  //Right
-    //bmpText.inputEnabled = true;
+
+    style = { font: "40px Arial", fill: "#ffffff", align: "center" };
+    text = game.add.text(-300, 300, turn, style);
+    text.anchor.set(0.5);
+    text.addColor('#0000ff', 0);
+    _hud.addChild(text);
+    _score[0] = text;
+
+    text = game.add.text(300, -300, turn, style);
+    text.anchor.set(0.5);
+    text.addColor('#ff0000', 0);
+    _hud.addChild(text);
+    _score[1] = text;
+
+
   }
 
   function loadHand(){
@@ -306,10 +297,8 @@ GameState = (function(){
           sprite.piece = piece;
           sprite.inputEnabled = true;
           sprite.events.onInputDown.add(
-          function(obj)
-          {
-              if(_turn == Link.getPlayer().turn)
-              {
+          function(obj){
+              if(_turn == Link.getPlayer().turn){
                   _selectedPiece = obj;
                   showBlanks();
               }
@@ -322,8 +311,7 @@ GameState = (function(){
       //buttonExit.anchor.set(0.5);
   }
 
-  function showBlanks()
-  {
+  function showBlanks(){
     _edges.center.blank.visible       = false;
     _edges.up.blank.side.visible      = false;
     _edges.down.blank.side.visible    = false;
@@ -333,24 +321,19 @@ GameState = (function(){
     _edges.down.blank.normal.visible  = false;
     _edges.left.blank.normal.visible  = false;
     _edges.right.blank.normal.visible = false;
-    if(_flagStart)
-    {
+    if(_flagStart){
       _edges.center.blank.normal.visible = (_selectedPiece.piece[0] + _selectedPiece.piece[1] == 12) ? true : false;
     }
-    else if (_selectedPiece.piece[0] == _selectedPiece.piece[1])
-    {
-      if(_edges.left.total > 0 && _edges.right.total > 0)
-      {
+    else if (_selectedPiece.piece[0] == _selectedPiece.piece[1]){
+      if(_edges.left.total > 0 && _edges.right.total > 0){
         _edges.up.blank.side.visible    = (_selectedPiece.piece[0] == _edges.up.open) ? true : false;
         _edges.down.blank.side.visible  = (_selectedPiece.piece[0] == _edges.down.open) ? true : false;
       }
       _edges.left.blank.side.visible  = (_selectedPiece.piece[0] == _edges.left.open) ? true : false;
       _edges.right.blank.side.visible = (_selectedPiece.piece[0] == _edges.right.open) ? true : false;
     }
-    else
-    {
-      if(_edges.left.total > 0 && _edges.right.total > 0)
-      {
+    else{
+      if(_edges.left.total > 0 && _edges.right.total > 0){
         _edges.up.blank.normal.visible    = (_selectedPiece.piece[0] == _edges.up.open || _selectedPiece.piece[1] == _edges.up.open) ? true : false;
         _edges.down.blank.normal.visible  = (_selectedPiece.piece[0] == _edges.down.open || _selectedPiece.piece[1] == _edges.down.open) ? true : false;
       }
@@ -359,8 +342,7 @@ GameState = (function(){
     }
   }
 
-  function skipMove()
-  {
+  function skipMove(){
     if(_turn != Link.getPlayer().turn){
         return 0;
     }
@@ -368,8 +350,7 @@ GameState = (function(){
     finishSelect(null,null);
   }
 
-  function finishSelect(piece, direction)
-  {
+  function finishSelect(piece, direction){
     _edges.center.blank.normal.visible = false;
     _edges.up.blank.side.visible       = false;
     _edges.down.blank.side.visible     = false;
@@ -384,17 +365,13 @@ GameState = (function(){
     Link.sendMove(move);
   }
 
-  function doMove(data)
-  {
-    _players[_turn].text.addColor('#ffffff', 0);
+  function doMove(data){
+
 
     if(++_turn >= STATIC.TOTAL_PLAYERS)
       _turn = 0;
 
-    _players[_turn].text.addColor('#6A5ACD', 0);
-
-    if(data.move.piece == null)
-    {
+    if(data.move.piece == null){
       _countPass
       return 0;
     }
@@ -405,10 +382,9 @@ GameState = (function(){
     _players[data.player.turn].ctn--;
     points = calculatePoints();
     if(points % 5 == 0)
-    {
       _players[data.player.turn].points += points;
-    }
-    _players[data.player.turn].text.text = "pts "+_players[data.player.turn].points+" / ctn "+_players[data.player.turn].ctn;
+
+    _score[data.player.team].text.text = "pts "+_players[data.player.turn].points+" / ctn "+_players[data.player.turn].ctn;
 
     if(_flagStart){
       _flagStart = false;
@@ -423,8 +399,7 @@ GameState = (function(){
     _table.addChild(sprite);
 
     //Zoom out
-    if(_maxPieceRow < edge.total)
-    {
+    if(_maxPieceRow < edge.total){
       _maxPieceRow = edge.total;
       tableScale = _table.scale;
       if(_scaleTable > 0.6)
@@ -434,8 +409,7 @@ GameState = (function(){
     }
   }
 
-  function drawMove(data)
-  {
+  function drawMove(data){
     orientation = (data.move.piece[0] == data.move.piece[1] ) ? 'side' : 'normal';
     edge = _edges[data.move.direction];
 
@@ -456,20 +430,19 @@ GameState = (function(){
 
     edge.points = (data.move.piece[0]==data.move.piece[1]) ? edge.points * 2 : edge.points;
 
-    if(edge.total == 7 && (data.move.direction == 'right' || data.move.direction == 'left'))
-    {
+    if(edge.total == 7 && (data.move.direction == 'right' || data.move.direction == 'left')){
       edge.blank.normal.angle += 90;
       edge.blank.side.angle += 90;
       switch (data.move.direction) {
         case 'right':
-          edge.nextPosition = _formulaPositions.down;
+          edge.nextPosition    = _formulaPositions.down;
           edge.blank.normal.y -= STATIC.WIDTH_PIECE/2;
           edge.blank.side.y   -= STATIC.WIDTH_PIECE/2;
           edge.blank.normal.x += STATIC.WIDTH_PIECE/2;
           edge.blank.side.x   += STATIC.WIDTH_PIECE;
         break;
         case 'left':
-          edge.nextPosition = _formulaPositions.up;
+          edge.nextPosition    = _formulaPositions.up;
           edge.blank.normal.y += STATIC.WIDTH_PIECE/2;
           edge.blank.side.y   += STATIC.WIDTH_PIECE/2;
           edge.blank.normal.x -= STATIC.WIDTH_PIECE/2;
@@ -482,14 +455,14 @@ GameState = (function(){
       edge.blank.side.angle += 90;
       switch (data.move.direction) {
         case 'up':
-          edge.nextPosition = _formulaPositions.right;
+          edge.nextPosition     = _formulaPositions.right;
            edge.blank.normal.x -= STATIC.WIDTH_PIECE/2;
            edge.blank.side.x   -= STATIC.WIDTH_PIECE/2;
            edge.blank.normal.y -= STATIC.WIDTH_PIECE/2;
            edge.blank.side.y   -= STATIC.WIDTH_PIECE;
         break;
         case 'down':
-          edge.nextPosition = _formulaPositions.left;
+          edge.nextPosition    = _formulaPositions.left;
           edge.blank.normal.x += STATIC.WIDTH_PIECE/2;
           edge.blank.side.x   += STATIC.WIDTH_PIECE/2;
           edge.blank.normal.y += STATIC.WIDTH_PIECE/2;

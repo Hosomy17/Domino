@@ -5,6 +5,7 @@ Link = (function(){
 		id     : _socket.id,
 		name   : 'Player',
 		turn   : 0,
+		team   : 0,
 		pieces : [],
 		status : 'connneted'
 	};
@@ -34,6 +35,7 @@ Link = (function(){
 				_player = _players[3];
 			break;
 		}
+		_player.team = (_player.turn == 1 || _player.turn == 3) ? 1 : 0;
 		_status = 'Ready';
 	});
 
