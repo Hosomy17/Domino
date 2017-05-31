@@ -263,18 +263,18 @@ GameState = (function(){
     }
 
     style = { font: "40px Arial", fill: "#ffffff", align: "center" };
-    text = game.add.text(-300, 300, turn, style);
-    text.anchor.set(0.5);
-    text.addColor('#0000ff', 0);
-    _hud.addChild(text);
-    _score[0] = text;
-
     text = game.add.text(300, -300, turn, style);
     text.anchor.set(0.5);
     text.addColor('#ff0000', 0);
     _hud.addChild(text);
-    _score[1] = text;
+    _score[0] = {text:text,total:0};
+    _score[1] = {text:text,total:0};
 
+    text = game.add.text(-300, 300, turn, style);
+    text.anchor.set(0.5);
+    text.addColor('#0000ff', 0);
+    _hud.addChild(text);
+    _score[Link.getPlayer().team].text = text;
 
   }
 
@@ -381,10 +381,11 @@ GameState = (function(){
 
     _players[data.player.turn].ctn--;
     points = calculatePoints();
-    if(points % 5 == 0)
+    if(points % 5 == 0){
       _players[data.player.turn].points += points;
-
-    _score[data.player.team].text.text = "pts "+_players[data.player.turn].points+" / ctn "+_players[data.player.turn].ctn;
+      _score[data.player.team].total += points;
+    }
+    _score[data.player.team].text.text = "pts "+_score[data.player.team].total;
 
     if(_flagStart){
       _flagStart = false;
