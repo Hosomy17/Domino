@@ -18,7 +18,7 @@ GameState = (function(){
   var _scaleTable = 1;
   var _players = [];
   var _score = [];
-
+  var _totalPieces = [];
 
 
   var _edges = {
@@ -254,23 +254,34 @@ GameState = (function(){
   function loadHud(){
     _hud = game.add.sprite(game.world.centerX,game.world.centerY);
     turn = Link.getPlayer().turn;
+    style = { font: "40px Arial", fill: "#ffffff", align: "center" };
+    a=-400;
+    b=0;
 
     for(i = 0;i < 4;i++){
-      _players[turn] = {id:turn, points : 0, ctn : 7};
       turn++;
       if(turn >= 4)
         turn = 0;
-    }
+        
+      text = null;
+      if(turn != Link.getPlayer().turn){
+        text = game.add.text(a, b%2*(-500), 7, style);
+        _hud.addChild(text);
+      }
+      _totalPieces[turn] = text;
+      a+= 400;
+      b++;
 
-    style = { font: "40px Arial", fill: "#ffffff", align: "center" };
-    text = game.add.text(300, -300, turn, style);
+      _players[turn] = {id:turn, points : 0, ctn : 7};
+    }
+    text = game.add.text(450, -400, turn, style);
     text.anchor.set(0.5);
     text.addColor('#ff0000', 0);
     _hud.addChild(text);
     _score[0] = {text:text,total:0};
     _score[1] = {text:text,total:0};
 
-    text = game.add.text(-300, 300, turn, style);
+    text = game.add.text(-450, 400, turn, style);
     text.anchor.set(0.5);
     text.addColor('#0000ff', 0);
     _hud.addChild(text);
@@ -343,11 +354,24 @@ GameState = (function(){
   }
 
   function skipMove(){
-    if(_turn != Link.getPlayer().turn){
-        return 0;
+    ok=true;
+    if(_turn != Link.getPlayer().turn)
+        ok = false;
+
+    pieces = Link.getPlayer().pieces;
+    nums = [];
+    nums[0] = _edges.up.open;
+    nums[1] = _edges.down.open;
+    nums[2] = _edges.right.open;
+    nums[3] = _edges.left.open;
+    for (var i=0;i < pieces.length;i++) {
+      for (var j=0;j < nums.length;j++) {
+        if(pieces[i][0] == nums[j] || pieces[i][1] == nums[j])
+          ok=false;
+      }
     }
-    /////////////////////////////////////////////////////////////////////////////VERIFICAR SE NÃO TEM OPÇÕES SE TIVER FAZER HIGHLIGHT
-    finishSelect(null,null);
+    if(ok)
+      finishSelect(null,null);
   }
 
   function finishSelect(piece, direction){
@@ -378,12 +402,15 @@ GameState = (function(){
 
 
     drawMove(data);
-
     _players[data.player.turn].ctn--;
     points = calculatePoints();
     if(points % 5 == 0){
       _players[data.player.turn].points += points;
       _score[data.player.team].total += points;
+    }
+    if(Link.getPlayer().turn != data.player.turn){
+      console.log(_totalPieces);
+      _totalPieces[data.player.turn].text = _players[data.player.turn].ctn;
     }
     _score[data.player.team].text.text = "pts "+_score[data.player.team].total;
 
@@ -429,7 +456,7 @@ GameState = (function(){
       edge.points = data.move.piece[0];
     }
 
-    edge.points = (data.move.piece[0]==data.move.piece[1]) ? edge.points * 2 : edge.points;
+    edge.points *= (data.move.piece[0]==data.move.piece[1]) ? 2 : 1;
 
     if(edge.total == 7 && (data.move.direction == 'right' || data.move.direction == 'left')){
       edge.blank.normal.angle += 90;

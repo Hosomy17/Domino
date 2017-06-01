@@ -74,7 +74,7 @@ Link = (function(){
 
 	return {
 				getLastMove  :getLastMove,
-				getPlayer	 :getPlayer,
+				getPlayer	   :getPlayer,
 				getStatus    :getStatus,
 				requestMatch :requestMatch,
 				sendMove     :sendMove
