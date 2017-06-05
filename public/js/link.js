@@ -7,7 +7,8 @@ Link = (function(){
 		turn   : 0,
 		team   : 0,
 		pieces : [],
-		status : 'connneted'
+		status : 'connneted',
+		room 	 : null
 	};
 
 	var _players;
@@ -36,6 +37,7 @@ Link = (function(){
 			break;
 		}
 		_player.team = (_player.turn == 1 || _player.turn == 3) ? 1 : 0;
+		_player.room = match.id;
 		_status = 'Ready';
 	});
 
@@ -72,11 +74,17 @@ Link = (function(){
 		_socket.emit('sendMove',msg);
 	}
 
+	function newRound(){
+		msg = {players:_players,room:_player.room};
+		_socket.emit('newRound',msg);
+	}
+
 	return {
 				getLastMove  :getLastMove,
 				getPlayer	   :getPlayer,
 				getStatus    :getStatus,
 				requestMatch :requestMatch,
-				sendMove     :sendMove
+				sendMove     :sendMove,
+				newRound     :newRound
 	};
 })();

@@ -64,28 +64,8 @@ io.on('connection', function(socket){
 
 		//Check if game already to start
 		if(match.players.length == STATIC.MAX_PLAYERS) {
-			//Shuffle domino
-			shufflePieces = [];
-			pieces = STATIC.DOMINO.slice();
-
-			while(pieces.length > 0)
-			{
-	            var piecesPlayer = [];
-
-	            for(var i=0; i<7; i++)
-	            {
-	            	var index = Math.floor(Math.random() * pieces.length);
-	            	if(index < 0)
-	            		index *= -1;
-
-	                piecesPlayer.push(pieces[index]);
-	                pieces.splice(index, 1);
-	            }
-
-	            shufflePieces.push(piecesPlayer);
-        	}
-
-      match.players[0].pieces = shufflePieces[0];
+			shufflePieces = drawPieces();
+			match.players[0].pieces = shufflePieces[0];
 			match.players[1].pieces = shufflePieces[1];
 			match.players[2].pieces = shufflePieces[2];
 			match.players[3].pieces = shufflePieces[3];
@@ -101,15 +81,28 @@ io.on('connection', function(socket){
 					match.players[i].turn = ++nextTurn;
 			}
 			matchs.progress.push(match);
-			io.to(match.id).emit('startMatch', {players:match.players});
-
+			io.to(match.id).emit('startMatch', {players:match.players,room:match.id});
 			console.info('Start game: ' + match.id);
+			console.info('Start new match: ' + match.id);
 		}
 		else {
 			matchs.avaliable.push(match);
 		}
 
 		socket.match = match;
+	});
+
+	socket.on('newRound', function(data){
+
+		shufflePieces = drawPieces();
+		players = [];
+		data.players[0].pieces = shufflePieces[0];
+		data.players[1].pieces = shufflePieces[1];
+		data.players[2].pieces = shufflePieces[2];
+		data.players[3].pieces = shufflePieces[3];
+
+		io.to(data.room).emit('startMatch', {players:data.players});
+		console.info('Start new round: ' + data.room);
 	});
 
 	socket.on('sendMove', function(data){
@@ -137,18 +130,38 @@ io.on('connection', function(socket){
 	});
 });
 
-function searchPiece(array, value)
-{
+function drawPieces(){
+	shufflePieces = [];
+	pieces = STATIC.DOMINO.slice();
+
+	while(pieces.length > 0){
+			var piecesPlayer = [];
+
+			for(var i=0; i<7; i++)
+			{
+				var index = Math.floor(Math.random() * pieces.length);
+				if(index < 0)
+					index *= -1;
+
+					piecesPlayer.push(pieces[index]);
+					pieces.splice(index, 1);
+			}
+
+			shufflePieces.push(piecesPlayer);
+	}
+
+	return shufflePieces;
+}
+
+function searchPiece(array, value){
 	result = null;
-	for(i = 0; i < array.length; i++)
-	{
+	for(i = 0; i < array.length; i++)	{
 		if(array[i][2] == 27)
 			result = array[i];
 	}
 	return result;
 }
 
-http.listen(3000, function()
-{
+http.listen(3000, function(){
 	console.log('Server on port 3000');
 });

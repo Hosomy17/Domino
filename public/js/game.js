@@ -262,7 +262,7 @@ GameState = (function(){
       turn++;
       if(turn >= 4)
         turn = 0;
-        
+
       text = null;
       if(turn != Link.getPlayer().turn){
         text = game.add.text(a, b%2*(-500), 7, style);
@@ -372,6 +372,8 @@ GameState = (function(){
     }
     if(ok)
       finishSelect(null,null);
+    if(_players[data.player.turn].ctn <= 1)
+      Link.newRound();
   }
 
   function finishSelect(piece, direction){
@@ -390,7 +392,6 @@ GameState = (function(){
   }
 
   function doMove(data){
-
 
     if(++_turn >= STATIC.TOTAL_PLAYERS)
       _turn = 0;
