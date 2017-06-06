@@ -9,8 +9,6 @@ GameState = (function(){
   var _turn = 0;
   var _countPass = 0;
   var _hand;
-  var _table;
-  var _hud;
   var _selectedPiece;
   var _flagStart = true;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>SOCORRO
   var _maxPieceRow = 0;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>maior numero de peças em uma fila
@@ -126,7 +124,8 @@ GameState = (function(){
 	}
 
 	function create(){
-    loadHand();
+    hand = new Hand(game);
+    hand.create();
     table = new Table(game);
     table.create();
     hud = new Hud(game);
@@ -138,39 +137,6 @@ GameState = (function(){
     if(move)
       doMove(move);
 	}
-
-  function loadHand(){
-      //Create Hand
-      _hand = game.add.sprite(game.world.centerX, game.world.height - 50, 'hand');//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< pocição
-      _hand.anchor.set(0.5);
-      _hand.scale.set(0.9);
-      pieces = Link.getPlayer().pieces;
-      for (var i = 0; i < STATIC.TOTAL_PIECES; i++){
-          piece = pieces[i];
-
-          //Create Sprite
-          //2 EXTRAS PIECES TO SIDES, STARTS BY -(TOTAL_PIECES/2) ENDS TO TOTAL_PIECES/2
-          //[-4]* [-3] [-2] [-1] [0] [1] [2] [3] [4]*  EXEMPLE TOTAL=7 PIECES
-          sprite = game.add.sprite(_hand.width/(STATIC.TOTAL_PIECES + 2)*(i-(Math.floor(STATIC.TOTAL_PIECES/2))), 0, 'domino', piece[2]);//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< pocição e melhorar atributos da peça
-          sprite.anchor.set(0.5);
-
-          //Set input listener
-          sprite.piece = piece;
-          sprite.inputEnabled = true;
-          sprite.events.onInputDown.add(
-          function(obj){
-              if(_turn == Link.getPlayer().turn){
-                  _selectedPiece = obj;
-                  showBlanks();
-              }
-          });
-
-          //Add to hand
-          _hand.addChild(sprite);
-      }
-      buttonExit = game.add.button(game.world.width - 100, game.world.height - 50, 'pass', skipMove, this, 0, 1, 2);//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< pocição
-      //buttonExit.anchor.set(0.5);
-  }
 
   function showBlanks(){
     _edges.center.blank.visible       = false;
