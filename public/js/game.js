@@ -1,11 +1,10 @@
+var STATIC = {
+    TOTAL_PLAYERS : 4,
+    TOTAL_PIECES  : 7,
+    WIDTH_PIECE   : 68,
+    HEIGHT_PIECE  : 134
+}
 GameState = (function(){
-
-  var STATIC = {
-      TOTAL_PLAYERS : 4,
-      TOTAL_PIECES  : 7,
-      WIDTH_PIECE   : 68,
-      HEIGHT_PIECE  : 134
-  }
 
   var _turn = 0;
   var _countPass = 0;
@@ -127,8 +126,9 @@ GameState = (function(){
 	}
 
 	function create(){
-    loadTable();
     loadHand();
+    table = new Table(game);
+    table.create();
     hud = new Hud(game);
     hud.create();
 	}
@@ -138,119 +138,6 @@ GameState = (function(){
     if(move)
       doMove(move);
 	}
-
-  function loadTable(){
-      _table = game.add.sprite(game.world.centerX,game.world.centerY,'table');
-      _table.anchor.set(0.5);
-      _table.scale.set(1);
-
-      sprite = game.add.sprite(0,0,'blank');
-      sprite.anchor.set(0.5);
-      sprite.visible = false;
-      sprite.inputEnabled = true;
-      sprite.events.onInputDown.add(function(obj){
-          _selectedPiece.visible = false;
-          finishSelect(_selectedPiece.piece, "center");
-      });
-      _table.addChild(sprite);
-      _edges.center.blank.normal = sprite;
-      _edges.center.blank.side = sprite;
-
-      sprite = game.add.sprite(0,-STATIC.HEIGHT_PIECE,'blank');
-      sprite.anchor.set(0.5);
-      sprite.visible = false;
-      sprite.inputEnabled = true;
-      sprite.events.onInputDown.add(function(obj){
-          _selectedPiece.visible = false;
-          finishSelect(_selectedPiece.piece, "up");
-      });
-      _table.addChild(sprite);
-      _edges.up.blank.normal = sprite;
-
-      sprite = game.add.sprite(0,- (STATIC.HEIGHT_PIECE + STATIC.WIDTH_PIECE)/2,'blank');
-      sprite.anchor.set(0.5);
-      sprite.angle = 90;
-      sprite.visible = false;
-      sprite.inputEnabled = true;
-      sprite.events.onInputDown.add(function(obj){
-          _selectedPiece.visible = false;
-          finishSelect(_selectedPiece.piece, "up");
-      });
-      _table.addChild(sprite);
-      _edges.up.blank.side = sprite;
-
-      sprite = game.add.sprite(0,STATIC.HEIGHT_PIECE,'blank');
-      sprite.anchor.set(0.5);
-      sprite.angle = 180;
-      sprite.visible = false;
-      sprite.inputEnabled = true;
-      sprite.events.onInputDown.add(function(obj){
-          _selectedPiece.visible = false;
-          finishSelect(_selectedPiece.piece, "down");
-      });
-      _table.addChild(sprite);
-      _edges.down.blank.normal = sprite;
-
-      sprite = game.add.sprite(0,(STATIC.HEIGHT_PIECE + STATIC.WIDTH_PIECE)/2,'blank');
-      sprite.anchor.set(0.5);
-      sprite.angle = 270;
-      sprite.visible = false;
-      sprite.inputEnabled = true;
-      sprite.events.onInputDown.add(function(obj){
-          _selectedPiece.visible = false;
-          finishSelect(_selectedPiece.piece, "down");
-      });
-      _table.addChild(sprite);
-      _edges.down.blank.side = sprite;
-
-
-      sprite = game.add.sprite((STATIC.HEIGHT_PIECE + STATIC.WIDTH_PIECE)/2,0,'blank');
-      sprite.anchor.set(0.5);
-      sprite.angle = 90;
-      sprite.visible = false;
-      sprite.inputEnabled = true;
-      sprite.events.onInputDown.add(function(obj){
-          _selectedPiece.visible = false;
-          finishSelect(_selectedPiece.piece, "right");
-      });
-      _table.addChild(sprite);
-      _edges.right.blank.normal = sprite;
-
-      sprite = game.add.sprite(STATIC.WIDTH_PIECE,0,'blank');
-      sprite.anchor.set(0.5);
-      sprite.angle = 180;
-      sprite.visible = false;
-      sprite.inputEnabled = true;
-      sprite.events.onInputDown.add(function(obj){
-          _selectedPiece.visible = false;
-          finishSelect(_selectedPiece.piece, "right");
-      });
-      _table.addChild(sprite);
-      _edges.right.blank.side = sprite;
-
-      sprite = game.add.sprite(-(STATIC.HEIGHT_PIECE + STATIC.WIDTH_PIECE)/2,0,'blank');
-      sprite.anchor.set(0.5);
-      sprite.angle = 270;
-      sprite.visible = false;
-      sprite.inputEnabled = true;
-      sprite.events.onInputDown.add(function(obj){
-          _selectedPiece.visible = false;
-          finishSelect(_selectedPiece.piece, "left");
-      });
-      _table.addChild(sprite);
-      _edges.left.blank.normal = sprite;
-
-      sprite = game.add.sprite(-STATIC.WIDTH_PIECE,0,'blank');
-      sprite.anchor.set(0.5);
-      sprite.visible = false;
-      sprite.inputEnabled = true;
-      sprite.events.onInputDown.add(function(obj){
-          _selectedPiece.visible = false;
-          finishSelect(_selectedPiece.piece, "left");
-      });
-      _table.addChild(sprite);
-      _edges.left.blank.side = sprite;
-  }
 
   function loadHand(){
       //Create Hand

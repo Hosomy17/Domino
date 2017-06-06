@@ -4,7 +4,8 @@ function preload(){
 	game.load.script('menu','/js/menu.js');
 	game.load.script('load','/js/load.js');
 	game.load.script('game','/js/game.js');
-	game.load.script('teste','/js/classes/Hud.js');
+	game.load.script('hud','/js/classes/Hud.js');
+	game.load.script('table','/js/classes/Table.js');
 }
 
 function create(){
