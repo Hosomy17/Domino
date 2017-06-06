@@ -73,15 +73,16 @@ io.on('connection', function(socket){
 			//Turn each player
 			// 0 1 2 3
 			nextTurn = 0;
-			for(i = 0; i < 4; i++)
-			{
+			for(var i = 0; i < 4; i++){
+
+
 				if(searchPiece(match.players[i].pieces, 27))
 					match.players[i].turn = 0;
 				else
 					match.players[i].turn = ++nextTurn;
 			}
 			matchs.progress.push(match);
-			io.to(match.id).emit('startMatch', {players:match.players,room:match.id});
+			io.to(match.id).emit('startMatch', {players:match.players,match:match});
 			console.info('Start game: ' + match.id);
 			console.info('Start new match: ' + match.id);
 		}

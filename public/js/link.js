@@ -37,7 +37,7 @@ Link = (function(){
 			break;
 		}
 		_player.team = (_player.turn == 1 || _player.turn == 3) ? 1 : 0;
-		_player.room = match.id;
+		_player.room = data.match.id;
 		_status = 'Ready';
 	});
 
