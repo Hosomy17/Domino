@@ -1,90 +1,80 @@
 var Edges = function(){
-  return {
+  this.edges = {
     center : {
-      blank : {
-        normal : null,
-        side   : null
-      },
-      open    : null,
-      points  : 0,
-      total   : 0,
-      block   : false,
-      nextPosition : function(blank, orietantion){}
+      blank  : {normal : null, side : null},
+      open   : null,
+      points : 0,
+      total  : 0,
+      block  : false
     },
     up : {
-      blank : {
-        normal : null,
-        side   : null
-      },
-      open     : null,
-      points  : 0,
-      total    : 0,
-      nextPosition : function(blank, orietantion){
-        if(orietantion == 'normal'){
-          blank.side.y = blank.normal.y - (STATIC.WIDTH_PIECE+ STATIC.HEIGHT_PIECE)/2;
-          blank.normal.y -= STATIC.HEIGHT_PIECE;
-        }
-        else {
-          blank.normal.y = blank.side.y - (STATIC.WIDTH_PIECE + STATIC.HEIGHT_PIECE)/2;
-          blank.side.y -= STATIC.WIDTH_PIECE;
-        }
-      }
+      blank  : {normal : null, side : null},
+      open   : null,
+      points : 0,
+      total  : 0
     },
     down : {
-      blank : {
-        normal : null,
-        side   : null
-      },
-      open     : null,
-      points  : 0,
-      total    : 0,
-      nextPosition : function(blank, orietantion) {
-        if(orietantion == 'normal'){
-          blank.side.y = blank.normal.y + (STATIC.WIDTH_PIECE+ STATIC.HEIGHT_PIECE)/2;
-          blank.normal.y += STATIC.HEIGHT_PIECE;
-        }
-        else {
-          blank.normal.y = blank.side.y + (STATIC.WIDTH_PIECE+ STATIC.HEIGHT_PIECE)/2;
-          blank.side.y += STATIC.WIDTH_PIECE;
-        }
-      }
+      blank  : {normal : null, side : null},
+      open   : null,
+      points : 0,
+      total  : 0
     },
     right : {
-      blank : {
-        normal : null,
-        side   : null
-      },
-      open     : null,
-      points  : 0,
-      total    : 0,
-      nextPosition : function(blank, orietantion) {
-        if(orietantion == 'normal'){
-          blank.side.x = blank.normal.x + (STATIC.WIDTH_PIECE + STATIC.HEIGHT_PIECE)/2;
-          blank.normal.x += STATIC.HEIGHT_PIECE;
-        }
-        else {
-          blank.normal.x = blank.side.x + (STATIC.WIDTH_PIECE+ STATIC.HEIGHT_PIECE)/2;
-          blank.side.x += STATIC.WIDTH_PIECE;
-        }
-      }
+      blank  : {normal : null, side : null},
+      open   : null,
+      points : 0,
+      total  : 0
     },
     left : {
-      blank : {
-        normal : null,
-        side   : null
-      },
-      open     : null,
-      points  : 0,
-      total    : 0,
-      nextPosition : function(blank, orietantion) {
-        if(orietantion == 'normal'){
-          blank.side.x = blank.normal.x - (STATIC.WIDTH_PIECE + STATIC.HEIGHT_PIECE)/2;
-          blank.normal.x -= STATIC.HEIGHT_PIECE;
-        }
-        else {
-          blank.normal.x = blank.side.x - (STATIC.WIDTH_PIECE+ STATIC.HEIGHT_PIECE)/2;
-          blank.side.x -= STATIC.WIDTH_PIECE;
-        }
+      blank  : {normal : null, side : null},
+      open   : null,
+      points : 0,
+      total  : 0
+    }
+  }
+}
+
+Edges.prototype = {
+  create : function(){
+    this.edges.center.nextPosition = function(blank, orietantion){};
+    this.edges.up.nextPosition = function(blank, orietantion){
+      if(orietantion == 'normal'){
+        blank.side.y = blank.normal.y - (STATIC.WIDTH_PIECE+ STATIC.HEIGHT_PIECE)/2;
+        blank.normal.y -= STATIC.HEIGHT_PIECE;
+      }
+      else {
+        blank.normal.y = blank.side.y - (STATIC.WIDTH_PIECE + STATIC.HEIGHT_PIECE)/2;
+        blank.side.y -= STATIC.WIDTH_PIECE;
+      }
+    }
+    this.edges.down.nextPosition = function(blank, orietantion) {
+      if(orietantion == 'normal'){
+        blank.side.y = blank.normal.y + (STATIC.WIDTH_PIECE+ STATIC.HEIGHT_PIECE)/2;
+        blank.normal.y += STATIC.HEIGHT_PIECE;
+      }
+      else {
+        blank.normal.y = blank.side.y + (STATIC.WIDTH_PIECE+ STATIC.HEIGHT_PIECE)/2;
+        blank.side.y += STATIC.WIDTH_PIECE;
+      }
+    }
+    this.edges.right.nextPosition = function(blank, orietantion) {
+      if(orietantion == 'normal'){
+        blank.side.x = blank.normal.x + (STATIC.WIDTH_PIECE + STATIC.HEIGHT_PIECE)/2;
+        blank.normal.x += STATIC.HEIGHT_PIECE;
+      }
+      else {
+        blank.normal.x = blank.side.x + (STATIC.WIDTH_PIECE+ STATIC.HEIGHT_PIECE)/2;
+        blank.side.x += STATIC.WIDTH_PIECE;
+      }
+    }
+    this.edges.left.nextPosition = function(blank, orietantion) {
+      if(orietantion == 'normal'){
+        blank.side.x = blank.normal.x - (STATIC.WIDTH_PIECE + STATIC.HEIGHT_PIECE)/2;
+        blank.normal.x -= STATIC.HEIGHT_PIECE;
+      }
+      else {
+        blank.normal.x = blank.side.x - (STATIC.WIDTH_PIECE+ STATIC.HEIGHT_PIECE)/2;
+        blank.side.x -= STATIC.WIDTH_PIECE;
       }
     }
   }

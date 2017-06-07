@@ -8,7 +8,6 @@ GameState = (function(){
 
   var _turn = 0;
   var _countPass = 0;
-  var _hand;
   var _selectedPiece;
   var _flagStart = true;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>SOCORRO
   var _maxPieceRow = 0;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>maior numero de peças em uma fila
@@ -36,7 +35,7 @@ GameState = (function(){
 	}
 
 	function create(){
-    _edges = Edges();
+    _edges = new Edges();
     hand = new Hand(game);
     hand.create();
     table = new Table(game);
@@ -52,33 +51,33 @@ GameState = (function(){
 	}
 
   function showBlanks(){
-    _edges.center.blank.visible       = false;
-    _edges.up.blank.side.visible      = false;
-    _edges.down.blank.side.visible    = false;
-    _edges.left.blank.side.visible    = false;
-    _edges.right.blank.side.visible   = false;
-    _edges.up.blank.normal.visible    = false;
-    _edges.down.blank.normal.visible  = false;
-    _edges.left.blank.normal.visible  = false;
-    _edges.right.blank.normal.visible = false;
+    _edges.edges.center.blank.visible       = false;
+    _edges.edges.up.blank.side.visible      = false;
+    _edges.edges.down.blank.side.visible    = false;
+    _edges.edges.left.blank.side.visible    = false;
+    _edges.edges.right.blank.side.visible   = false;
+    _edges.edges.up.blank.normal.visible    = false;
+    _edges.edges.down.blank.normal.visible  = false;
+    _edges.edges.left.blank.normal.visible  = false;
+    _edges.edges.right.blank.normal.visible = false;
     if(_flagStart){
-      _edges.center.blank.normal.visible = (_selectedPiece.piece[0] + _selectedPiece.piece[1] == 12) ? true : false;
+      _edges.edges.center.blank.normal.visible = (_selectedPiece.piece[0] + _selectedPiece.piece[1] == 12) ? true : false;
     }
     else if (_selectedPiece.piece[0] == _selectedPiece.piece[1]){
-      if(_edges.left.total > 0 && _edges.right.total > 0){
-        _edges.up.blank.side.visible    = (_selectedPiece.piece[0] == _edges.up.open) ? true : false;
-        _edges.down.blank.side.visible  = (_selectedPiece.piece[0] == _edges.down.open) ? true : false;
+      if(_edges.edges.left.total > 0 && _edges.edges.right.total > 0){
+        _edges.edges.up.blank.side.visible    = (_selectedPiece.piece[0] == _edges.edges.up.open) ? true : false;
+        _edges.edges.down.blank.side.visible  = (_selectedPiece.piece[0] == _edges.edges.down.open) ? true : false;
       }
-      _edges.left.blank.side.visible  = (_selectedPiece.piece[0] == _edges.left.open) ? true : false;
-      _edges.right.blank.side.visible = (_selectedPiece.piece[0] == _edges.right.open) ? true : false;
+      _edges.edges.left.blank.side.visible  = (_selectedPiece.piece[0] == _edges.edges.left.open) ? true : false;
+      _edges.edges.right.blank.side.visible = (_selectedPiece.piece[0] == _edges.edges.right.open) ? true : false;
     }
     else{
-      if(_edges.left.total > 0 && _edges.right.total > 0){
-        _edges.up.blank.normal.visible    = (_selectedPiece.piece[0] == _edges.up.open || _selectedPiece.piece[1] == _edges.up.open) ? true : false;
-        _edges.down.blank.normal.visible  = (_selectedPiece.piece[0] == _edges.down.open || _selectedPiece.piece[1] == _edges.down.open) ? true : false;
+      if(_edges.edges.left.total > 0 && _edges.edges.right.total > 0){
+        _edges.edges.up.blank.normal.visible    = (_selectedPiece.piece[0] == _edges.edges.up.open || _selectedPiece.piece[1] == _edges.edges.up.open) ? true : false;
+        _edges.edges.down.blank.normal.visible  = (_selectedPiece.piece[0] == _edges.edges.down.open || _selectedPiece.piece[1] == _edges.edges.down.open) ? true : false;
       }
-      _edges.left.blank.normal.visible  = (_selectedPiece.piece[0] == _edges.left.open || _selectedPiece.piece[1] == _edges.left.open) ? true : false;
-      _edges.right.blank.normal.visible = (_selectedPiece.piece[0] == _edges.right.open || _selectedPiece.piece[1] == _edges.right.open) ? true : false;
+      _edges.edges.left.blank.normal.visible  = (_selectedPiece.piece[0] == _edges.edges.left.open || _selectedPiece.piece[1] == _edges.edges.left.open) ? true : false;
+      _edges.edges.right.blank.normal.visible = (_selectedPiece.piece[0] == _edges.edges.right.open || _selectedPiece.piece[1] == _edges.edges.right.open) ? true : false;
     }
   }
 
@@ -89,10 +88,10 @@ GameState = (function(){
 
     pieces = Link.getPlayer().pieces;
     nums = [];
-    nums[0] = _edges.up.open;
-    nums[1] = _edges.down.open;
-    nums[2] = _edges.right.open;
-    nums[3] = _edges.left.open;
+    nums[0] = _edges.edges.up.open;
+    nums[1] = _edges.edges.down.open;
+    nums[2] = _edges.edges.right.open;
+    nums[3] = _edges.edges.left.open;
     for (var i=0;i < pieces.length;i++) {
       for (var j=0;j < nums.length;j++) {
         if(pieces[i][0] == nums[j] || pieces[i][1] == nums[j])
@@ -106,15 +105,15 @@ GameState = (function(){
   }
 
   function finishSelect(piece, direction){
-    _edges.center.blank.normal.visible = false;
-    _edges.up.blank.side.visible       = false;
-    _edges.down.blank.side.visible     = false;
-    _edges.left.blank.side.visible     = false;
-    _edges.right.blank.side.visible    = false;
-    _edges.up.blank.normal.visible     = false;
-    _edges.down.blank.normal.visible   = false;
-    _edges.left.blank.normal.visible   = false;
-    _edges.right.blank.normal.visible  = false;
+    _edges.edges.center.blank.normal.visible = false;
+    _edges.edges.up.blank.side.visible       = false;
+    _edges.edges.down.blank.side.visible     = false;
+    _edges.edges.left.blank.side.visible     = false;
+    _edges.edges.right.blank.side.visible    = false;
+    _edges.edges.up.blank.normal.visible     = false;
+    _edges.edges.down.blank.normal.visible   = false;
+    _edges.edges.left.blank.normal.visible   = false;
+    _edges.edges.right.blank.normal.visible  = false;
 
     move = {piece:piece, direction:direction};
     Link.sendMove(move);
@@ -146,11 +145,11 @@ GameState = (function(){
 
     if(_flagStart){
       _flagStart = false;
-      _edges.up.open     = data.move.piece[0];
-      _edges.down.open   = data.move.piece[0];
-      _edges.left.open   = data.move.piece[0];
-      _edges.right.open  = data.move.piece[0];
-      _edges.center.open = data.move.piece[0];
+      _edges.edges.up.open     = data.move.piece[0];
+      _edges.edges.down.open   = data.move.piece[0];
+      _edges.edges.left.open   = data.move.piece[0];
+      _edges.edges.right.open  = data.move.piece[0];
+      _edges.edges.center.open = data.move.piece[0];
     }
 
     sprite.anchor.set(0.5);
@@ -169,7 +168,7 @@ GameState = (function(){
 
   function drawMove(data){
     orientation = (data.move.piece[0] == data.move.piece[1] ) ? 'side' : 'normal';
-    edge = _edges[data.move.direction];
+    edge = _edges.edges[data.move.direction];
 
     sprite = game.add.sprite(edge.blank[orientation].x,edge.blank[orientation].y,'domino',data.move.piece[2]);//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<melhorar atributos
     sprite.angle = edge.blank[orientation].angle;
@@ -235,9 +234,9 @@ GameState = (function(){
 
   function calculatePoints(){
 
-    _edges.center.points *= (_edges.left.total > 0 && _edges.right.total > 0) ? 0 : 1;
+    _edges.edges.center.points *= (_edges.edges.left.total > 0 && _edges.edges.right.total > 0) ? 0 : 1;
 
-    points = _edges.center.points + _edges.up.points + _edges.right.points + _edges.down.points + _edges.left.points;
+    points = _edges.edges.center.points + _edges.edges.up.points + _edges.edges.right.points + _edges.edges.down.points + _edges.edges.left.points;
     return points;
   }
 
