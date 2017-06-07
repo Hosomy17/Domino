@@ -7,6 +7,7 @@ function preload(){
 	game.load.script('hud','/js/classes/Hud.js');
 	game.load.script('table','/js/classes/Table.js');
 	game.load.script('hand','/js/classes/hand.js');
+	game.load.script('edges','/js/classes/Edges.js');
 
 }
 
