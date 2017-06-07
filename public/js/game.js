@@ -8,31 +8,34 @@ GameState = (function(){
 
   var _turn = 0;
   var _countPass = 0;
-  var _selectedPiece;
   var _flagStart = true;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>SOCORRO
   var _maxPieceRow = 0;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>maior numero de peças em uma fila
   var _scaleTable = 1;
   var _players = [];
-  var _score = [];
-  var _totalPieces = [];
   var _edges = null;
+  var _score = null;
+  var _table = null;
 
 	function preload(){
     this.load.spritesheet('domino', 'assets/sprites/domino.png',STATIC.WIDTH_PIECE,STATIC.HEIGHT_PIECE);//<<<<<<<<<<<<<<<<<<<<<<<< dimenção
-    this.load.spritesheet('hand', 'assets/sprites/hand.png');//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< spritesheet??????
-    this.load.spritesheet('table', 'assets/sprites/table.png');//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< spritesheet??????
-    this.load.spritesheet('blank', 'assets/sprites/blank.png');//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< spritesheet??????
-    this.load.spritesheet('pass', 'assets/sprites/pass.png',90,30);
+    this.load.spritesheet('hand',   'assets/sprites/hand.png');//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< spritesheet??????
+    this.load.spritesheet('table',  'assets/sprites/table.png');//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< spritesheet??????
+    this.load.spritesheet('blank',  'assets/sprites/blank.png');//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< spritesheet??????
+    this.load.spritesheet('pass',   'assets/sprites/pass.png',90,30);
 	}
 
 	function create(){
     _edges = new Edges();
-    hand = new Hand(game);
+    _edges.create();
+    hand = new Hand(game, _edges, _turn);
     hand.create();
-    table = new Table(game);
+    table = new Table(game, _edges);
     table.create();
     hud = new Hud(game);
     hud.create();
+    _players = hud.players;
+    _score = hud.score;
+    _table = table.group;
 	}
 
 	function update(){
@@ -40,37 +43,6 @@ GameState = (function(){
     if(move)
       doMove(move);
 	}
-
-  function showBlanks(){
-    _edges.edges.center.blank.visible       = false;
-    _edges.edges.up.blank.side.visible      = false;
-    _edges.edges.down.blank.side.visible    = false;
-    _edges.edges.left.blank.side.visible    = false;
-    _edges.edges.right.blank.side.visible   = false;
-    _edges.edges.up.blank.normal.visible    = false;
-    _edges.edges.down.blank.normal.visible  = false;
-    _edges.edges.left.blank.normal.visible  = false;
-    _edges.edges.right.blank.normal.visible = false;
-    if(_flagStart){
-      _edges.edges.center.blank.normal.visible = (_selectedPiece.piece[0] + _selectedPiece.piece[1] == 12) ? true : false;
-    }
-    else if (_selectedPiece.piece[0] == _selectedPiece.piece[1]){
-      if(_edges.edges.left.total > 0 && _edges.edges.right.total > 0){
-        _edges.edges.up.blank.side.visible    = (_selectedPiece.piece[0] == _edges.edges.up.open) ? true : false;
-        _edges.edges.down.blank.side.visible  = (_selectedPiece.piece[0] == _edges.edges.down.open) ? true : false;
-      }
-      _edges.edges.left.blank.side.visible  = (_selectedPiece.piece[0] == _edges.edges.left.open) ? true : false;
-      _edges.edges.right.blank.side.visible = (_selectedPiece.piece[0] == _edges.edges.right.open) ? true : false;
-    }
-    else{
-      if(_edges.edges.left.total > 0 && _edges.edges.right.total > 0){
-        _edges.edges.up.blank.normal.visible    = (_selectedPiece.piece[0] == _edges.edges.up.open || _selectedPiece.piece[1] == _edges.edges.up.open) ? true : false;
-        _edges.edges.down.blank.normal.visible  = (_selectedPiece.piece[0] == _edges.edges.down.open || _selectedPiece.piece[1] == _edges.edges.down.open) ? true : false;
-      }
-      _edges.edges.left.blank.normal.visible  = (_selectedPiece.piece[0] == _edges.edges.left.open || _selectedPiece.piece[1] == _edges.edges.left.open) ? true : false;
-      _edges.edges.right.blank.normal.visible = (_selectedPiece.piece[0] == _edges.edges.right.open || _selectedPiece.piece[1] == _edges.edges.right.open) ? true : false;
-    }
-  }
 
   function skipMove(){
     ok=true;
@@ -90,24 +62,9 @@ GameState = (function(){
       }
     }
     if(ok)
-      finishSelect(null,null);
+      _edges.finishSelect(null,null);
     if(_players[data.player.turn].ctn <= 1)
       Link.newRound();
-  }
-
-  function finishSelect(piece, direction){
-    _edges.edges.center.blank.normal.visible = false;
-    _edges.edges.up.blank.side.visible       = false;
-    _edges.edges.down.blank.side.visible     = false;
-    _edges.edges.left.blank.side.visible     = false;
-    _edges.edges.right.blank.side.visible    = false;
-    _edges.edges.up.blank.normal.visible     = false;
-    _edges.edges.down.blank.normal.visible   = false;
-    _edges.edges.left.blank.normal.visible   = false;
-    _edges.edges.right.blank.normal.visible  = false;
-
-    move = {piece:piece, direction:direction};
-    Link.sendMove(move);
   }
 
   function doMove(data){
@@ -120,7 +77,6 @@ GameState = (function(){
       return 0;
     }
 
-
     drawMove(data);
     _players[data.player.turn].ctn--;
     points = calculatePoints();
@@ -129,13 +85,12 @@ GameState = (function(){
       _score[data.player.team].total += points;
     }
     if(Link.getPlayer().turn != data.player.turn){
-      console.log(_totalPieces);
-      _totalPieces[data.player.turn].text = _players[data.player.turn].ctn;
+      _players[data.player.turn].totalPieces.text = _players[data.player.turn].ctn;
     }
     _score[data.player.team].text.text = "pts "+_score[data.player.team].total;
 
-    if(_flagStart){
-      _flagStart = false;
+    if(_edges.flagStart){
+      _edges.flagStart = false;
       _edges.edges.up.open     = data.move.piece[0];
       _edges.edges.down.open   = data.move.piece[0];
       _edges.edges.left.open   = data.move.piece[0];
@@ -183,14 +138,14 @@ GameState = (function(){
       edge.blank.side.angle += 90;
       switch (data.move.direction) {
         case 'right':
-          edge.nextPosition    = _edges.formaulaPositions.down;
+          edge.nextPosition    = _edges.formulaPositions.down;
           edge.blank.normal.y -= STATIC.WIDTH_PIECE/2;
           edge.blank.side.y   -= STATIC.WIDTH_PIECE/2;
           edge.blank.normal.x += STATIC.WIDTH_PIECE/2;
           edge.blank.side.x   += STATIC.WIDTH_PIECE;
         break;
         case 'left':
-          edge.nextPosition    = _edges.formaulaPositions.up;
+          edge.nextPosition    = _edges.formulaPositions.up;
           edge.blank.normal.y += STATIC.WIDTH_PIECE/2;
           edge.blank.side.y   += STATIC.WIDTH_PIECE/2;
           edge.blank.normal.x -= STATIC.WIDTH_PIECE/2;
@@ -203,14 +158,14 @@ GameState = (function(){
       edge.blank.side.angle += 90;
       switch (data.move.direction) {
         case 'up':
-          edge.nextPosition     = _edges.formaulaPositions.right;
-           edge.blank.normal.x -= STATIC.WIDTH_PIECE/2;
-           edge.blank.side.x   -= STATIC.WIDTH_PIECE/2;
-           edge.blank.normal.y -= STATIC.WIDTH_PIECE/2;
-           edge.blank.side.y   -= STATIC.WIDTH_PIECE;
+          edge.nextPosition     = _edges.formulaPositions.right;
+          edge.blank.normal.x -= STATIC.WIDTH_PIECE/2;
+          edge.blank.side.x   -= STATIC.WIDTH_PIECE/2;
+          edge.blank.normal.y -= STATIC.WIDTH_PIECE/2;
+          edge.blank.side.y   -= STATIC.WIDTH_PIECE;
         break;
         case 'down':
-          edge.nextPosition    = _edges.formaulaPositions.left;
+          edge.nextPosition    = _edges.formulaPositions.left;
           edge.blank.normal.x += STATIC.WIDTH_PIECE/2;
           edge.blank.side.x   += STATIC.WIDTH_PIECE/2;
           edge.blank.normal.y += STATIC.WIDTH_PIECE/2;

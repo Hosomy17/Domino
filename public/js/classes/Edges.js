@@ -34,10 +34,12 @@ var Edges = function(){
   };
   this.formulaPositions = {
     up    : null,
-    down : null,
-    right  : null,
+    down  : null,
+    right : null,
     left  : null
   };
+  this.selectedPiece = null;
+  this.flagStart = true;
 }
 
 Edges.prototype = {
@@ -87,5 +89,51 @@ Edges.prototype = {
     this.formulaPositions.down  = this.edges.down.nextPosition;
     this.formulaPositions.right = this.edges.right.nextPosition;
     this.formulaPositions.left  = this.edges.left.nextPosition;
+  },
+
+  showBlanks : function(){
+    this.edges.center.blank.visible       = false;
+    this.edges.up.blank.side.visible      = false;
+    this.edges.down.blank.side.visible    = false;
+    this.edges.left.blank.side.visible    = false;
+    this.edges.right.blank.side.visible   = false;
+    this.edges.up.blank.normal.visible    = false;
+    this.edges.down.blank.normal.visible  = false;
+    this.edges.left.blank.normal.visible  = false;
+    this.edges.right.blank.normal.visible = false;
+    if(this.flagStart){
+      this.edges.center.blank.normal.visible = (this.selectedPiece.piece[0] + this.selectedPiece.piece[1] == 12) ? true : false;
+    }
+    else if (this.selectedPiece.piece[0] == this.selectedPiece.piece[1]){
+      if(this.edges.left.total > 0 && this.edges.right.total > 0){
+        this.edges.up.blank.side.visible    = (this.selectedPiece.piece[0] == this.edges.up.open) ? true : false;
+        this.edges.down.blank.side.visible  = (this.selectedPiece.piece[0] == this.edges.down.open) ? true : false;
+      }
+      this.edges.left.blank.side.visible  = (this.selectedPiece.piece[0] == this.edges.left.open) ? true : false;
+      this.edges.right.blank.side.visible = (this.selectedPiece.piece[0] == this.edges.right.open) ? true : false;
+    }
+    else{
+      if(this.edges.left.total > 0 && this.edges.right.total > 0){
+        this.edges.up.blank.normal.visible   = (this.selectedPiece.piece[0] == this.edges.up.open || this.selectedPiece.piece[1] == this.edges.up.open) ? true : false;
+        this.edges.down.blank.normal.visible = (this.selectedPiece.piece[0] == this.edges.down.open || this.selectedPiece.piece[1] == this.edges.down.open) ? true : false;
+      }
+      this.edges.left.blank.normal.visible  = (this.selectedPiece.piece[0] == this.edges.left.open || this.selectedPiece.piece[1] == this.edges.left.open) ? true : false;
+      this.edges.right.blank.normal.visible = (this.selectedPiece.piece[0] == this.edges.right.open || this.selectedPiece.piece[1] == this.edges.right.open) ? true : false;
+    }
+  },
+
+  finishSelect : function(piece, direction){
+    this.edges.center.blank.normal.visible = false;
+    this.edges.up.blank.side.visible       = false;
+    this.edges.down.blank.side.visible     = false;
+    this.edges.left.blank.side.visible     = false;
+    this.edges.right.blank.side.visible    = false;
+    this.edges.up.blank.normal.visible     = false;
+    this.edges.down.blank.normal.visible   = false;
+    this.edges.left.blank.normal.visible   = false;
+    this.edges.right.blank.normal.visible  = false;
+
+    move = {piece:piece, direction:direction};
+    Link.sendMove(move);
   }
 }

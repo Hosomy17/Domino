@@ -1,5 +1,7 @@
-var Hand = function(game){
-  this.game = game;
+var Hand = function(game, edges, turn){
+  this.game  = game;
+  this.edges = edges;
+  this.turn = turn;
   this.group = null;
 }
 
@@ -22,12 +24,13 @@ Hand.prototype = {
         //Set input listener
         sprite.piece = piece;
         sprite.inputEnabled = true;
+        var edges = this.edges;
         sprite.events.onInputDown.add(
         function(obj){
-            // if(_turn == Link.getPlayer().turn){
-            //     _selectedPiece = obj;
-            //     showBlanks();
-            // }
+            if(this.turn == Link.getPlayer().turn){
+                edges.selectedPiece = obj;
+                edges.showBlanks();
+            }
         });
 
         //Add to hand
