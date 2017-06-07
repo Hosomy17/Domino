@@ -31,7 +31,13 @@ var Edges = function(){
       points : 0,
       total  : 0
     }
-  }
+  };
+  this.formulaPositions = {
+    up    : null,
+    down : null,
+    right  : null,
+    left  : null
+  };
 }
 
 Edges.prototype = {
@@ -77,5 +83,9 @@ Edges.prototype = {
         blank.side.x -= STATIC.WIDTH_PIECE;
       }
     }
+    this.formulaPositions.up    = this.edges.up.nextPosition;
+    this.formulaPositions.down  = this.edges.down.nextPosition;
+    this.formulaPositions.right = this.edges.right.nextPosition;
+    this.formulaPositions.left  = this.edges.left.nextPosition;
   }
 }

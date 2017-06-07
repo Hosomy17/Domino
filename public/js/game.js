@@ -15,16 +15,7 @@ GameState = (function(){
   var _players = [];
   var _score = [];
   var _totalPieces = [];
-
-
   var _edges = null;
-
-  // var _formulaPositions = {
-  //   up    : _edges.up.nextPosition,
-  //   right : _edges.right.nextPosition,
-  //   down  : _edges.down.nextPosition,
-  //   left  : _edges.left.nextPosition
-  // }
 
 	function preload(){
     this.load.spritesheet('domino', 'assets/sprites/domino.png',STATIC.WIDTH_PIECE,STATIC.HEIGHT_PIECE);//<<<<<<<<<<<<<<<<<<<<<<<< dimenção
@@ -192,14 +183,14 @@ GameState = (function(){
       edge.blank.side.angle += 90;
       switch (data.move.direction) {
         case 'right':
-          edge.nextPosition    = _formulaPositions.down;
+          edge.nextPosition    = _edges.formaulaPositions.down;
           edge.blank.normal.y -= STATIC.WIDTH_PIECE/2;
           edge.blank.side.y   -= STATIC.WIDTH_PIECE/2;
           edge.blank.normal.x += STATIC.WIDTH_PIECE/2;
           edge.blank.side.x   += STATIC.WIDTH_PIECE;
         break;
         case 'left':
-          edge.nextPosition    = _formulaPositions.up;
+          edge.nextPosition    = _edges.formaulaPositions.up;
           edge.blank.normal.y += STATIC.WIDTH_PIECE/2;
           edge.blank.side.y   += STATIC.WIDTH_PIECE/2;
           edge.blank.normal.x -= STATIC.WIDTH_PIECE/2;
@@ -212,14 +203,14 @@ GameState = (function(){
       edge.blank.side.angle += 90;
       switch (data.move.direction) {
         case 'up':
-          edge.nextPosition     = _formulaPositions.right;
+          edge.nextPosition     = _edges.formaulaPositions.right;
            edge.blank.normal.x -= STATIC.WIDTH_PIECE/2;
            edge.blank.side.x   -= STATIC.WIDTH_PIECE/2;
            edge.blank.normal.y -= STATIC.WIDTH_PIECE/2;
            edge.blank.side.y   -= STATIC.WIDTH_PIECE;
         break;
         case 'down':
-          edge.nextPosition    = _formulaPositions.left;
+          edge.nextPosition    = _edges.formaulaPositions.left;
           edge.blank.normal.x += STATIC.WIDTH_PIECE/2;
           edge.blank.side.x   += STATIC.WIDTH_PIECE/2;
           edge.blank.normal.y += STATIC.WIDTH_PIECE/2;
