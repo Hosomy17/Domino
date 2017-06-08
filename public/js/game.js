@@ -57,15 +57,17 @@ GameState = (function(){
     nums[1] = _edges.edges.down.open;
     nums[2] = _edges.edges.right.open;
     nums[3] = _edges.edges.left.open;
+    console.log(pieces);
+    console.log(nums);
     for (var i=0;i < pieces.length;i++) {
       for (var j=0;j < nums.length;j++) {
         if(pieces[i][0] == nums[j] || pieces[i][1] == nums[j])
           ok=false;
       }
     }
-    
+
     if(ok)
-      finishSelect(null,null);
+      _edges.finishSelect(null,null);
     // if(ok)
     //   _edges.finishSelect(null,null);
     // if(_players[data.player.turn].ctn <= 1)
