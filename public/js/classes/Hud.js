@@ -11,7 +11,7 @@ Hud.prototype = {
     this.group.x = game.world.centerX;
     this.group.y = game.world.centerY;
 
-    turn = Link.getPlayer().turn;
+    var turn = Link.getPlayer().turn;
     style = { font: "40px Arial", fill: "#ffffff", align: "center" };
     a=-400;
     b=0;

@@ -6,7 +6,7 @@ var STATIC = {
 }
 GameState = (function(){
 
-  var _turn = 0;
+  var _hand;
   var _countPass = 0;
   var _flagStart = true;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>SOCORRO
   var _maxPieceRow = 0;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>maior numero de peças em uma fila
@@ -27,8 +27,8 @@ GameState = (function(){
 	function create(){
     _edges = new Edges();
     _edges.create();
-    hand = new Hand(game, _edges, _turn);
-    hand.create();
+    _hand = new Hand(game, _edges);
+    _hand.create();
     table = new Table(game, _edges);
     table.create();
     hud = new Hud(game);
@@ -36,6 +36,8 @@ GameState = (function(){
     _players = hud.players;
     _score = hud.score;
     _table = table.group;
+
+    game.add.button(game.world.width - 100, game.world.height - 50, 'pass', skipMove, this, 0, 1, 2);
 	}
 
 	function update(){
@@ -46,7 +48,7 @@ GameState = (function(){
 
   function skipMove(){
     ok=true;
-    if(_turn != Link.getPlayer().turn)
+    if(_hand.turn != Link.getPlayer().turn)
         ok = false;
 
     pieces = Link.getPlayer().pieces;
@@ -61,16 +63,19 @@ GameState = (function(){
           ok=false;
       }
     }
+    
     if(ok)
-      _edges.finishSelect(null,null);
-    if(_players[data.player.turn].ctn <= 1)
-      Link.newRound();
+      finishSelect(null,null);
+    // if(ok)
+    //   _edges.finishSelect(null,null);
+    // if(_players[data.player.turn].ctn <= 1)
+    //   Link.newRound();
   }
 
   function doMove(data){
 
-    if(++_turn >= STATIC.TOTAL_PLAYERS)
-      _turn = 0;
+    if(++_hand.turn >= STATIC.TOTAL_PLAYERS)
+      _hand.turn = 0;
 
     if(data.move.piece == null){
       _countPass

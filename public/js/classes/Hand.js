@@ -1,7 +1,7 @@
 var Hand = function(game, edges, turn){
   this.game  = game;
   this.edges = edges;
-  this.turn = turn;
+  this.turn = 0;
   this.group = null;
 }
 
@@ -11,7 +11,8 @@ Hand.prototype = {
     this.group = game.add.sprite(game.world.centerX, game.world.height - 50, 'hand');//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< posição
     this.group.anchor.set(0.5);
     this.group.scale.set(0.9);
-    pieces = Link.getPlayer().pieces;
+    var pieces = Link.getPlayer().pieces;
+    var hand = this;
     for (var i = 0; i < STATIC.TOTAL_PIECES; i++){
         piece = pieces[i];
 
@@ -27,7 +28,7 @@ Hand.prototype = {
         var edges = this.edges;
         sprite.events.onInputDown.add(
         function(obj){
-            if(this.turn == Link.getPlayer().turn){
+            if(hand.turn == Link.getPlayer().turn){
                 edges.selectedPiece = obj;
                 edges.showBlanks();
             }
