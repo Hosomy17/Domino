@@ -2,11 +2,49 @@ var Table = function(game, edges){
   this.game = game;
   this.edges = edges;
   this.group = null;
+  this.turns = [];
 }
 
 Table.prototype = {
   create : function(){
     this.group = this.game.add.sprite(this.game.world.centerX,this.game.world.centerY,'table');
+    up = this.game.add.sprite(0,0,'turn');
+    down = this.game.add.sprite(0,0,'turn');
+    left = this.game.add.sprite(0,0,'turn');
+    right = this.game.add.sprite(0,0,'turn');
+
+    this.turns[0] = down;
+    this.turns[1] = left;
+    this.turns[2] = up;
+    this.turns[3] = right;
+
+    up.tint = 0x0000FF;
+    up.visible = false;
+    up.angle = 180;
+    up.anchor.set(0.5,0);
+    up.y = -400;//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<ver isso
+    this.group.addChild(up);
+
+    down.tint = 0x0000FF;
+    down.visible = false;
+    down.anchor.set(0.5,0);
+    down.y = 400;//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<ver isso
+    this.group.addChild(down);
+
+    left.tint = 0xFF0000;
+    left.visible = false;
+    left.angle = 90;
+    left.anchor.set(0.5,0);
+    left.x = -400;//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<ver isso
+    this.group.addChild(left);
+
+    right.tint = 0xFF0000;
+    right.visible = false;
+    right.angle = 270;
+    right.anchor.set(0.5,0);
+    right.x = 400;//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<ver isso
+    this.group.addChild(right);
+
     this.group.anchor.set(0.5);
     this.group.scale.set(1);
     var edges = this.edges;

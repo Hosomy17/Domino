@@ -2,41 +2,27 @@ var Edges = function(){
   this.edges = {
     center : {
       blank  : {normal : null, side : null},
-      open   : null,
-      points : 0,
-      total  : 0,
-      block  : false
+      open   : null, points : 0, total : 0, block : false
     },
     up : {
-      blank  : {normal : null, side : null},
-      open   : null,
-      points : 0,
-      total  : 0
+      blank : {normal : null, side : null},
+      open  : null, points : 0, total : 0
     },
     down : {
-      blank  : {normal : null, side : null},
-      open   : null,
-      points : 0,
-      total  : 0
+      blank : {normal : null, side : null},
+      open  : null, points : 0, total : 0
     },
     right : {
-      blank  : {normal : null, side : null},
-      open   : null,
-      points : 0,
-      total  : 0
+      blank : {normal : null, side : null},
+      open  : null, points : 0, total : 0
     },
     left : {
-      blank  : {normal : null, side : null},
-      open   : null,
-      points : 0,
-      total  : 0
+      blank : {normal : null, side : null},
+      open  : null, points : 0, total : 0
     }
   };
   this.formulaPositions = {
-    up    : null,
-    down  : null,
-    right : null,
-    left  : null
+    up : null, down : null, right : null, left : null
   };
   this.selectedPiece = null;
   this.flagStart = true;
@@ -85,6 +71,7 @@ Edges.prototype = {
         blank.side.x -= STATIC.WIDTH_PIECE;
       }
     }
+
     this.formulaPositions.up    = this.edges.up.nextPosition;
     this.formulaPositions.down  = this.edges.down.nextPosition;
     this.formulaPositions.right = this.edges.right.nextPosition;

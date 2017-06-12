@@ -22,6 +22,7 @@ GameState = (function(){
     this.load.spritesheet('table',  'assets/sprites/table.png');//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< spritesheet??????
     this.load.spritesheet('blank',  'assets/sprites/blank.png');//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< spritesheet??????
     this.load.spritesheet('pass',   'assets/sprites/pass.png',90,30);
+    this.load.spritesheet('turn',   'assets/sprites/turn.png');
 	}
 
 	function create(){
@@ -31,7 +32,7 @@ GameState = (function(){
     _hand.create();
     table = new Table(game, _edges);
     table.create();
-    hud = new Hud(game);
+    hud = new Hud(game, table);
     hud.create();
     _players = hud.players;
     _score = hud.score;
@@ -61,13 +62,17 @@ GameState = (function(){
     console.log(nums);
     for (var i=0;i < pieces.length;i++) {
       for (var j=0;j < nums.length;j++) {
-        if(pieces[i][0] == nums[j] || pieces[i][1] == nums[j])
+        if((pieces[i][0] == nums[j] || pieces[i][1] == nums[j]) && pieces[i])
           ok=false;
       }
     }
 
-    if(ok)
+    if(ok){
       _edges.finishSelect(null,null);
+      return true;
+    }
+    else
+      return false;
     // if(ok)
     //   _edges.finishSelect(null,null);
     // if(_players[data.player.turn].ctn <= 1)
@@ -78,6 +83,11 @@ GameState = (function(){
 
     if(++_hand.turn >= STATIC.TOTAL_PLAYERS)
       _hand.turn = 0;
+
+    for (var i = 0; i < _players.length; i++) {
+      _players[i].turn.visible = false;
+    }
+    _players[_hand.turn].turn.visible = true;
 
     if(data.move.piece == null){
       _countPass

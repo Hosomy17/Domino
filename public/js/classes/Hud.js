@@ -1,5 +1,6 @@
-var Hud = function(game){
+var Hud = function(game, table){
   this.game    = game;
+  this.turns   = table.turns;
   this.players = [];
   this.score   = [];
   this.group   = null;
@@ -17,9 +18,7 @@ Hud.prototype = {
     b=0;
 
     for(i = 0;i < 4;i++){
-      turn++;
-      if(turn >= 4)
-        turn = 0;
+
 
       text = null;
       if(turn != Link.getPlayer().turn){
@@ -29,8 +28,12 @@ Hud.prototype = {
       a+= 400;
       b++;
 
-      this.players[turn] = {id:turn, points : 0, ctn : 7, totalPieces : text};
+      this.players[turn] = {id:turn, points : 0, ctn : 7, totalPieces : text, turn: this.turns[i]};
+      turn++;
+      if(turn >= 4)
+        turn = 0;
     }
+    this.players[0].turn.visible=true;
     text = game.add.text(450, -400, turn, style);
     text.anchor.set(0.5);
     text.addColor('#ff0000', 0);
