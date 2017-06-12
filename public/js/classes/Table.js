@@ -8,42 +8,34 @@ var Table = function(game, edges){
 Table.prototype = {
   create : function(){
     this.group = this.game.add.sprite(this.game.world.centerX,this.game.world.centerY,'table');
-    up = this.game.add.sprite(0,0,'turn');
-    down = this.game.add.sprite(0,0,'turn');
-    left = this.game.add.sprite(0,0,'turn');
-    right = this.game.add.sprite(0,0,'turn');
+    var up = this.game.add.sprite(this.game.world.centerX,0,'turn');//<<<<<<<<<<<<<<<<<<<<<posição
+    var down = this.game.add.sprite(this.game.world.centerX,this.game.world.height,'turn');//<<<<<<<<<<<<<<<<<<<<<posição
+    var left = this.game.add.sprite(0,this.game.world.centerY,'turn');//<<<<<<<<<<<<<<<<<<<<<posição
+    var right = this.game.add.sprite(this.game.world.width,this.game.world.centerY,'turn');//<<<<<<<<<<<<<<<<<<<<<posição
 
-    this.turns[0] = down;
-    this.turns[1] = left;
-    this.turns[2] = up;
-    this.turns[3] = right;
+    this.turns[0] = left;
+    this.turns[1] = up;
+    this.turns[2] = right;
+    this.turns[3] = down;
 
     up.tint = 0x0000FF;
     up.visible = false;
     up.angle = 180;
-    up.anchor.set(0.5,0);
-    up.y = -400;//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<ver isso
-    this.group.addChild(up);
+    up.anchor.set(0.5,1);
 
     down.tint = 0x0000FF;
     down.visible = false;
-    down.anchor.set(0.5,0);
-    down.y = 400;//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<ver isso
-    this.group.addChild(down);
+    down.anchor.set(0.5,1);
 
     left.tint = 0xFF0000;
     left.visible = false;
     left.angle = 90;
-    left.anchor.set(0.5,0);
-    left.x = -400;//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<ver isso
-    this.group.addChild(left);
+    left.anchor.set(0.5,1);
 
     right.tint = 0xFF0000;
     right.visible = false;
     right.angle = 270;
-    right.anchor.set(0.5,0);
-    right.x = 400;//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<ver isso
-    this.group.addChild(right);
+    right.anchor.set(0.5,1);
 
     this.group.anchor.set(0.5);
     this.group.scale.set(1);

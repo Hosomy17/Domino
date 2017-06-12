@@ -18,7 +18,9 @@ Hud.prototype = {
     b=0;
 
     for(i = 0;i < 4;i++){
-
+      turn++;
+      if(turn >= 4)
+        turn = 0;
 
       text = null;
       if(turn != Link.getPlayer().turn){
@@ -29,9 +31,6 @@ Hud.prototype = {
       b++;
 
       this.players[turn] = {id:turn, points : 0, ctn : 7, totalPieces : text, turn: this.turns[i]};
-      turn++;
-      if(turn >= 4)
-        turn = 0;
     }
     this.players[0].turn.visible=true;
     text = game.add.text(450, -400, turn, style);
