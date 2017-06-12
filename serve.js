@@ -157,7 +157,7 @@ function drawPieces(){
 function searchPiece(array, value){
 	result = null;
 	for(i = 0; i < array.length; i++)	{
-		if(array[i][2] == 27)
+		if(array[i][2] == value)
 			result = array[i];
 	}
 	return result;

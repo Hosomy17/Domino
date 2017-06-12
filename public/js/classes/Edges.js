@@ -122,5 +122,11 @@ Edges.prototype = {
 
     move = {piece:piece, direction:direction};
     Link.sendMove(move);
+
+    if(piece)
+      for(i = 0; i < Link.getPlayer().pieces.length; i++){
+        if(Link.getPlayer().pieces[i][2] == piece[2])
+          Link.getPlayer().pieces.splice(i,1);
+      }
   }
 }

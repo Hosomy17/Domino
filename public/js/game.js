@@ -78,7 +78,6 @@ GameState = (function(){
   }
 
   function doMove(data){
-
     if(++_hand.turn >= STATIC.TOTAL_PLAYERS)
       _hand.turn = 0;
 
@@ -88,8 +87,14 @@ GameState = (function(){
     _players[_hand.turn].turn.visible = true;
 
     if(data.move.piece == null){
-      _countPass
+      _countPass++
       return 0;
+    }
+    else
+      _countPass = 0;
+
+    if(_countPass == 4){
+      console.log("game over por trancamento");
     }
 
     drawMove(data);
@@ -124,6 +129,10 @@ GameState = (function(){
         //_table.scale.set(tableScale.x - 0.1);
         _scaleTable -= 0.1;
       game.add.tween(_table.scale).to( { x: _scaleTable, y: _scaleTable,}, 500, Phaser.Easing.Linear.None, true);
+    }
+    console.log(_players[data.player.turn].ctn);
+    if(_players[data.player.turn].ctn == 0){
+      console.log("game over conta ponto pra garagem");
     }
   }
 
