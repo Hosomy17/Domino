@@ -130,7 +130,6 @@ GameState = (function(){
         _scaleTable -= 0.1;
       game.add.tween(_table.scale).to( { x: _scaleTable, y: _scaleTable,}, 500, Phaser.Easing.Linear.None, true);
     }
-    console.log(_players[data.player.turn].ctn);
     if(_players[data.player.turn].ctn == 0){
       console.log("game over conta ponto pra garagem");
     }
