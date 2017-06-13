@@ -26,6 +26,7 @@ GameState = (function(){
 	}
 
 	function create(){
+    console.log("iniciado");
     _edges = new Edges();
     _edges.create();
     _hand = new Hand(game, _edges);
@@ -64,17 +65,14 @@ GameState = (function(){
           ok=false;
       }
     }
-
+    console.log(nums);
+    console.log(pieces);
     if(ok){
       _edges.finishSelect(null,null);
       return true;
     }
     else
       return false;
-    // if(ok)
-    //   _edges.finishSelect(null,null);
-    // if(_players[data.player.turn].ctn <= 1)
-    //   Link.newRound();
   }
 
   function doMove(data){
@@ -88,14 +86,15 @@ GameState = (function(){
 
     if(data.move.piece == null){
       _countPass++
+      if(_countPass == 4){
+        Link.setScore(_score);//<<<<<<<<<<<<<<<<<<<<<<<<<<<verificar
+        game.state.restart();
+        console.log("game over por trancamento");
+      }
       return 0;
     }
     else
       _countPass = 0;
-
-    if(_countPass == 4){
-      console.log("game over por trancamento");
-    }
 
     drawMove(data);
     _players[data.player.turn].ctn--;
@@ -131,6 +130,8 @@ GameState = (function(){
       game.add.tween(_table.scale).to( { x: _scaleTable, y: _scaleTable,}, 500, Phaser.Easing.Linear.None, true);
     }
     if(_players[data.player.turn].ctn == 0){
+      Link.setScore(_score);//<<<<<<<<<<<<<<<<<<<<<<<<<<<verificar
+      game.state.restart();
       console.log("game over conta ponto pra garagem");
     }
   }
