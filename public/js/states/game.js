@@ -26,7 +26,6 @@ GameState = (function(){
 	}
 
 	function create(){
-    console.log("iniciado");
     _edges = new Edges();
     _edges.create();
     _hand = new Hand(game, _edges);
@@ -38,8 +37,6 @@ GameState = (function(){
     _players = hud.players;
     _score = hud.score;
     _table = table.group;
-
-    game.add.button(game.world.width - 100, game.world.height - 50, 'pass', skipMove, this, 0, 1, 2);
 	}
 
 	function update(){

@@ -33,14 +33,14 @@ Hud.prototype = {
       this.players[turn] = {id:turn, points : 0, ctn : 7, totalPieces : text, turn: this.turns[i]};
     }
     this.players[0].turn.visible=true;
-    text = game.add.text(450, -400, turn, style);
+    text = game.add.text(450, -400, "Pts: "+Link.getScore()[0], style);
     text.anchor.set(0.5);
     text.addColor('#ff0000', 0);
     this.group.addChild(text);
     this.score[0] = {text:text,total:Link.getScore()[0]};
     this.score[1] = {text:text,total:Link.getScore()[1]};
 
-    text = game.add.text(-450, 400, turn, style);
+    text = game.add.text(-450, 400, "Pts: "+Link.getScore()[1], style);
     text.anchor.set(0.5);
     text.addColor('#0000ff', 0);
     this.group.addChild(text);
