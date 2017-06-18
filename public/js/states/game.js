@@ -4,7 +4,7 @@ var STATIC = {
     WIDTH_PIECE   : 68,
     HEIGHT_PIECE  : 134
 }
-GameState = (function(){
+State.Game = (function(){
 
   var _hand;
   var _countPass = 0;
@@ -26,6 +26,7 @@ GameState = (function(){
 	}
 
 	function create(){
+    Link.setStatus("waiting");
     _edges = new Edges();
     _edges.create();
     _hand = new Hand(game, _edges);
@@ -85,9 +86,10 @@ GameState = (function(){
       _countPass++
       if(_countPass == 4){
         Link.setScore(_score);//<<<<<<<<<<<<<<<<<<<<<<<<<<<verificar
-        game.state.restart();
+        game.state.start("GameoverState");
         console.log("game over por trancamento");
       }
+      skipMove();
       return 0;
     }
     else
@@ -128,7 +130,7 @@ GameState = (function(){
     }
     if(_players[data.player.turn].ctn == 0){
       Link.setScore(_score);//<<<<<<<<<<<<<<<<<<<<<<<<<<<verificar
-      game.state.restart();
+      game.state.start("GameoverState");
       console.log("game over conta ponto pra garagem");
     }
   }
@@ -197,6 +199,8 @@ GameState = (function(){
 
     //Move blank to the next edge
     edge.nextPosition(edge.blank, orientation);
+
+    skipMove();
   }
 
   function calculatePoints(){

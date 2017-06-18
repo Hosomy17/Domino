@@ -1,17 +1,18 @@
-MenuState = (function(){
+State.Menu = function(game){
+	this.game = game;
+};
 
-	function preload(){
+State.Menu.prototype = {
+	preload : function (){
 		this.load.spritesheet('start', 'assets/sprites/start.png',100,50);
+	},
+
+	create : function (){
+		this.game.stage.backgroundColor = '#57C651';
+		var btn = this.game.add.button(this.game.world.width * 0.5, this.game.world.height * 0.75, 'start', function(){this.game.state.start('LoadState')}, this, 1, 0, 2);
+	},
+
+	update : function (){
+
 	}
-
-	function create(){
-		game.stage.backgroundColor = '#57C651';
-		btn = game.add.button(game.world.width * 0.5, game.world.height * 0.75, 'start', function(){game.state.start('LoadState')}, this, 1, 0, 2);
-	}
-
-	function update(){
-
-	}
-
-	return {preload: preload, create:create, update:update};
-})();
+}

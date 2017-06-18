@@ -10,7 +10,7 @@ Link = (function(){
 		status : 'connneted',
 		room 	 : null
 	};
-	var _score = [];
+	var _score = [0,0];
 
 	var _players;
 
@@ -38,9 +38,8 @@ Link = (function(){
 			break;
 		}
 		_player.team = (_player.turn == 1 || _player.turn == 3) ? 1 : 0;
+		console.log(data);
 		_player.room = data.match.id;
-		_score[0] = 0;
-		_score[1] = 0;
 		_status = 'Ready';
 	});
 
@@ -56,6 +55,10 @@ Link = (function(){
 
 	function getStatus(){
 		return _status;
+	}
+
+	function setStatus(status){
+		_status = status;
 	}
 
 	function setScore(score){
@@ -98,6 +101,7 @@ Link = (function(){
 				sendMove     :sendMove,
 				newRound     :newRound,
 				getScore		 :getScore,
-				setScore		 :setScore
+				setScore		 :setScore,
+				setStatus    :setStatus
 	};
 })();

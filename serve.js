@@ -17,7 +17,6 @@ STATIC = {
 }
 
 //Routes
-
 app.use(express.static(__dirname + '/public'));
 
 app.get('/', function(req,res){
@@ -83,7 +82,7 @@ io.on('connection', function(socket){
 			}
 			matchs.progress.push(match);
 			io.to(match.id).emit('startMatch', {players:match.players,match:match});
-			console.info('Start game: ' + match.id);
+			console.info('Start game: '      + match.id);
 			console.info('Start new match: ' + match.id);
 		}
 		else {
@@ -102,7 +101,7 @@ io.on('connection', function(socket){
 		data.players[2].pieces = shufflePieces[2];
 		data.players[3].pieces = shufflePieces[3];
 
-		io.to(data.room).emit('startMatch', {players:data.players});
+		io.to(data.room).emit('startMatch', {players:data.players,match:data.room});
 		console.info('Start new round: ' + data.room);
 	});
 
