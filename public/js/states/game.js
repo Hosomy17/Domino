@@ -29,14 +29,14 @@ State.Game = (function(){
     var players = hud.players;
     var score = hud.score;
     var table = table.group;
-
     _core = new Core(hand, edges, players, score, table);
 	}
 
 	function update(){
-    move = Link.getLastMove();
-    if(move)
+    var move = Link.getLastMove();
+    if(move){
       _core.doMove(move);
+    }
 	}
 
   return {preload: preload, create:create, update:update};

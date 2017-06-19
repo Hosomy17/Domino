@@ -1,6 +1,9 @@
 var Game = new Phaser.Game(1000, 1000, Phaser.AUTO, 'phaser-game', {preload:preload,create:create,update:update});
 
-var State = {}
+var State = {
+	LudusSplash: function () {
+	}
+};
 
 function preload(){
 	Game.load.script('menu','/js/states/menu.js');
@@ -12,7 +15,7 @@ function preload(){
 	Game.load.script('hud','/js/classes/hud.js');
 	Game.load.script('table','/js/classes/table.js');
 	Game.load.script('hand','/js/classes/hand.js');
-	Game.load.script('edges','/js/classes/tdges.js');
+	Game.load.script('edges','/js/classes/edges.js');
 }
 
 function create(){
@@ -20,8 +23,8 @@ function create(){
 
 	Game.state.add('MenuState', new State.Menu());
 	Game.state.add('LoadState', new State.Load());
-	Game.state.add('GameState', State.game);
-	Game.state.add('GameoverState', State.gameOver);
+	Game.state.add('GameState', State.Game);
+	Game.state.add('GameoverState', State.GameOver);
 
 	Game.state.start('MenuState');
 }

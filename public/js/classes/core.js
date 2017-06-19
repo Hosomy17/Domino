@@ -28,10 +28,7 @@ Core.prototype = {
           ok=false;
       }
     }
-    console.log(ok);
-    console.log(this.hand.turn);
     console.log(nums);
-    console.log(pieces);
     if(ok)
       this.edges.finishSelect(null,null);
 
@@ -54,7 +51,6 @@ Core.prototype = {
         Game.state.start("GameoverState");
         console.log("game over por trancamento");
       }
-      console.log("anterior passou");
       this.skipMove();
       return 0;
     }
@@ -72,7 +68,6 @@ Core.prototype = {
       this.players[data.player.turn].totalPieces.text = this.players[data.player.turn].ctn;
     }
     this.score[data.player.team].text.text = "pts "+this.score[data.player.team].total;
-
     if(this.edges.flagStart){
       this.edges.flagStart = false;
       this.edges.edges.up.open     = data.move.piece[0];
@@ -97,6 +92,7 @@ Core.prototype = {
       Game.state.start("GameoverState");
       console.log("game over conta ponto pra garagem");
     }
+    this.skipMove();
   },
 
   drawMove: function(data){
@@ -165,8 +161,6 @@ Core.prototype = {
 
     //Move blank to the next edge
     edge.nextPosition(edge.blank, orientation);
-
-    this.skipMove();
   },
 
   calculatePoints: function(){
