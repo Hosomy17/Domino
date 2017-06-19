@@ -5,7 +5,7 @@ State.GameOver = (function(){
 	}
 
 	function create(){
-		load = game.add.sprite(game.world.centerX, game.world.centerY, 'load', 0);
+		load = Game.add.sprite(Game.world.centerX, Game.world.centerY, 'load', 0);
 		load.anchor.set(0.5);
 		load = load.animations.add('loading');
 		load.play(10,true);
@@ -15,7 +15,7 @@ State.GameOver = (function(){
 
 	function update(){
 		if(Link.getStatus() == 'Ready')
-			game.state.start('GameState');
+			Game.state.start('GameState');
 	}
 
 	return {preload: preload, create:create, update:update};

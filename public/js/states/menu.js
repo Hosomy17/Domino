@@ -1,5 +1,4 @@
-State.Menu = function(game){
-	this.game = game;
+State.Menu = function(){
 };
 
 State.Menu.prototype = {
@@ -8,8 +7,8 @@ State.Menu.prototype = {
 	},
 
 	create : function (){
-		this.game.stage.backgroundColor = '#57C651';
-		var btn = this.game.add.button(this.game.world.width * 0.5, this.game.world.height * 0.75, 'start', function(){this.game.state.start('LoadState')}, this, 1, 0, 2);
+		Game.stage.backgroundColor = '#57C651';
+		var btn = Game.add.button(Game.world.width * 0.5, Game.world.height * 0.75, 'start', function(){Game.state.start('LoadState')}, this, 1, 0, 2);//<<<<<<<this está ok?
 	},
 
 	update : function (){

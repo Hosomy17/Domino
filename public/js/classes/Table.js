@@ -1,5 +1,4 @@
-var Table = function(game, edges){
-  this.game = game;
+var Table = function(edges){
   this.edges = edges;
   this.group = null;
   this.turns = [];
@@ -7,11 +6,11 @@ var Table = function(game, edges){
 
 Table.prototype = {
   create : function(){
-    this.group = this.game.add.sprite(this.game.world.centerX,this.game.world.centerY,'table');
-    var up = this.game.add.sprite(this.game.world.centerX,0,'turn');//<<<<<<<<<<<<<<<<<<<<<posição
-    var down = this.game.add.sprite(this.game.world.centerX,this.game.world.height,'turn');//<<<<<<<<<<<<<<<<<<<<<posição
-    var left = this.game.add.sprite(0,this.game.world.centerY,'turn');//<<<<<<<<<<<<<<<<<<<<<posição
-    var right = this.game.add.sprite(this.game.world.width,this.game.world.centerY,'turn');//<<<<<<<<<<<<<<<<<<<<<posição
+    this.group = Game.add.sprite(Game.world.centerX,Game.world.centerY,'table');
+    var up = Game.add.sprite(Game.world.centerX,0,'turn');//<<<<<<<<<<<<<<<<<<<<<posição
+    var down = Game.add.sprite(Game.world.centerX,Game.world.height,'turn');//<<<<<<<<<<<<<<<<<<<<<posição
+    var left = Game.add.sprite(0,Game.world.centerY,'turn');//<<<<<<<<<<<<<<<<<<<<<posição
+    var right = Game.add.sprite(Game.world.width,Game.world.centerY,'turn');//<<<<<<<<<<<<<<<<<<<<<posição
 
     this.turns[0] = left;
     this.turns[1] = up;
@@ -41,7 +40,7 @@ Table.prototype = {
     this.group.scale.set(1);
     var edges = this.edges;
 
-    s = this.game.add.sprite(0,0,'blank');
+    s = Game.add.sprite(0,0,'blank');
     s.anchor.set(0.5);
     s.visible = false;
     s.inputEnabled = true;
@@ -53,7 +52,7 @@ Table.prototype = {
     edges.edges.center.blank.normal = s;
     edges.edges.center.blank.side = s;
 
-    s = this.game.add.sprite(0,-STATIC.HEIGHT_PIECE,'blank');
+    s = Game.add.sprite(0,-STATIC.HEIGHT_PIECE,'blank');
     s.anchor.set(0.5);
     s.visible = false;
     s.inputEnabled = true;
@@ -64,7 +63,7 @@ Table.prototype = {
     this.group.addChild(s);
     edges.edges.up.blank.normal = s;
 
-    s = this.game.add.sprite(0,- (STATIC.HEIGHT_PIECE + STATIC.WIDTH_PIECE)/2,'blank');
+    s = Game.add.sprite(0,- (STATIC.HEIGHT_PIECE + STATIC.WIDTH_PIECE)/2,'blank');
     s.anchor.set(0.5);
     s.angle = 90;
     s.visible = false;
@@ -76,7 +75,7 @@ Table.prototype = {
     this.group.addChild(s);
     edges.edges.up.blank.side = s;
 
-    s = this.game.add.sprite(0,STATIC.HEIGHT_PIECE,'blank');
+    s = Game.add.sprite(0,STATIC.HEIGHT_PIECE,'blank');
     s.anchor.set(0.5);
     s.angle = 180;
     s.visible = false;
@@ -88,7 +87,7 @@ Table.prototype = {
     this.group.addChild(s);
     edges.edges.down.blank.normal = s;
 
-    s = this.game.add.sprite(0,(STATIC.HEIGHT_PIECE + STATIC.WIDTH_PIECE)/2,'blank');
+    s = Game.add.sprite(0,(STATIC.HEIGHT_PIECE + STATIC.WIDTH_PIECE)/2,'blank');
     s.anchor.set(0.5);
     s.angle = 270;
     s.visible = false;
@@ -101,7 +100,7 @@ Table.prototype = {
     edges.edges.down.blank.side = s;
 
 
-    s = this.game.add.sprite((STATIC.HEIGHT_PIECE + STATIC.WIDTH_PIECE)/2,0,'blank');
+    s = Game.add.sprite((STATIC.HEIGHT_PIECE + STATIC.WIDTH_PIECE)/2,0,'blank');
     s.anchor.set(0.5);
     s.angle = 90;
     s.visible = false;
@@ -113,7 +112,7 @@ Table.prototype = {
     this.group.addChild(s);
     edges.edges.right.blank.normal = s;
 
-    s = this.game.add.sprite(STATIC.WIDTH_PIECE,0,'blank');
+    s = Game.add.sprite(STATIC.WIDTH_PIECE,0,'blank');
     s.anchor.set(0.5);
     s.angle = 180;
     s.visible = false;
@@ -125,7 +124,7 @@ Table.prototype = {
     this.group.addChild(s);
     edges.edges.right.blank.side = s;
 
-    s = this.game.add.sprite(-(STATIC.HEIGHT_PIECE + STATIC.WIDTH_PIECE)/2,0,'blank');
+    s = Game.add.sprite(-(STATIC.HEIGHT_PIECE + STATIC.WIDTH_PIECE)/2,0,'blank');
     s.anchor.set(0.5);
     s.angle = 270;
     s.visible = false;
@@ -137,7 +136,7 @@ Table.prototype = {
     this.group.addChild(s);
     edges.edges.left.blank.normal = s;
 
-    s = this.game.add.sprite(-STATIC.WIDTH_PIECE,0,'blank');
+    s = Game.add.sprite(-STATIC.WIDTH_PIECE,0,'blank');
     s.anchor.set(0.5);
     s.visible = false;
     s.inputEnabled = true;

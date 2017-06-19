@@ -1,33 +1,29 @@
-var game = new Phaser.Game(1000, 1000, Phaser.AUTO, 'phaser-game', {preload:preload,create:create,update:update});
+var Game = new Phaser.Game(1000, 1000, Phaser.AUTO, 'phaser-game', {preload:preload,create:create,update:update});
 
-var State = {
-	LudusSplash: function (game) {
-		"use strict";
-		this.game = game;
-	}
-}
+var State = {}
 
 function preload(){
-	game.load.script('menu','/js/states/menu.js');
-	game.load.script('load','/js/states/load.js');
-	game.load.script('game','/js/states/game.js');
-	game.load.script('core','/js/classes/core.js');
-	game.load.script('gameover','/js/states/gameover.js');
-	game.load.script('hud','/js/classes/Hud.js');
-	game.load.script('table','/js/classes/Table.js');
-	game.load.script('hand','/js/classes/hand.js');
-	game.load.script('edges','/js/classes/Edges.js');
+	Game.load.script('menu','/js/states/menu.js');
+	Game.load.script('load','/js/states/load.js');
+	Game.load.script('game','/js/states/game.js');
+	Game.load.script('gameover','/js/states/gameover.js');
+
+	Game.load.script('core','/js/classes/core.js');
+	Game.load.script('hud','/js/classes/hud.js');
+	Game.load.script('table','/js/classes/table.js');
+	Game.load.script('hand','/js/classes/hand.js');
+	Game.load.script('edges','/js/classes/tdges.js');
 }
 
 function create(){
-	game.stage.disableVisibilityChange = true;
+	Game.stage.disableVisibilityChange = true;
 
-	game.state.add('MenuState', new State.Menu());
-	game.state.add('LoadState', new State.Load());
-	game.state.add('GameState', State.Game);
-	game.state.add('GameoverState', State.GameOver);
+	Game.state.add('MenuState', new State.Menu());
+	Game.state.add('LoadState', new State.Load());
+	Game.state.add('GameState', State.game);
+	Game.state.add('GameoverState', State.gameOver);
 
-	game.state.start('MenuState');
+	Game.state.start('MenuState');
 }
 
 function update(){

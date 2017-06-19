@@ -11,7 +11,7 @@ State.Load.prototype = {
 
 	create : function(){
 		Link.requestMatch();
-		var load = game.add.sprite(game.world.centerX, game.world.centerY, 'load', 0);
+		var load = Game.add.sprite(Game.world.centerX, Game.world.centerY, 'load', 0);
 		load.anchor.set(0.5);
 		load = load.animations.add('loading');
 		load.play(10,true);
@@ -19,7 +19,7 @@ State.Load.prototype = {
 
 	update : function(){
 		if(Link.getStatus() == 'Ready')
-			game.state.start('GameState');
+			Game.state.start('GameState');
 	}
 
 };

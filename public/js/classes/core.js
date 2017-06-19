@@ -1,5 +1,4 @@
-var Core = function(game, hand, edges, players, score, table){
-  this.game = game;
+var Core = function(hand, edges, players, score, table){
   this.hand = hand;
   this.countPass = 0;
   this.flagStart = true;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>SOCORRO
@@ -52,7 +51,7 @@ Core.prototype = {
       this.countPass++
       if(this.countPass == 4){
         Link.setScore(this.score);//<<<<<<<<<<<<<<<<<<<<<<<<<<<verificar
-        this.game.state.start("GameoverState");
+        Game.state.start("GameoverState");
         console.log("game over por trancamento");
       }
       console.log("anterior passou");
@@ -91,11 +90,11 @@ Core.prototype = {
       if(this.scaleTable > 0.6)
         //this.table.scale.set(tableScale.x - 0.1);
         this.scaleTable -= 0.1;
-      this.game.add.tween(this.table.scale).to( { x: this.scaleTable, y: this.scaleTable,}, 500, Phaser.Easing.Linear.None, true);
+      Game.add.tween(this.table.scale).to( { x: this.scaleTable, y: this.scaleTable,}, 500, Phaser.Easing.Linear.None, true);
     }
     if(this.players[data.player.turn].ctn == 0){
       Link.setScore(this.score);//<<<<<<<<<<<<<<<<<<<<<<<<<<<verificar
-      this.game.state.start("GameoverState");
+      Game.state.start("GameoverState");
       console.log("game over conta ponto pra garagem");
     }
   },
@@ -104,7 +103,7 @@ Core.prototype = {
     var orientation = (data.move.piece[0] == data.move.piece[1] ) ? 'side' : 'normal';
     var edge = this.edges.edges[data.move.direction];
 
-    var sprite = this.game.add.sprite(edge.blank[orientation].x,edge.blank[orientation].y,'domino',data.move.piece[2]);//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<melhorar atributos
+    var sprite = Game.add.sprite(edge.blank[orientation].x,edge.blank[orientation].y,'domino',data.move.piece[2]);//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<melhorar atributos
     sprite.angle = edge.blank[orientation].angle;
     sprite.anchor.set(0.5);
     this.table.addChild(sprite);

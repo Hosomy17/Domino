@@ -19,9 +19,9 @@ State.Game = (function(){
 	function create(){
     Link.setStatus("waiting");
     var edges = new Edges();
-    var hand = new Hand(game, edges);
-    var table = new Table(game, edges);
-    var hud = new Hud(game, table);
+    var hand = new Hand(edges);
+    var table = new Table(edges);
+    var hud = new Hud(table);
     edges.create();
     hand.create();
     table.create();
@@ -30,7 +30,7 @@ State.Game = (function(){
     var score = hud.score;
     var table = table.group;
 
-    _core = new Core(game, hand, edges, players, score, table);
+    _core = new Core(hand, edges, players, score, table);
 	}
 
 	function update(){
