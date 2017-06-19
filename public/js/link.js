@@ -12,6 +12,8 @@ Link = (function(){
 	};
 	var _score = [0,0];
 
+	var _round = 1;
+
 	var _players;
 
 	var _lastMoves = [];
@@ -21,7 +23,7 @@ Link = (function(){
 		_lastMoves.unshift(data);
 	});
 
-	_socket.on('startMatch', function(data){
+	_socket.on('startRound', function(data){
 		_players = data.players;
 		switch (_socket.id){
 			case _players[0].id:
@@ -38,8 +40,8 @@ Link = (function(){
 			break;
 		}
 		_player.team = (_player.turn == 1 || _player.turn == 3) ? 1 : 0;
-		console.log(data);
-		_player.room = data.match.id;
+		_player.room = data.match;
+		console.log(_player);
 		_status = 'Ready';
 	});
 
@@ -78,6 +80,14 @@ Link = (function(){
 		return _players;
 	}
 
+	function getRound(){
+		return _round;
+	}
+
+	function setRound(round){
+		_round = round;
+	}
+
 	function requestMatch(){
 		msg = {player: _player};
 		_socket.emit('findMatch', msg);
@@ -102,6 +112,8 @@ Link = (function(){
 				newRound     :newRound,
 				getScore		 :getScore,
 				setScore		 :setScore,
-				setStatus    :setStatus
+				setStatus    :setStatus,
+				getRound		 :getRound,
+				setRound		 :setRound
 	};
 })();

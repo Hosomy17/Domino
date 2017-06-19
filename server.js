@@ -81,7 +81,7 @@ io.on('connection', function(socket){
 					match.players[i].turn = ++nextTurn;
 			}
 			matchs.progress.push(match);
-			io.to(match.id).emit('startMatch', {players:match.players,match:match});
+			io.to(match.id).emit('startRound', {players:match.players,match:match});
 			console.info('Start game: '      + match.id);
 			console.info('Start new match: ' + match.id);
 		}
@@ -101,8 +101,8 @@ io.on('connection', function(socket){
 		data.players[2].pieces = shufflePieces[2];
 		data.players[3].pieces = shufflePieces[3];
 
-		io.to(data.room).emit('startMatch', {players:data.players,match:data.room});
-		console.info('Start new round: ' + data.room);
+		io.to(data.room.id).emit('startRound', {players:data.players,match:data.room});
+		console.info('Start new round: ' + data.room.id);
 	});
 
 	socket.on('sendMove', function(data){
