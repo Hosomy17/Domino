@@ -5,16 +5,6 @@ var STATIC = {
     HEIGHT_PIECE  : 134
 }
 State.Game = (function(){
-
-  var _hand;
-  var _countPass = 0;
-  var _flagStart = true;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>SOCORRO
-  var _maxPieceRow = 0;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>maior numero de peças em uma fila
-  var _scaleTable = 1;
-  var _players = [];
-  var _edges = null;
-  var _score = null;
-  var _table = null;
   var _core;
 
 	function preload(){
@@ -28,19 +18,19 @@ State.Game = (function(){
 
 	function create(){
     Link.setStatus("waiting");
-    _edges = new Edges();
-    _hand = new Hand(game, _edges);
-    table = new Table(game, _edges);
-    hud = new Hud(game, table);
-    _edges.create();
-    _hand.create();
+    var edges = new Edges();
+    var hand = new Hand(game, edges);
+    var table = new Table(game, edges);
+    var hud = new Hud(game, table);
+    edges.create();
+    hand.create();
     table.create();
     hud.create();
-    _players = hud.players;
-    _score = hud.score;
-    _table = table.group;
+    var players = hud.players;
+    var score = hud.score;
+    var table = table.group;
 
-    _core = new Core(game, _hand, _edges, _players, _score, _table);
+    _core = new Core(game, hand, edges, players, score, table);
 	}
 
 	function update(){

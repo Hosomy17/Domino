@@ -29,14 +29,14 @@ Core.prototype = {
           ok=false;
       }
     }
+    console.log(ok);
+    console.log(this.hand.turn);
     console.log(nums);
     console.log(pieces);
-    if(ok){
+    if(ok)
       this.edges.finishSelect(null,null);
-      return true;
-    }
-    else
-      return false;
+
+    return ok;
   },
 
   doMove: function(data){
@@ -55,6 +55,7 @@ Core.prototype = {
         this.game.state.start("GameoverState");
         console.log("game over por trancamento");
       }
+      console.log("anterior passou");
       this.skipMove();
       return 0;
     }
