@@ -107,7 +107,7 @@ io.on('connection', function(socket){
 
 	socket.on('sendMove', function(data){
 		//verificar<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< se ta tudo ok
-		console.info('Player: ' + socket.id + ' send new move: ' + data.move);
+		console.info('Player: ' + socket.id + ' send new move: ' + data.move.piece +' '+data.move.direction);
 		io.to(socket.match.id).emit('newMove',data);
 	});
 

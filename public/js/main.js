@@ -11,6 +11,7 @@ function preload(){
 	game.load.script('menu','/js/states/menu.js');
 	game.load.script('load','/js/states/load.js');
 	game.load.script('game','/js/states/game.js');
+	game.load.script('core','/js/classes/core.js');
 	game.load.script('gameover','/js/states/gameover.js');
 	game.load.script('hud','/js/classes/Hud.js');
 	game.load.script('table','/js/classes/Table.js');
