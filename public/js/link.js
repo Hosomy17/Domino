@@ -14,6 +14,8 @@ Link = (function(){
 
 	var _round = 1;
 
+	var _turn = 0;
+
 	var _players;
 
 	var _lastMoves = [];
@@ -84,6 +86,14 @@ Link = (function(){
 		return _round;
 	}
 
+	function getTurn(){
+		return _turn
+	}
+
+	function setTurn(turn){
+		_turn = turn;
+	}
+
 	function setRound(round){
 		_round = round;
 	}
@@ -114,6 +124,8 @@ Link = (function(){
 				setScore		 :setScore,
 				setStatus    :setStatus,
 				getRound		 :getRound,
-				setRound		 :setRound
+				setRound		 :setRound,
+				setTurn			 :setTurn,
+				getTurn			 :getTurn
 	};
 })();

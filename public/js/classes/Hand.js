@@ -7,6 +7,7 @@ var Hand = function(edges, turn){
 Hand.prototype = {
   create : function(){
     //Create Hand
+    this.turn = Link.getTurn();
     this.group = Game.add.sprite(Game.world.centerX, Game.world.height - 50, 'hand');//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< posição
     this.group.anchor.set(0.5);
     this.group.scale.set(0.9);

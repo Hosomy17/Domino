@@ -36,8 +36,8 @@ Hud.prototype = {
     text.anchor.set(0.5);
     text.addColor('#ff0000', 0);
     this.group.addChild(text);
-    this.score[0] = {text:text,total:Link.getScore()[0]};
-    this.score[1] = {text:text,total:Link.getScore()[1]};
+    this.score[0] = {text:text,total:Link.getScore()[1]};
+    this.score[1] = {text:text,total:Link.getScore()[0]};//<<<<<<<<<<<<<<<<<<<<<<<<<<<<posição errada?????
 
     text = Game.add.text(-450, 400, "Pts: "+Link.getScore()[1], style);
     text.anchor.set(0.5);

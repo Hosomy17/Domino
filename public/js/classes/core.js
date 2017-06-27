@@ -48,6 +48,7 @@ Core.prototype = {
       if(this.countPass == 4){
         var score = [this.score[0].total, this.score[1].total];
         Link.setScore(score);//<<<<<<<<<<<<<<<<<<<<<<<<<<<verificar
+        Link.setTurn(data.player.turn);
         Game.state.start("GameoverState");
         console.log("game over por trancamento");
       }
@@ -90,6 +91,7 @@ Core.prototype = {
     if(this.players[data.player.turn].ctn == 0){
       var score = [this.score[0].total, this.score[1].total];
       Link.setScore(score);//<<<<<<<<<<<<<<<<<<<<<<<<<<<verificar
+      Link.setTurn(data.player.turn);
       Game.state.start("GameoverState");
       console.log("game over conta ponto pra garagem");
     }
