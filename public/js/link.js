@@ -20,6 +20,8 @@ Link = (function(){
 
 	var _lastMoves = [];
 
+	var _doublesSix = true;
+
 	_socket.on('newMove', function(data){
 		//testar ordem<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 		_lastMoves.unshift(data);
@@ -43,7 +45,6 @@ Link = (function(){
 		}
 		_player.team = (_player.turn == 1 || _player.turn == 3) ? 1 : 0;
 		_player.room = data.match;
-		console.log(_player);
 		_status = 'Ready';
 	});
 
@@ -98,6 +99,14 @@ Link = (function(){
 		_round = round;
 	}
 
+	function getDoublesSix(){
+		return _doublesSix;
+	}
+
+	function setDoublesSix(doublesSix){
+		_doublesSix = doublesSix;
+	}
+
 	function requestMatch(){
 		msg = {player: _player};
 		_socket.emit('findMatch', msg);
@@ -126,6 +135,8 @@ Link = (function(){
 				getRound		 :getRound,
 				setRound		 :setRound,
 				setTurn			 :setTurn,
-				getTurn			 :getTurn
+				getTurn			 :getTurn,
+				setDoublesSix :setDoublesSix,
+				getDoublesSix :getDoublesSix
 	};
 })();

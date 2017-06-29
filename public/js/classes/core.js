@@ -1,13 +1,13 @@
 var Core = function(hand, edges, players, score, table){
-  this.hand = hand;
-  this.countPass = 0;
-  this.flagStart = true;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>SOCORRO
+  this.hand        = hand;
+  this.countPass   = 0;
+  this.flagStart   = true;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>SOCORRO
   this.maxPieceRow = 0;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>maior numero de peças em uma fila
-  this.scaleTable = 1;
-  this.players = players;
-  this.edges = edges;
-  this.score = score;
-  this.table = table;
+  this.scaleTable  = 1;
+  this.players     = players;
+  this.edges       = edges;
+  this.score       = score;
+  this.table       = table;
 }
 
 Core.prototype = {
@@ -28,8 +28,28 @@ Core.prototype = {
           ok=false;
       }
     }
+
+    if(this.flagStart)
+    {
+      if(Link.getDoublesSix()){
+        for(var i=0; i < nums.length; i++){
+          if(pieces[i][0] + pieces[i][1] == 12)
+            ok=false;
+        }
+      }
+      else {
+        for(var i=0; i < nums.length; i++){
+          if(pieces[i][0] == pieces[i][1])
+            ok=false;
+        }
+      }
+    }
+
     if(ok)
       this.edges.finishSelect(null,null);
+
+    console.log(nums);
+    console.log(pieces);
 
     return ok;
   },
@@ -52,7 +72,8 @@ Core.prototype = {
         Game.state.start("GameoverState");
         console.log("game over por trancamento");
       }
-      this.skipMove();
+      else
+        this.skipMove();
       return 0;
     }
     else
@@ -63,7 +84,7 @@ Core.prototype = {
     var points = this.calculatePoints();
     if(points % 5 == 0){
       this.players[data.player.turn].points += points;
-      this.score[data.player.team].total += points;
+      this.score[data.player.team].total    += points;
     }
     if(Link.getPlayer().turn != data.player.turn){
       this.players[data.player.turn].totalPieces.text = this.players[data.player.turn].ctn;
@@ -95,7 +116,8 @@ Core.prototype = {
       Game.state.start("GameoverState");
       console.log("game over conta ponto pra garagem");
     }
-    this.skipMove();
+    else
+      this.skipMove();
   },
 
   drawMove: function(data){
@@ -143,10 +165,10 @@ Core.prototype = {
     }
     else if (edge.total == 5 &&  (data.move.direction == 'up' || data.move.direction == 'down')) {
       edge.blank.normal.angle += 90;
-      edge.blank.side.angle += 90;
+      edge.blank.side.angle   += 90;
       switch (data.move.direction) {
         case 'up':
-          edge.nextPosition     = this.edges.formulaPositions.right;
+          edge.nextPosition    = this.edges.formulaPositions.right;
           edge.blank.normal.x -= STATIC.WIDTH_PIECE/2;
           edge.blank.side.x   -= STATIC.WIDTH_PIECE/2;
           edge.blank.normal.y -= STATIC.WIDTH_PIECE/2;
