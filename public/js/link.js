@@ -23,7 +23,6 @@ Link = (function(){
 	var _doublesSix = true;
 
 	_socket.on('newMove', function(data){
-		//testar ordem<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 		_lastMoves.unshift(data);
 	});
 

@@ -89,7 +89,10 @@ Edges.prototype = {
     this.edges.left.blank.normal.visible  = false;
     this.edges.right.blank.normal.visible = false;
     if(this.flagStart){
-      this.edges.center.blank.normal.visible = (this.selectedPiece.piece[0] + this.selectedPiece.piece[1] == 12) ? true : false;
+      if(Link.getDoublesSix())
+        this.edges.center.blank.normal.visible = (this.selectedPiece.piece[0] + this.selectedPiece.piece[1] == 12) ? true : false;
+      else
+        this.edges.center.blank.normal.visible = (this.selectedPiece.piece[0] == this.selectedPiece.piece[1]) ? true : false;
     }
     else if (this.selectedPiece.piece[0] == this.selectedPiece.piece[1]){
       if(this.edges.left.total > 0 && this.edges.right.total > 0){

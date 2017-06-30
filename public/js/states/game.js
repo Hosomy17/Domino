@@ -29,9 +29,8 @@ State.Game = (function(){
     var players = hud.players;
     var score = hud.score;
     var table = table.group;
-    console.log(hand.turn);
-    console.log(Link.getPlayer().turn);
     _core = new Core(hand, edges, players, score, table);
+    _core.skipMove();
 	}
 
 	function update(){

@@ -1,7 +1,7 @@
 var Core = function(hand, edges, players, score, table){
   this.hand        = hand;
   this.countPass   = 0;
-  this.flagStart   = true;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>SOCORRO
+  this.flagStart   = true;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>SOCORRO DUPLICADO
   this.maxPieceRow = 0;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>maior numero de peças em uma fila
   this.scaleTable  = 1;
   this.players     = players;
@@ -29,8 +29,8 @@ Core.prototype = {
       }
     }
 
-    if(this.flagStart)
-    {
+    if(this.flagStart){
+
       if(Link.getDoublesSix()){
         for(var i=0; i < nums.length; i++){
           if(pieces[i][0] + pieces[i][1] == 12)
@@ -47,9 +47,6 @@ Core.prototype = {
 
     if(ok)
       this.edges.finishSelect(null,null);
-
-    console.log(nums);
-    console.log(pieces);
 
     return ok;
   },
@@ -69,8 +66,8 @@ Core.prototype = {
         var score = [this.score[0].total, this.score[1].total];
         Link.setScore(score);//<<<<<<<<<<<<<<<<<<<<<<<<<<<verificar
         Link.setTurn(data.player.turn);
+        Link.setDoublesSix(true);
         Game.state.start("GameoverState");
-        console.log("game over por trancamento");
       }
       else
         this.skipMove();
@@ -89,8 +86,9 @@ Core.prototype = {
     if(Link.getPlayer().turn != data.player.turn){
       this.players[data.player.turn].totalPieces.text = this.players[data.player.turn].ctn;
     }
-    this.score[data.player.team].text.text = "pts "+this.score[data.player.team].total;
+    this.score[data.player.team].text.text = this.score[data.player.team].total;
     if(this.edges.flagStart){
+      this.flagStart = false;
       this.edges.flagStart = false;
       this.edges.edges.up.open     = data.move.piece[0];
       this.edges.edges.down.open   = data.move.piece[0];
@@ -113,8 +111,8 @@ Core.prototype = {
       var score = [this.score[0].total, this.score[1].total];
       Link.setScore(score);//<<<<<<<<<<<<<<<<<<<<<<<<<<<verificar
       Link.setTurn(data.player.turn);
+      Link.setDoublesSix(false);
       Game.state.start("GameoverState");
-      console.log("game over conta ponto pra garagem");
     }
     else
       this.skipMove();
