@@ -31,7 +31,7 @@ Hud.prototype = {
 
       this.players[turn] = {id:turn, points : 0, ctn : 7, totalPieces : text, turn: this.turns[i]};
     }
-    this.players[0].turn.visible=true;
+    this.players[Link.getTurn()].turn.visible=true;
     text = Game.add.text(450, -400, Link.getScore()[0], style);
     text.anchor.set(0.5);
     text.addColor('#ff0000', 0);
