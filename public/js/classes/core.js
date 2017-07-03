@@ -54,7 +54,10 @@ Core.prototype = {
   doMove: function(data){
 
     if(data.move.piece == null){
-      
+      if(this.countPass == 0){
+        this.score[0].total += 20;//<<<<<<<<<<<<<<<<<<<<!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        this.score[0].text.text = this.score[0].total;
+      }
 
       this.countPass++
       if(this.countPass == 4){
