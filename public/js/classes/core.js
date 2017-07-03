@@ -108,6 +108,10 @@ Core.prototype = {
       Game.add.tween(this.table.scale).to( { x: this.scaleTable, y: this.scaleTable,}, 500, Phaser.Easing.Linear.None, true);
     }
     if(this.players[data.player.turn].ctn == 0){
+      if(data.move.piece[0] == data.move.piece[1]){
+        this.score[data.player.team].total += 20;
+        this.score[data.player.team].text.text = this.score[data.player.team].total;
+      }
       var score = [this.score[0].total, this.score[1].total];
       Link.setScore(score);//<<<<<<<<<<<<<<<<<<<<<<<<<<<verificar
       Link.setTurn(data.player.turn);
