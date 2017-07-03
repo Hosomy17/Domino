@@ -52,15 +52,10 @@ Core.prototype = {
   },
 
   doMove: function(data){
-    if(++this.hand.turn >= STATIC.TOTAL_PLAYERS)
-      this.hand.turn = 0;
-
-    for (var i = 0; i < this.players.length; i++) {
-      this.players[i].turn.visible = false;
-    }
-    this.players[this.hand.turn].turn.visible = true;
 
     if(data.move.piece == null){
+      
+
       this.countPass++
       if(this.countPass == 4){
         var score = [this.score[0].total, this.score[1].total];
@@ -73,8 +68,11 @@ Core.prototype = {
         this.skipMove();
       return 0;
     }
-    else
+    else{
       this.countPass = 0;
+    }
+
+    nextTurn();
 
     this.drawMove(data);
     this.players[data.player.turn].ctn--;
@@ -121,6 +119,16 @@ Core.prototype = {
     else
       this.skipMove();
   },
+
+  nextTurn: function(){
+    if(++this.hand.turn >= STATIC.TOTAL_PLAYERS)
+      this.hand.turn = 0;
+
+    for (var i = 0; i < this.players.length; i++) {
+      this.players[i].turn.visible = false;
+    }
+    this.players[this.hand.turn].turn.visible = true;
+  }
 
   drawMove: function(data){
     var orientation = (data.move.piece[0] == data.move.piece[1] ) ? 'side' : 'normal';
