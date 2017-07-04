@@ -55,8 +55,14 @@ Core.prototype = {
 
     if(data.move.piece == null){
       if(this.countPass == 0){
-        this.score[0].total += 20;//<<<<<<<<<<<<<<<<<<<<!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        this.score[0].text.text = this.score[0].total;
+        if(data.player.team == 0){
+        this.score[1].total += 20;
+        this.score[1].text.text = this.score[1].total;
+        }
+        else{
+          this.score[0].total += 20;
+          this.score[0].text.text = this.score[0].total;
+        }
       }
 
       this.countPass++
