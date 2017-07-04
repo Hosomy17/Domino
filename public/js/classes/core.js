@@ -78,6 +78,10 @@ Core.prototype = {
       return 0;
     }
     else{
+      if(this.countPass == 3){
+        this.score[data.player.team].total += 50;
+        this.score[data.player.team].text.text = this.score[data.player.team].total;
+      }
       this.countPass = 0;
     }
 
