@@ -35,21 +35,24 @@ matchs =
 io.on('connection', function(socket){
 
 	console.info('New player: ' + socket.id);
+	var match;
 
 	socket.on('findMatch', function(data){
 
 		//Search an avaiable match
-		match = matchs.avaliable.shift();
+		var m = matchs.avaliable.shift();
 
-		if(!match){
-			match = {
-				id		: 'Room ' + matchs.total++,
-				players : []
+		if(!m){
+			m = {
+				id		  : 'Room ' + matchs.total++,
+				players : [],
+				sum     : []
 			}
 
-			console.info('New match: ' + match.id);
+			console.info('New match: ' + m.id);
 		}
 
+		match = m;
 		//Put player in the match
 		player = data.player;
 		player.id = socket.conn.id;//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<problema com o '/#' dos ids
@@ -69,6 +72,12 @@ io.on('connection', function(socket){
 			match.players[2].pieces = shufflePieces[2];
 			match.players[3].pieces = shufflePieces[3];
 
+			var sum = [0,0,0,0];
+			for(var i=0; i < 4; i++){
+				for(var j=0; j < shufflePieces[i].length; j++){
+					sum[i] += shufflePieces[i][j][0] + shufflePieces[i][j][1];
+				}
+			}
 			//Turn each player
 			// 0 1 2 3
 			nextTurn = 0;
@@ -94,13 +103,19 @@ io.on('connection', function(socket){
 
 	socket.on('newRound', function(data){
 
-		shufflePieces = drawPieces();
-		players = [];
+		var shufflePieces = drawPieces();
+		var players = [];
 		data.players[0].pieces = shufflePieces[0];
 		data.players[1].pieces = shufflePieces[1];
 		data.players[2].pieces = shufflePieces[2];
 		data.players[3].pieces = shufflePieces[3];
 
+		var sum = [0,0,0,0];
+		for(var i=0; i < 4; i++){
+			for(var j=0; j < shufflePieces.length; j++){
+				sum[i] += shufflePieces[i][j][0] + shufflePieces[i][j][1];
+			}
+		}
 		io.to(data.room.id).emit('startRound', {players:data.players,match:data.room});
 		console.info('Start new round: ' + data.room.id);
 	});
