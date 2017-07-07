@@ -46,7 +46,7 @@ io.on('connection', function(socket){
 			m = {
 				id		  : 'Room ' + matchs.total++,
 				players : [],
-				sum     : []
+				sum     : [0,0]
 			}
 
 			console.info('New match: ' + m.id);
@@ -80,15 +80,27 @@ io.on('connection', function(socket){
 			}
 			//Turn each player
 			// 0 1 2 3
-			nextTurn = 0;
+			nextTurn = 1;
 			for(var i = 0; i < 4; i++){
-
-
-				if(searchPiece(match.players[i].pieces, 27))
+				if(searchPiece(match.players[i].pieces, 27)){
+					match.players[i].team = 0;
 					match.players[i].turn = 0;
-				else
-					match.players[i].turn = ++nextTurn;
+					match.sum[0] += sum[i];
+				}
+				else{
+					if(nextTurn == 2){
+						match.players[i].team = 0;
+						match.sum[0] += sum[i];
+					}
+					else{
+						match.players[i].team = 1;
+						match.sum[1] += sum[i];
+					}
+					match.players[i].turn = nextTurn++;
+				}
 			}
+			console.log(sum);
+			console.log(match.sum);
 			matchs.progress.push(match);
 			io.to(match.id).emit('startRound', {players:match.players,match:match});
 			console.info('Start game: '      + match.id);

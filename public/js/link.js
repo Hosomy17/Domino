@@ -42,7 +42,6 @@ Link = (function(){
 				_player = _players[3];
 			break;
 		}
-		_player.team = (_player.turn == 1 || _player.turn == 3) ? 1 : 0;
 		_player.room = data.match;
 		_status = 'Ready';
 	});
