@@ -3,7 +3,7 @@ Link = (function(){
 	var _status = 'Created';
 	var _player = {
 		id     : _socket.id,
-		name   : 'Player',
+		name   : 'Player1',
 		turn   : 0,
 		team   : 0,
 		pieces : [],

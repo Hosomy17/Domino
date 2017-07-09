@@ -32,27 +32,33 @@ Core.prototype = {
     if(this.flagStart){
 
       if(Link.getDoublesSix()){
-        for(var i=0; i < nums.length; i++){
+        for(var i=0; i < pieces.length; i++){
           if(pieces[i][0] + pieces[i][1] == 12)
             ok=false;
         }
       }
       else {
-        for(var i=0; i < nums.length; i++){
+        for(var i=0; i < pieces.length; i++){
           if(pieces[i][0] == pieces[i][1])
             ok=false;
         }
       }
     }
 
-    if(ok)
+    if(ok){
+      console.log(Link.getPlayer().turn);
+      console.log(this.hand.turn);
+      console.log(pieces);
+      console.log(nums);
+      console.log(this.flagStart);
+      console.log(ok);
       this.edges.finishSelect(null,null);
+    }
 
     return ok;
   },
 
   doMove: function(data){
-
     if(data.move.piece == null){
       if(this.countPass == 0){
         if(data.player.team == 0){
@@ -68,6 +74,9 @@ Core.prototype = {
       this.countPass++
       if(this.countPass == 4){
         var score = [this.score[0].total, this.score[1].total];
+        console.log(score);
+        score[data.player.team] += Math.floor(data.sum[data.player.team]/5) * 5;
+        console.log(score);
         Link.setScore(score);//<<<<<<<<<<<<<<<<<<<<<<<<<<<verificar
         Link.setTurn(data.player.turn);
         Link.setDoublesSix(true);
@@ -84,8 +93,6 @@ Core.prototype = {
       }
       this.countPass = 0;
     }
-
-    nextTurn();
 
     this.drawMove(data);
     this.players[data.player.turn].ctn--;
@@ -118,19 +125,25 @@ Core.prototype = {
         this.scaleTable -= 0.1;
       Game.add.tween(this.table.scale).to( { x: this.scaleTable, y: this.scaleTable,}, 500, Phaser.Easing.Linear.None, true);
     }
+
     if(this.players[data.player.turn].ctn == 0){
       if(data.move.piece[0] == data.move.piece[1]){
         this.score[data.player.team].total += 20;
         this.score[data.player.team].text.text = this.score[data.player.team].total;
       }
       var score = [this.score[0].total, this.score[1].total];
+      console.log(score);
+      score[data.player.team] += Math.floor(data.sum[data.player.team]/5) * 5;
+      console.log(score);
       Link.setScore(score);//<<<<<<<<<<<<<<<<<<<<<<<<<<<verificar
       Link.setTurn(data.player.turn);
       Link.setDoublesSix(false);
       Game.state.start("GameoverState");
     }
-    else
+    else{
+      this.nextTurn();
       this.skipMove();
+    }
   },
 
   nextTurn: function(){
@@ -141,7 +154,7 @@ Core.prototype = {
       this.players[i].turn.visible = false;
     }
     this.players[this.hand.turn].turn.visible = true;
-  }
+  },
 
   drawMove: function(data){
     var orientation = (data.move.piece[0] == data.move.piece[1] ) ? 'side' : 'normal';

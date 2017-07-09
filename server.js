@@ -62,7 +62,7 @@ io.on('connection', function(socket){
 		socket.join(match.id);
 
 		socket.to(match.id).emit('newMatch', match);
-		console.info('Player: ' + data.player.id + ' enter: ' + match.id);
+		console.info('Player: ' + data.player.name + ' enter: ' + match.id);
 
 		//Check if game already to start
 		if(match.players.length == STATIC.MAX_PLAYERS) {
@@ -81,7 +81,7 @@ io.on('connection', function(socket){
 			//Turn each player
 			// 0 1 2 3
 			nextTurn = 1;
-			for(var i = 0; i < 4; i++){
+			for(var i = 0; i < STATIC.MAX_PLAYERS; i++){
 				if(searchPiece(match.players[i].pieces, 27)){
 					match.players[i].team = 0;
 					match.players[i].turn = 0;
@@ -99,8 +99,6 @@ io.on('connection', function(socket){
 					match.players[i].turn = nextTurn++;
 				}
 			}
-			console.log(sum);
-			console.log(match.sum);
 			matchs.progress.push(match);
 			io.to(match.id).emit('startRound', {players:match.players,match:match});
 			console.info('Start game: '      + match.id);
@@ -116,17 +114,20 @@ io.on('connection', function(socket){
 	socket.on('newRound', function(data){
 
 		var shufflePieces = drawPieces();
-		var players = [];
+		console.log(data);
 		data.players[0].pieces = shufflePieces[0];
 		data.players[1].pieces = shufflePieces[1];
 		data.players[2].pieces = shufflePieces[2];
 		data.players[3].pieces = shufflePieces[3];
-
 		var sum = [0,0,0,0];
 		for(var i=0; i < 4; i++){
 			for(var j=0; j < shufflePieces.length; j++){
 				sum[i] += shufflePieces[i][j][0] + shufflePieces[i][j][1];
 			}
+		}
+		match.sum = [0,0];
+		for(var i=0; i < STATIC.MAX_PLAYERS; i++){
+			match.sum[data.players[i].team] = shufflePieces[i];
 		}
 		io.to(data.room.id).emit('startRound', {players:data.players,match:data.room});
 		console.info('Start new round: ' + data.room.id);
@@ -134,7 +135,11 @@ io.on('connection', function(socket){
 
 	socket.on('sendMove', function(data){
 		//verificar<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< se ta tudo ok
-		console.info('Player: ' + socket.id + ' send new move: ' + data.move.piece +' '+data.move.direction);
+		if(data.move.piece != null)
+			match.sum[data.player.team] -= data.move.piece[0] + data.move.piece[1];
+
+		data.sum = match.sum;
+		console.info('Player: ' + data.player.id + ' send new move: ' + data.move.piece +' '+data.move.direction);
 		io.to(socket.match.id).emit('newMove',data);
 	});
 
