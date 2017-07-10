@@ -114,7 +114,6 @@ io.on('connection', function(socket){
 	socket.on('newRound', function(data){
 
 		var shufflePieces = drawPieces();
-		console.log(data);
 		data.players[0].pieces = shufflePieces[0];
 		data.players[1].pieces = shufflePieces[1];
 		data.players[2].pieces = shufflePieces[2];
