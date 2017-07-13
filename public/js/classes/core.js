@@ -61,14 +61,10 @@ Core.prototype = {
   doMove: function(data){
     if(data.move.piece == null){
       if(this.countPass == 0){
-        if(data.player.team == 0){
-        this.score[1].total += 20;
-        this.score[1].text.text = this.score[1].total;
-        }
-        else{
-          this.score[0].total += 20;
-          this.score[0].text.text = this.score[0].total;
-        }
+        if(data.player.team == 0)
+          this.gainPoints(20,1);
+        else
+          this.gainPoints(20,0);
       }
 
       this.countPass++
@@ -87,24 +83,20 @@ Core.prototype = {
       return 0;
     }
     else{
-      if(this.countPass == 3){
-        this.score[data.player.team].total += 50;
-        this.score[data.player.team].text.text = this.score[data.player.team].total;
-      }
+      if(this.countPass == 3)
+        this.gainPoints(50,data.player.team);
       this.countPass = 0;
     }
 
     this.drawMove(data);
     this.players[data.player.turn].ctn--;
     var points = this.calculatePoints();
-    if(points % 5 == 0){
-      this.players[data.player.turn].points += points;
-      this.score[data.player.team].total    += points;
-    }
-    if(Link.getPlayer().turn != data.player.turn){
+    if(points % 5 == 0)
+      this.gainPoints(points,data.player.team);
+
+    if(Link.getPlayer().turn != data.player.turn)
       this.players[data.player.turn].totalPieces.text = this.players[data.player.turn].ctn;
-    }
-    this.score[data.player.team].text.text = this.score[data.player.team].total;
+
     if(this.edges.flagStart){
       this.flagStart = false;
       this.edges.flagStart = false;
@@ -127,10 +119,9 @@ Core.prototype = {
     }
 
     if(this.players[data.player.turn].ctn == 0){
-      if(data.move.piece[0] == data.move.piece[1]){
-        this.score[data.player.team].total += 20;
-        this.score[data.player.team].text.text = this.score[data.player.team].total;
-      }
+      if(data.move.piece[0] == data.move.piece[1])
+        this.gainPoints(20,data.player.team);
+
       var score = [this.score[0].total, this.score[1].total];
       console.log(score);
       score[data.player.team] += Math.floor(data.sum[data.player.team]/5) * 5;
@@ -166,8 +157,7 @@ Core.prototype = {
     this.table.addChild(sprite);
 
     edge.total++;
-    if(edge.open == data.move.piece[0])//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<roda se o lado for o outro
-    {
+    if(edge.open == data.move.piece[0]){
       sprite.angle += 180;
       edge.open = data.move.piece[1];
       edge.points = data.move.piece[1];
@@ -229,5 +219,10 @@ Core.prototype = {
 
     var points = this.edges.edges.center.points + this.edges.edges.up.points + this.edges.edges.right.points + this.edges.edges.down.points + this.edges.edges.left.points;
     return points;
+  },
+
+  gainPoints: function(pts, team){
+    this.score[team].total += pts;
+    this.score[team].text.text = this.score[team].total;
   }
 }
