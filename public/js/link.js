@@ -1,6 +1,7 @@
 Link = (function(){
 	var _socket = io();
-	var _status = 'Created';
+
+	//Info about player in the current match
 	var _player = {
 		id     : _socket.id,
 		name   : 'Player1',
@@ -8,22 +9,22 @@ Link = (function(){
 		team   : 0,
 		pieces : [],
 		status : 'connneted',
-		room 	 : null
+		room 	 : null,
+		lastMoves : []
 	};
-	var _score = [0,0];
 
-	var _round = 1;
+	//Info about match
+	var _match = {
+		score     : [0,0],
+		round     : 1,
+		turn      : 0,
+		doublesSix: true,
+		status    : 'Created'
+	};
 
-	var _turn = 0;
-
-	var _players;
-
-	var _lastMoves = [];
-
-	var _doublesSix = true;
-
+	//Received Messages//
 	_socket.on('newMove', function(data){
-		_lastMoves.unshift(data);
+		_player.lastMoves.unshift(data);
 	});
 
 	_socket.on('startRound', function(data){
@@ -43,67 +44,13 @@ Link = (function(){
 			break;
 		}
 		_player.room = data.match;
-		_status = 'Ready';
+		_match.status = 'Ready';
 	});
 
 	_socket.on('updateMatch', function(data){
 		_players = data.players;
 		_status = 'Update';
 	});
-
-	function getLastMove(){
-		move = _lastMoves.pop();
-		return move;
-	}
-
-	function getStatus(){
-		return _status;
-	}
-
-	function setStatus(status){
-		_status = status;
-	}
-
-	function setScore(score){
-		_score = score;
-	}
-
-	function getScore(){
-		return _score;
-	}
-
-	function getPlayer(){
-		return _player;
-	}
-
-	function getPlayers(){
-		_status = 'Ready';
-		return _players;
-	}
-
-	function getRound(){
-		return _round;
-	}
-
-	function getTurn(){
-		return _turn
-	}
-
-	function setTurn(turn){
-		_turn = turn;
-	}
-
-	function setRound(round){
-		_round = round;
-	}
-
-	function getDoublesSix(){
-		return _doublesSix;
-	}
-
-	function setDoublesSix(doublesSix){
-		_doublesSix = doublesSix;
-	}
 
 	function requestMatch(){
 		msg = {player: _player};
@@ -121,20 +68,22 @@ Link = (function(){
 	}
 
 	return {
-				getLastMove  :getLastMove,
-				getPlayer	   :getPlayer,
-				getStatus    :getStatus,
-				requestMatch :requestMatch,
-				sendMove     :sendMove,
-				newRound     :newRound,
-				getScore		 :getScore,
-				setScore		 :setScore,
-				setStatus    :setStatus,
-				getRound		 :getRound,
-				setRound		 :setRound,
-				setTurn			 :setTurn,
-				getTurn			 :getTurn,
-				setDoublesSix :setDoublesSix,
-				getDoublesSix :getDoublesSix
+		player : {
+			get pieces(){return _player.pieces}, set pieces(v){_player.pieces = v},
+			get turn(){return _player.turn},     set turn(v){_player.turn = v},
+			get team(){return _player.team},     set team(v){_player.team = v},
+			get lastMove(){return _player.lastMoves.pop()}
+
+		},
+		match  : {
+			get doublesSix(){return _match.doublesSix}, set doublesSix(v){_match.doublesSix = v},
+			get status(){return _match.status},         set status(v){_match.status = v},
+			get score(){return _match.score},           set score(v){_match.score = v},
+			get round(){return _match.round},           set round(v){_match.round = v},
+			get turn(){return _match.turn},             set turn(v){_match.turn = v}
+		},
+		requestMatch :requestMatch,
+		sendMove     :sendMove,
+		newRound     :newRound
 	};
 })();

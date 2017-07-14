@@ -89,7 +89,7 @@ Edges.prototype = {
     this.edges.left.blank.normal.visible  = false;
     this.edges.right.blank.normal.visible = false;
     if(this.flagStart){
-      if(Link.getDoublesSix())
+      if(Link.match.doublesSix)
         this.edges.center.blank.normal.visible = (this.selectedPiece.piece[0] + this.selectedPiece.piece[1] == 12) ? true : false;
       else
         this.edges.center.blank.normal.visible = (this.selectedPiece.piece[0] == this.selectedPiece.piece[1]) ? true : false;
@@ -127,9 +127,9 @@ Edges.prototype = {
     Link.sendMove(move);
 
     if(piece)
-      for(i = 0; i < Link.getPlayer().pieces.length; i++){
-        if(Link.getPlayer().pieces[i][2] == piece[2])
-          Link.getPlayer().pieces.splice(i,1);
+      for(i = 0; i < Link.player.pieces.length; i++){
+        if(Link.player.pieces[i][2] == piece[2])
+          Link.player.pieces.splice(i,1);
       }
   }
 }

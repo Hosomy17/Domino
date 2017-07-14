@@ -18,7 +18,7 @@ State.Load.prototype = {
 	},
 
 	update : function(){
-		if(Link.getStatus() == 'Ready')
+		if(Link.match.status == 'Ready')
 			Game.state.start('GameState');
 	}
 

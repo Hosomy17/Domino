@@ -17,7 +17,7 @@ State.Game = (function(){
 	}
 
 	function create(){
-    Link.setStatus("waiting");
+    Link.match.status = "waiting";
     var edges = new Edges();
     var hand = new Hand(edges);
     var table = new Table(edges);
@@ -34,7 +34,7 @@ State.Game = (function(){
 	}
 
 	function update(){
-    var move = Link.getLastMove();
+    var move = Link.player.lastMove;
     if(move){
       _core.doMove(move);
     }

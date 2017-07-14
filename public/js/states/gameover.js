@@ -9,12 +9,12 @@ State.GameOver = (function(){
 		load.anchor.set(0.5);
 		load = load.animations.add('loading');
 		load.play(10,true);
-		if(Link.getPlayer().turn == 0)
+		if(Link.player.turn == 0)
 			Link.newRound();
 	}
 
 	function update(){
-		if(Link.getStatus() == 'Ready')
+		if(Link.match.status == 'Ready')
 			Game.state.start('GameState');
 	}
 

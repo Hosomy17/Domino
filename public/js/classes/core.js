@@ -13,10 +13,10 @@ var Core = function(hand, edges, players, score, table){
 Core.prototype = {
   skipMove: function(){
     var ok=true;
-    if(this.hand.turn != Link.getPlayer().turn)
+    if(this.hand.turn != Link.player.turn)
         ok = false;
 
-    var pieces = Link.getPlayer().pieces;
+    var pieces = Link.player.pieces;
     var nums = [];
     nums[0] = this.edges.edges.up.open;
     nums[1] = this.edges.edges.down.open;
@@ -31,7 +31,7 @@ Core.prototype = {
 
     if(this.flagStart){
 
-      if(Link.getDoublesSix()){
+      if(Link.match.doublesSix){
         for(var i=0; i < pieces.length; i++){
           if(pieces[i][0] + pieces[i][1] == 12)
             ok=false;
@@ -46,7 +46,7 @@ Core.prototype = {
     }
 
     if(ok){
-      console.log(Link.getPlayer().turn);
+      console.log(Link.player.turn);
       console.log(this.hand.turn);
       console.log(pieces);
       console.log(nums);
@@ -73,9 +73,9 @@ Core.prototype = {
         console.log(score);
         score[data.player.team] += Math.floor(data.sum[data.player.team]/5) * 5;
         console.log(score);
-        Link.setScore(score);//<<<<<<<<<<<<<<<<<<<<<<<<<<<verificar
-        Link.setTurn(data.player.turn);
-        Link.setDoublesSix(true);
+        Link.match.score = score;//<<<<<<<<<<<<<<<<<<<<<<<<<<<verificar
+        Link.match.turn = data.player.turn;
+        Link.match.doublesSix = true;
         Game.state.start("GameoverState");
       }
       else
@@ -94,7 +94,7 @@ Core.prototype = {
     if(points % 5 == 0)
       this.gainPoints(points,data.player.team);
 
-    if(Link.getPlayer().turn != data.player.turn)
+    if(Link.player.turn != data.player.turn)
       this.players[data.player.turn].totalPieces.text = this.players[data.player.turn].ctn;
 
     if(this.edges.flagStart){
@@ -126,9 +126,9 @@ Core.prototype = {
       console.log(score);
       score[data.player.team] += Math.floor(data.sum[data.player.team]/5) * 5;
       console.log(score);
-      Link.setScore(score);//<<<<<<<<<<<<<<<<<<<<<<<<<<<verificar
-      Link.setTurn(data.player.turn);
-      Link.setDoublesSix(false);
+      Link.match.score = score;//<<<<<<<<<<<<<<<<<<<<<<<<<<<verificar
+      Link.match.turn = data.player.turn;
+      Link.match.doublesSix = false;
       Game.state.start("GameoverState");
     }
     else{
