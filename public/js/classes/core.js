@@ -64,7 +64,9 @@ Core.prototype = {
       if(this.countPass == 4){
         var score = [this.score[0].total, this.score[1].total];
         score[data.player.team] += Math.floor(data.sum[data.player.team]/5) * 5;
-        Link.match.score = score;//<<<<<<<<<<<<<<<<<<<<<<<<<<<verificar
+
+        if(data)
+        Link.match.score = score;
         Link.match.turn = data.player.turn;
         Link.match.doublesSix = true;
         Game.state.start("GameoverState");
@@ -212,7 +214,7 @@ Core.prototype = {
     return points;
   },
 
-  gainPoints: function(pts, team){
+  gainPoints: function(pts, team){//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Deveria estar no HUD o colocar pontos
     this.score[team].total += pts;
     this.score[team].text.text = this.score[team].total;
   }
