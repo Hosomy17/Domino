@@ -46,12 +46,6 @@ Core.prototype = {
     }
 
     if(ok){
-      console.log(Link.player.turn);
-      console.log(this.hand.turn);
-      console.log(pieces);
-      console.log(nums);
-      console.log(this.flagStart);
-      console.log(ok);
       this.edges.finishSelect(null,null);
     }
 
@@ -66,20 +60,19 @@ Core.prototype = {
         else
           this.gainPoints(20,0);
       }
-
       this.countPass++
       if(this.countPass == 4){
         var score = [this.score[0].total, this.score[1].total];
-        console.log(score);
         score[data.player.team] += Math.floor(data.sum[data.player.team]/5) * 5;
-        console.log(score);
         Link.match.score = score;//<<<<<<<<<<<<<<<<<<<<<<<<<<<verificar
         Link.match.turn = data.player.turn;
         Link.match.doublesSix = true;
         Game.state.start("GameoverState");
       }
-      else
+      else{
+        this.nextTurn();
         this.skipMove();
+      }
       return 0;
     }
     else{
@@ -123,9 +116,7 @@ Core.prototype = {
         this.gainPoints(20,data.player.team);
 
       var score = [this.score[0].total, this.score[1].total];
-      console.log(score);
       score[data.player.team] += Math.floor(data.sum[data.player.team]/5) * 5;
-      console.log(score);
       Link.match.score = score;//<<<<<<<<<<<<<<<<<<<<<<<<<<<verificar
       Link.match.turn = data.player.turn;
       Link.match.doublesSix = false;
