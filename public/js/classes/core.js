@@ -63,9 +63,12 @@ Core.prototype = {
       this.countPass++
       if(this.countPass == 4){
         var score = [this.score[0].total, this.score[1].total];
-        score[data.player.team] += Math.floor(data.sum[data.player.team]/5) * 5;
 
-        if(data)
+        if(data.sum[0] < data.sum[1])
+          score[0] += Math.floor(data.sum[1]/5) * 5;
+        else if(data.sum[1] < data.sum[0])
+          score[1] += Math.floor(data.sum[0]/5) * 5;
+
         Link.match.score = score;
         Link.match.turn = data.player.turn;
         Link.match.doublesSix = true;
