@@ -225,7 +225,7 @@ Core.prototype = {
   },
 
   finalRound: function(){
-    if((this.score[0].total >= 50 || this.score[1].total >= 50) && (this.score[0].total != this.score[1].total))//<<<<<<<<<<<<<<<<<<<<<<pontuação n static
+    if((this.score[0].total >= 200 || this.score[1].total >= 200) && (this.score[0].total != this.score[1].total))//<<<<<<<<<<<<<<<<<<<<<<pontuação n static
       this.hud.showScore();
     else
       Game.state.start("GameoverState");

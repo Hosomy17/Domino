@@ -1,0 +1,9 @@
+@font-face
+{
+	font-family: 'hachicro';
+	src: url("fonts/hachicro.ttf");
+}
+.test
+{
+	font-family: 'hachicro';
+}
