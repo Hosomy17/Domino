@@ -2,7 +2,6 @@ var Hud = function(table){
   this.turns   = table.turns;
   this.players = [];
   this.score   = [];
-  this.group   = null;
 }
 
 Hud.prototype = {
@@ -53,5 +52,18 @@ Hud.prototype = {
     text.addColor('#0000ff', 0);
     this.group.addChild(text);
     this.score[pTeam] = {text:text,total:pScr};
+  },
+
+  showScore : function(){
+    var panel = Game.add.sprite(Game.world.centerX, Game.world.centerY, 'final');
+    panel.anchor.set(0.5);
+
+    this.score[0].text.x = 0;
+    this.score[0].text.y = -50;
+    this.score[1].text.x = 0;
+    this.score[1].text.y = 50;
+
+    panel.addChild(this.score[0].text);
+    panel.addChild(this.score[1].text);
   }
 };
