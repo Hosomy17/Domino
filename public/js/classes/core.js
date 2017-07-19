@@ -1,13 +1,14 @@
-var Core = function(hand, edges, players, score, table){
-  this.hand        = hand;
+var Core = function(ha, hu, e, p, s, t){
+  this.hand        = ha;
+  this.hud         = hu;
   this.countPass   = 0;
   this.flagStart   = true;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>SOCORRO DUPLICADO
   this.maxPieceRow = 0;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>maior numero de peças em uma fila
   this.scaleTable  = 1;
-  this.players     = players;
-  this.edges       = edges;
-  this.score       = score;
-  this.table       = table;
+  this.players     = p;
+  this.edges       = e;
+  this.score       = s;
+  this.table       = t;
 }
 
 Core.prototype = {
@@ -62,17 +63,16 @@ Core.prototype = {
       }
       this.countPass++
       if(this.countPass == 4){
-        var score = [this.score[0].total, this.score[1].total];
 
         if(data.sum[0] < data.sum[1])
-          score[0] += Math.floor(data.sum[1]/5) * 5;
+          this.gainPoints(Math.floor(data.sum[1]/5) * 5,0);
         else if(data.sum[1] < data.sum[0])
-          score[1] += Math.floor(data.sum[0]/5) * 5;
+          this.gainPoints(Math.floor(data.sum[0]/5) * 5,1);
 
-        Link.match.score = score;
+        Link.match.score = [this.score[0].total, this.score[1].total];
         Link.match.turn = data.player.turn;
         Link.match.doublesSix = true;
-        Game.state.start("GameoverState");
+        this.finalRound();
       }
       else{
         this.nextTurn();
@@ -117,15 +117,17 @@ Core.prototype = {
     }
 
     if(this.players[data.player.turn].ctn == 0){
+
       if(data.move.piece[0] == data.move.piece[1])
         this.gainPoints(20,data.player.team);
 
       var score = [this.score[0].total, this.score[1].total];
-      score[data.player.team] += Math.floor(data.sum[data.player.team]/5) * 5;
+      this.gainPoints(Math.floor(data.sum[data.player.team]/5) * 5,data.player.team);
+
       Link.match.score = score;//<<<<<<<<<<<<<<<<<<<<<<<<<<<verificar
       Link.match.turn = data.player.turn;
       Link.match.doublesSix = false;
-      Game.state.start("GameoverState");
+      this.finalRound();
     }
     else{
       this.nextTurn();
@@ -220,5 +222,12 @@ Core.prototype = {
   gainPoints: function(pts, team){//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Deveria estar no HUD o colocar pontos
     this.score[team].total += pts;
     this.score[team].text.text = this.score[team].total;
+  },
+
+  finalRound: function(){
+    if((this.score[0].total >= 50 || this.score[1].total >= 50) && (this.score[0].total != this.score[1].total))//<<<<<<<<<<<<<<<<<<<<<<pontuação n static
+      this.hud.showScore();
+    else
+      Game.state.start("GameoverState");
   }
 }
