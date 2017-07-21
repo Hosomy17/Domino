@@ -9,6 +9,7 @@ var Core = function(ha, hu, e, p, s, t){
   this.edges       = e;
   this.score       = s;
   this.table       = t;
+  this.autoPlayTrg = null;
 }
 
 Core.prototype = {
@@ -48,6 +49,9 @@ Core.prototype = {
 
     if(ok){
       this.edges.finishSelect(null,null);
+    }
+    else {
+      this.autoPlayTrg = Game.time.events.add(Phaser.Timer.SECOND * 5, this.autoPlay, this);
     }
 
     return ok;
@@ -222,6 +226,27 @@ Core.prototype = {
   gainPoints: function(pts, team){//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Deveria estar no HUD o colocar pontos
     this.score[team].total += pts;
     this.score[team].text.text = this.score[team].total;
+  },
+
+  autoPlay : function(){
+    var piece = null;
+    var direction = null;
+    var edges = [];
+    edges[0] = {n:this.edges.edges.up.open,d:"up"};
+    edges[1] = {n:this.edges.edges.down.open,d:"down"};
+    edges[2] = {n:this.edges.edges.right.open,d:"right"};
+    edges[3] = {n:this.edges.edges.left.open,d:"left"};
+    for(var i = 0; i < Link.player.pieces.length; i++){
+      for(var j = 0; j < edges.length; j++){
+        if(edges[j].n == Link.player.pieces[i][0] || edges[j].n == Link.player.pieces[i][1]){
+          direction = edges[j].d;
+          piece = Link.player.pieces[i][3];
+        }
+      }
+    }
+
+    this.edges.selectedPiece = piece;
+    this.edges.finishSelect(direction);
   },
 
   finalRound: function(){

@@ -112,7 +112,9 @@ Edges.prototype = {
     }
   },
 
-  finishSelect : function(piece, direction){
+  finishSelect : function(direction){
+    this.selectedPiece.visible = false;
+
     this.edges.center.blank.normal.visible = false;
     this.edges.up.blank.side.visible       = false;
     this.edges.down.blank.side.visible     = false;
@@ -123,13 +125,14 @@ Edges.prototype = {
     this.edges.left.blank.normal.visible   = false;
     this.edges.right.blank.normal.visible  = false;
 
-    move = {piece:piece, direction:direction};
+    var move = {piece:this.selectedPiece, direction:direction};
     Link.sendMove(move);
 
-    if(piece)
+    if(this.selectedPiece){
       for(i = 0; i < Link.player.pieces.length; i++){
         if(Link.player.pieces[i][2] == piece[2])
           Link.player.pieces.splice(i,1);
       }
+    }
   }
 }

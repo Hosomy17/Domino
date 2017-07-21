@@ -45,8 +45,7 @@ Table.prototype = {
     s.visible = false;
     s.inputEnabled = true;
     s.events.onInputDown.add(function(obj){
-        edges.selectedPiece.visible = false;
-        edges.finishSelect(edges.selectedPiece.piece, "center");
+        edges.finishSelect("center");
     });
     this.group.addChild(s);
     edges.edges.center.blank.normal = s;
@@ -57,8 +56,7 @@ Table.prototype = {
     s.visible = false;
     s.inputEnabled = true;
     s.events.onInputDown.add(function(obj){
-        edges.selectedPiece.visible = false;
-        edges.finishSelect(edges.selectedPiece.piece, "up");
+        edges.finishSelect("up");
     });
     this.group.addChild(s);
     edges.edges.up.blank.normal = s;
@@ -69,8 +67,7 @@ Table.prototype = {
     s.visible = false;
     s.inputEnabled = true;
     s.events.onInputDown.add(function(obj){
-        edges.selectedPiece.visible = false;
-        edges.finishSelect(edges.selectedPiece.piece, "up");
+        edges.finishSelect("up");
     });
     this.group.addChild(s);
     edges.edges.up.blank.side = s;
@@ -81,8 +78,7 @@ Table.prototype = {
     s.visible = false;
     s.inputEnabled = true;
     s.events.onInputDown.add(function(obj){
-        edges.selectedPiece.visible = false;
-        edges.finishSelect(edges.selectedPiece.piece, "down");
+        edges.finishSelect("down");
     });
     this.group.addChild(s);
     edges.edges.down.blank.normal = s;
@@ -93,8 +89,7 @@ Table.prototype = {
     s.visible = false;
     s.inputEnabled = true;
     s.events.onInputDown.add(function(obj){
-        edges.selectedPiece.visible = false;
-        edges.finishSelect(edges.selectedPiece.piece, "down");
+        edges.finishSelect("down");
     });
     this.group.addChild(s);
     edges.edges.down.blank.side = s;
@@ -106,8 +101,7 @@ Table.prototype = {
     s.visible = false;
     s.inputEnabled = true;
     s.events.onInputDown.add(function(obj){
-        edges.selectedPiece.visible = false;
-        edges.finishSelect(edges.selectedPiece.piece, "right");
+        edges.finishSelect("right");
     });
     this.group.addChild(s);
     edges.edges.right.blank.normal = s;
@@ -118,8 +112,7 @@ Table.prototype = {
     s.visible = false;
     s.inputEnabled = true;
     s.events.onInputDown.add(function(obj){
-        edges.selectedPiece.visible = false;
-        edges.finishSelect(edges.selectedPiece.piece, "right");
+        edges.finishSelect("right");
     });
     this.group.addChild(s);
     edges.edges.right.blank.side = s;
@@ -130,8 +123,7 @@ Table.prototype = {
     s.visible = false;
     s.inputEnabled = true;
     s.events.onInputDown.add(function(obj){
-        edges.selectedPiece.visible = false;
-        edges.finishSelect(edges.selectedPiece.piece, "left");
+        edges.finishSelect("left");
     });
     this.group.addChild(s);
     edges.edges.left.blank.normal = s;
@@ -141,8 +133,7 @@ Table.prototype = {
     s.visible = false;
     s.inputEnabled = true;
     s.events.onInputDown.add(function(obj){
-        edges.selectedPiece.visible = false;
-        edges.finishSelect(edges.selectedPiece.piece, "left");
+        edges.finishSelect("left");
     });
     this.group.addChild(s);
     edges.edges.left.blank.side = s;

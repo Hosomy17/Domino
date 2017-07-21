@@ -25,6 +25,7 @@ Hand.prototype = {
         sprite.piece = piece;
         sprite.inputEnabled = true;
         var edges = this.edges;
+        Link.player.pieces[3] = sprite;
         sprite.events.onInputDown.add(
         function(obj){
             if(hand.turn == Link.player.turn){

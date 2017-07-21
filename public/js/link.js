@@ -28,19 +28,19 @@ Link = (function(){
 	});
 
 	_socket.on('startRound', function(data){
-		_players = data.players;
+		var players = data.players;
 		switch (_socket.id){
-			case _players[0].id:
-				_player = _players[0];
+			case players[0].id:
+				_player = players[0];
 			break;
-			case _players[1].id:
-				_player = _players[1];
+			case players[1].id:
+				_player = players[1];
 			break;
-			case _players[2].id:
-				_player = _players[2];
+			case players[2].id:
+				_player = players[2];
 			break;
-			case _players[3].id:
-				_player = _players[3];
+			case players[3].id:
+				_player = players[3];
 			break;
 		}
 		_player.room = data.match;
@@ -48,7 +48,6 @@ Link = (function(){
 	});
 
 	_socket.on('updateMatch', function(data){
-		_players = data.players;
 		_status = 'Update';
 	});
 
@@ -59,11 +58,12 @@ Link = (function(){
 
 	function sendMove(move){
 		msg = {player:_player,move:move};
+		console.log(msg);
 		_socket.emit('sendMove',msg);
 	}
 
 	function newRound(){
-		msg = {players:_players,room:_player.room};
+		msg = {player:_player,room:_player.room};
 		_socket.emit('newRound',msg);
 	}
 
