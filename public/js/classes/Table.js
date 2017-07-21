@@ -1,5 +1,6 @@
-var Table = function(edges){
+var Table = function(edges,hand){//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<melhorar
   this.edges = edges;
+  this.hand = hand;
   this.group = null;
   this.turns = [];
 }
@@ -39,13 +40,13 @@ Table.prototype = {
     this.group.anchor.set(0.5);
     this.group.scale.set(1);
     var edges = this.edges;
-
+    var hand  = this.hand;//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<????????????????????????????pq
     s = Game.add.sprite(0,0,'blank');
     s.anchor.set(0.5);
     s.visible = false;
     s.inputEnabled = true;
     s.events.onInputDown.add(function(obj){
-        edges.finishSelect("center");
+        hand.finishSelect("center");
     });
     this.group.addChild(s);
     edges.edges.center.blank.normal = s;
@@ -56,7 +57,7 @@ Table.prototype = {
     s.visible = false;
     s.inputEnabled = true;
     s.events.onInputDown.add(function(obj){
-        edges.finishSelect("up");
+        hand.finishSelect("up");
     });
     this.group.addChild(s);
     edges.edges.up.blank.normal = s;
@@ -67,7 +68,7 @@ Table.prototype = {
     s.visible = false;
     s.inputEnabled = true;
     s.events.onInputDown.add(function(obj){
-        edges.finishSelect("up");
+        hand.finishSelect("up");
     });
     this.group.addChild(s);
     edges.edges.up.blank.side = s;
@@ -78,7 +79,7 @@ Table.prototype = {
     s.visible = false;
     s.inputEnabled = true;
     s.events.onInputDown.add(function(obj){
-        edges.finishSelect("down");
+        hand.finishSelect("down");
     });
     this.group.addChild(s);
     edges.edges.down.blank.normal = s;
@@ -89,7 +90,7 @@ Table.prototype = {
     s.visible = false;
     s.inputEnabled = true;
     s.events.onInputDown.add(function(obj){
-        edges.finishSelect("down");
+        hand.finishSelect("down");
     });
     this.group.addChild(s);
     edges.edges.down.blank.side = s;
@@ -101,7 +102,7 @@ Table.prototype = {
     s.visible = false;
     s.inputEnabled = true;
     s.events.onInputDown.add(function(obj){
-        edges.finishSelect("right");
+        hand.finishSelect("right");
     });
     this.group.addChild(s);
     edges.edges.right.blank.normal = s;
@@ -112,7 +113,7 @@ Table.prototype = {
     s.visible = false;
     s.inputEnabled = true;
     s.events.onInputDown.add(function(obj){
-        edges.finishSelect("right");
+        hand.finishSelect("right");
     });
     this.group.addChild(s);
     edges.edges.right.blank.side = s;
@@ -123,7 +124,7 @@ Table.prototype = {
     s.visible = false;
     s.inputEnabled = true;
     s.events.onInputDown.add(function(obj){
-        edges.finishSelect("left");
+        hand.finishSelect("left");
     });
     this.group.addChild(s);
     edges.edges.left.blank.normal = s;
@@ -133,7 +134,7 @@ Table.prototype = {
     s.visible = false;
     s.inputEnabled = true;
     s.events.onInputDown.add(function(obj){
-        edges.finishSelect("left");
+        hand.finishSelect("left");
     });
     this.group.addChild(s);
     edges.edges.left.blank.side = s;

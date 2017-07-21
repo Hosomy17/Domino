@@ -18,40 +18,45 @@ Core.prototype = {
     if(this.hand.turn != Link.player.turn)
         ok = false;
 
-    var pieces = Link.player.pieces;
+    var pieces = this.hand.pieces;
     var nums = [];
-    nums[0] = this.edges.edges.up.open;
-    nums[1] = this.edges.edges.down.open;
-    nums[2] = this.edges.edges.right.open;
-    nums[3] = this.edges.edges.left.open;
+    nums[0] = {n:this.edges.edges.up.open,d:"up"};
+    nums[1] = {n:this.edges.edges.down.open,d:"down"};
+    nums[2] = {n:this.edges.edges.right.open,d:"right"};
+    nums[3] = {n:this.edges.edges.left.open,d:"left"};
     for (var i=0;i < pieces.length;i++) {
       for (var j=0;j < nums.length;j++) {
-        if((pieces[i][0] == nums[j] || pieces[i][1] == nums[j]) && pieces[i])
+        if((pieces[i].piece[0] == nums[j] || pieces[i].piece[1] == nums[j])){
+          this.hand.reservedPiece = {p:pieces[i],d:nums[j].d};//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<muito complexo
           ok=false;
+        }
       }
     }
 
     if(this.flagStart){
-
-      if(Link.match.doublesSix){
+      if(Link.match.doublesSix){//<<<<<<<<<<<<<<<<<<<<<<<juntar isso com o de cima
         for(var i=0; i < pieces.length; i++){
-          if(pieces[i][0] + pieces[i][1] == 12)
+          if(pieces[i].piece[0] + pieces[i].piece[1] == 12){
+            this.hand.reservedPiece = {p:pieces[i],d:"center"};
             ok=false;
+          }
         }
       }
       else {
-        for(var i=0; i < pieces.length; i++){
-          if(pieces[i][0] == pieces[i][1])
+        for(var i=0; i < pieces.length; i++){//<<<<<<<<<<<<<<<<<<<<<<<juntar isso com o de cima
+          if(pieces[i].piece[0] == pieces[i].piece[1]){
+            this.hand.reservedPiece = {p:pieces[i],d:"center"};
             ok=false;
+          }
         }
       }
     }
 
     if(ok){
-      this.edges.finishSelect(null,null);
+      this.hand.finishSelect(null,null);
     }
     else {
-      this.autoPlayTrg = Game.time.events.add(Phaser.Timer.SECOND * 5, this.autoPlay, this);
+      this.autoPlayTrg = Game.time.events.add(Phaser.Timer.SECOND * 1, this.autoPlay, this);
     }
 
     return ok;
@@ -228,25 +233,8 @@ Core.prototype = {
     this.score[team].text.text = this.score[team].total;
   },
 
-  autoPlay : function(){
-    var piece = null;
-    var direction = null;
-    var edges = [];
-    edges[0] = {n:this.edges.edges.up.open,d:"up"};
-    edges[1] = {n:this.edges.edges.down.open,d:"down"};
-    edges[2] = {n:this.edges.edges.right.open,d:"right"};
-    edges[3] = {n:this.edges.edges.left.open,d:"left"};
-    for(var i = 0; i < Link.player.pieces.length; i++){
-      for(var j = 0; j < edges.length; j++){
-        if(edges[j].n == Link.player.pieces[i][0] || edges[j].n == Link.player.pieces[i][1]){
-          direction = edges[j].d;
-          piece = Link.player.pieces[i][3];
-        }
-      }
-    }
-
-    this.edges.selectedPiece = piece;
-    this.edges.finishSelect(direction);
+  autoPlay: function(){
+    this.hand.autoPlay();
   },
 
   finalRound: function(){

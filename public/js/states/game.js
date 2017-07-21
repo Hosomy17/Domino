@@ -21,7 +21,7 @@ State.Game = (function(){
     Link.match.status = "waiting";
     var edges = new Edges();
     var hand = new Hand(edges);
-    var table = new Table(edges);
+    var table = new Table(edges,hand);
     var hud = new Hud(table);
     edges.create();
     hand.create();

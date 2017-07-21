@@ -1,7 +1,9 @@
-var Hand = function(edges, turn){
-  this.edges = edges;
-  this.turn = 0;
+var Hand = function(e, t){
+  this.edges = e;
+  this.turn = t;
+  this.pieces = [1,2];
   this.group = null;
+  this.reservedPiece = null;
 }
 
 Hand.prototype = {
@@ -24,8 +26,8 @@ Hand.prototype = {
         //Set input listener
         sprite.piece = piece;
         sprite.inputEnabled = true;
+        this.pieces[i] = sprite;
         var edges = this.edges;
-        Link.player.pieces[3] = sprite;
         sprite.events.onInputDown.add(
         function(obj){
             if(hand.turn == Link.player.turn){
@@ -37,6 +39,35 @@ Hand.prototype = {
         //Add to hand
         this.group.addChild(sprite);
     }
-    //game.add.button(game.world.width - 100, game.world.height - 50, 'pass', skipMove, this, 0, 1, 2);//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< pocição
+  },
+
+  finishSelect : function(direction){
+    this.edges.selectedPiece.visible = false;
+    this.edges.edges.center.blank.normal.visible = false;
+    this.edges.edges.up.blank.side.visible       = false;
+    this.edges.edges.down.blank.side.visible     = false;
+    this.edges.edges.left.blank.side.visible     = false;
+    this.edges.edges.right.blank.side.visible    = false;
+    this.edges.edges.up.blank.normal.visible     = false;
+    this.edges.edges.down.blank.normal.visible   = false;
+    this.edges.edges.left.blank.normal.visible   = false;
+    this.edges.edges.right.blank.normal.visible  = false;
+
+    var move = {piece:this.selectedPiece.piece, direction:direction};
+    Link.sendMove(move);
+
+    if(this.edges.selectedPiece){
+      for(i = 0; i < this.pieces.length; i++){ //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<alterar isso para hand
+        if(this.pieces[i].piece[2] == this.edges.selectedPiece.piece[2])
+          this.pieces.splice(i,1);
+      }
+    }
+    this.edges.selectedPiece = null;//<<<<<<<<<<<<<<<<<<<<<<<<<<<<ainda em edge?
+  },
+
+  autoPlay: function(){
+    console.log(this.reservedPiece);
+    this.edges.selectedPiece = this.reservedPiece.p;
+    this.finishSelect(this.reservedPiece.d);
   }
 };

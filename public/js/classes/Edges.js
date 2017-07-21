@@ -77,7 +77,6 @@ Edges.prototype = {
     this.formulaPositions.right = this.edges.right.nextPosition;
     this.formulaPositions.left  = this.edges.left.nextPosition;
   },
-
   showBlanks : function(){
     this.edges.center.blank.visible       = false;
     this.edges.up.blank.side.visible      = false;
@@ -109,30 +108,6 @@ Edges.prototype = {
       }
       this.edges.left.blank.normal.visible  = (this.selectedPiece.piece[0] == this.edges.left.open || this.selectedPiece.piece[1] == this.edges.left.open) ? true : false;
       this.edges.right.blank.normal.visible = (this.selectedPiece.piece[0] == this.edges.right.open || this.selectedPiece.piece[1] == this.edges.right.open) ? true : false;
-    }
-  },
-
-  finishSelect : function(direction){
-    this.selectedPiece.visible = false;
-
-    this.edges.center.blank.normal.visible = false;
-    this.edges.up.blank.side.visible       = false;
-    this.edges.down.blank.side.visible     = false;
-    this.edges.left.blank.side.visible     = false;
-    this.edges.right.blank.side.visible    = false;
-    this.edges.up.blank.normal.visible     = false;
-    this.edges.down.blank.normal.visible   = false;
-    this.edges.left.blank.normal.visible   = false;
-    this.edges.right.blank.normal.visible  = false;
-
-    var move = {piece:this.selectedPiece, direction:direction};
-    Link.sendMove(move);
-
-    if(this.selectedPiece){
-      for(i = 0; i < Link.player.pieces.length; i++){
-        if(Link.player.pieces[i][2] == piece[2])
-          Link.player.pieces.splice(i,1);
-      }
     }
   }
 }

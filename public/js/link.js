@@ -57,8 +57,8 @@ Link = (function(){
 	}
 
 	function sendMove(move){
-		msg = {player:_player,move:move};
-		console.log(msg);
+		var player = {name:_player.name,turn:_player.turn,team:_player.team};
+		msg = {player:player,move:move};
 		_socket.emit('sendMove',msg);
 	}
 

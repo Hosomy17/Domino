@@ -138,7 +138,7 @@ io.on('connection', function(socket){
 			match.sum[data.player.team] -= data.move.piece[0] + data.move.piece[1];
 
 		data.sum = match.sum;
-		console.info('Player: ' + data.player.id + ' send new move: ' + data.move.piece +' '+data.move.direction);
+		console.info('Player: ' + data.player.name + ' send new move: ' + data.move.piece +' '+data.move.direction);
 		io.to(socket.match.id).emit('newMove',data);
 	});
 
