@@ -9,7 +9,6 @@ var Core = function(ha, hu, e, p, s, t){
   this.edges       = e;
   this.score       = s;
   this.table       = t;
-  this.autoPlayTrg = null;
 }
 
 Core.prototype = {
@@ -19,7 +18,7 @@ Core.prototype = {
       ok = false;
     }
     else {
-      this.autoPlayTrg = Game.time.events.add(Phaser.Timer.SECOND * 1, this.autoPlay, this);
+      Game.time.events.add(Phaser.Timer.SECOND * 0.1, this.autoPlay, this);
     }
 
     var pieces = this.hand.pieces;
@@ -56,7 +55,7 @@ Core.prototype = {
       }
     }
     if(ok){
-      this.autoPlayTrg.timer.destroy();
+      Game.time.events.removeAll();
       this.hand.selectedPiece = null;
       this.finishSelect(null);
     }

@@ -2,6 +2,8 @@ Link = (function(){
 	var _socket = io();
 
 	//Info about player in the current match
+
+	var _players = [];
 	var _player = {
 		id     : _socket.id,
 		name   : 'Player1',
@@ -43,7 +45,12 @@ Link = (function(){
 				_player = players[3];
 			break;
 		}
-		_player.room = data.match;
+		_players[0] = {name:players[0].name, team:players[0].team, pieces:[]};//<<<<<<<<<<<<<<<<<<<<<verificar se está certo
+		_players[1] = {name:players[1].name, team:players[1].team, pieces:[]};
+		_players[2] = {name:players[2].name, team:players[2].team, pieces:[]};
+		_players[3] = {name:players[3].name, team:players[3].team, pieces:[]};
+
+		_player.room = data.room;
 		_match.status = 'Ready';
 	});
 
@@ -63,7 +70,7 @@ Link = (function(){
 	}
 
 	function newRound(){
-		msg = {player:_player,room:_player.room};
+		var msg = {players:_players};
 		_socket.emit('newRound',msg);
 	}
 
