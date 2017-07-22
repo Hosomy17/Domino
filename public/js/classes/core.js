@@ -15,8 +15,12 @@ var Core = function(ha, hu, e, p, s, t){
 Core.prototype = {
   skipMove: function(){
     var ok=true;
-    if(this.hand.turn != Link.player.turn)
-        ok = false;
+    if(this.hand.turn != Link.player.turn){
+      ok = false;
+    }
+    else {
+      this.autoPlayTrg = Game.time.events.add(Phaser.Timer.SECOND * 1, this.autoPlay, this);
+    }
 
     var pieces = this.hand.pieces;
     var nums = [];
@@ -26,7 +30,7 @@ Core.prototype = {
     nums[3] = {n:this.edges.edges.left.open,d:"left"};
     for (var i=0;i < pieces.length;i++) {
       for (var j=0;j < nums.length;j++) {
-        if((pieces[i].piece[0] == nums[j] || pieces[i].piece[1] == nums[j])){
+        if((pieces[i].piece[0] == nums[j].n || pieces[i].piece[1] == nums[j].n)){
           this.hand.reservedPiece = {p:pieces[i],d:nums[j].d};//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<muito complexo
           ok=false;
         }
@@ -51,14 +55,11 @@ Core.prototype = {
         }
       }
     }
-
     if(ok){
-      this.hand.finishSelect(null,null);
+      this.autoPlayTrg.timer.destroy();
+      this.hand.selectedPiece = null;
+      this.finishSelect(null);
     }
-    else {
-      this.autoPlayTrg = Game.time.events.add(Phaser.Timer.SECOND * 1, this.autoPlay, this);
-    }
-
     return ok;
   },
 
@@ -233,8 +234,34 @@ Core.prototype = {
     this.score[team].text.text = this.score[team].total;
   },
 
+  finishSelect : function(direction){
+    this.edges.edges.center.blank.normal.visible = false;
+    this.edges.edges.up.blank.side.visible       = false;
+    this.edges.edges.down.blank.side.visible     = false;
+    this.edges.edges.left.blank.side.visible     = false;
+    this.edges.edges.right.blank.side.visible    = false;
+    this.edges.edges.up.blank.normal.visible     = false;
+    this.edges.edges.down.blank.normal.visible   = false;
+    this.edges.edges.left.blank.normal.visible   = false;
+    this.edges.edges.right.blank.normal.visible  = false;
+
+    var piece = this.edges.selectedPiece;
+    if(piece){
+      piece.visible = false;
+      piece = piece.piece;
+      for(i = 0; i < this.hand.pieces.length; i++){ //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<alterar isso para hand
+        if(this.hand.pieces[i].piece[2] == piece[2])
+          this.hand.pieces.splice(i,1);
+      }
+    }
+    var move = {piece:piece, direction:direction};
+    Link.sendMove(move);
+    this.edges.selectedPiece = null;//<<<<<<<<<<<<<<<<<<<<<<<<<<<<ainda em edge?
+  },
+
   autoPlay: function(){
-    this.hand.autoPlay();
+    this.edges.selectedPiece = this.hand.reservedPiece.p;
+    this.finishSelect(this.hand.reservedPiece.d);
   },
 
   finalRound: function(){

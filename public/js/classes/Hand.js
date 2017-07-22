@@ -41,8 +41,7 @@ Hand.prototype = {
     }
   },
 
-  finishSelect : function(direction){
-    this.edges.selectedPiece.visible = false;
+  finishSelect : function(direction){//<<<<<<<<<<<<<<<<<<<<<<<<<<<duplicado no core
     this.edges.edges.center.blank.normal.visible = false;
     this.edges.edges.up.blank.side.visible       = false;
     this.edges.edges.down.blank.side.visible     = false;
@@ -53,21 +52,17 @@ Hand.prototype = {
     this.edges.edges.left.blank.normal.visible   = false;
     this.edges.edges.right.blank.normal.visible  = false;
 
-    var move = {piece:this.selectedPiece.piece, direction:direction};
-    Link.sendMove(move);
-
-    if(this.edges.selectedPiece){
+    var piece = this.edges.selectedPiece;
+    if(piece){
+      piece.visible = false;
+      piece = piece.piece;
       for(i = 0; i < this.pieces.length; i++){ //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<alterar isso para hand
-        if(this.pieces[i].piece[2] == this.edges.selectedPiece.piece[2])
+        if(this.pieces[i].piece[2] == piece[2])
           this.pieces.splice(i,1);
       }
     }
+    var move = {piece:piece, direction:direction};
+    Link.sendMove(move);
     this.edges.selectedPiece = null;//<<<<<<<<<<<<<<<<<<<<<<<<<<<<ainda em edge?
-  },
-
-  autoPlay: function(){
-    console.log(this.reservedPiece);
-    this.edges.selectedPiece = this.reservedPiece.p;
-    this.finishSelect(this.reservedPiece.d);
   }
 };
