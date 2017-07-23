@@ -18,7 +18,7 @@ Core.prototype = {
       ok = false;
     }
     else {
-      Game.time.events.add(Phaser.Timer.SECOND * 0.1, this.autoPlay, this);
+      Game.time.events.add(Phaser.Timer.SECOND * 15, this.autoPlay, this);
     }
 
     var pieces = this.hand.pieces;
