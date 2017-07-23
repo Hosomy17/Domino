@@ -20,7 +20,6 @@ Core.prototype = {
     else {
       Game.time.events.add(Phaser.Timer.SECOND * 15, this.autoPlay, this);
     }
-
     var pieces = this.hand.pieces;
     var nums = [];
     nums[0] = {n:this.edges.edges.up.open,d:"up"};
@@ -35,7 +34,6 @@ Core.prototype = {
         }
       }
     }
-
     if(this.flagStart){
       if(Link.match.doublesSix){//<<<<<<<<<<<<<<<<<<<<<<<juntar isso com o de cima
         for(var i=0; i < pieces.length; i++){

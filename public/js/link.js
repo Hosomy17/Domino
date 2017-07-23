@@ -59,13 +59,13 @@ Link = (function(){
 	});
 
 	function requestMatch(){
-		msg = {player: _player};
+		var msg = {player: _player};
 		_socket.emit('findMatch', msg);
 	}
 
 	function sendMove(move){
 		var player = {name:_player.name,turn:_player.turn,team:_player.team};
-		msg = {player:player,move:move};
+		var msg = {player:player,move:move};
 		_socket.emit('sendMove',msg);
 	}
 

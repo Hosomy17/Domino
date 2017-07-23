@@ -41,7 +41,7 @@ Table.prototype = {
     this.group.scale.set(1);
     var edges = this.edges;
     var hand  = this.hand;//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<????????????????????????????pq
-    s = Game.add.sprite(0,0,'blank');
+    var s = Game.add.sprite(0,0,'blank');
     s.anchor.set(0.5);
     s.visible = false;
     s.inputEnabled = true;

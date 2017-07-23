@@ -16,7 +16,7 @@ Hand.prototype = {
     var pieces = Link.player.pieces;
     var hand = this;
     for (var i = 0; i < STATIC.TOTAL_PIECES; i++){
-        piece = pieces[i];
+        var piece = pieces[i];
         //Create Sprite
         //2 EXTRAS PIECES TO SIDES, STARTS BY -(TOTAL_PIECES/2) ENDS TO TOTAL_PIECES/2
         //[-4]* [-3] [-2] [-1] [0] [1] [2] [3] [4]*  EXEMPLE TOTAL=7 PIECES
