@@ -24,8 +24,7 @@ app.get('/', function(req,res){
 });
 
 //Socket
-matchs =
-{
+matchs = {
 	avaliable : [],//match
 	progress  : [],//match
 	disable   : [],//match
@@ -35,24 +34,21 @@ matchs =
 io.on('connection', function(socket){
 
 	console.info('New player: ' + socket.id);
-	var match;
 
 	socket.on('findMatch', function(data){
 
 		//Search an avaiable match
-		var m = matchs.avaliable.shift();
+		var match = matchs.avaliable.shift();
 
-		if(!m){
-			m = {
+		if(!match){
+			match = {
 				id		  : 'Room ' + matchs.total++,
 				players : [],
 				sum     : [0,0]
 			}
 
-			console.info('New match: ' + m.id);
+			console.info('New match: ' + match.id);
 		}
-
-		match = m;
 		//Put player in the match
 		player = data.player;
 		player.id = socket.conn.id;//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<problema com o '/#' dos ids
@@ -104,9 +100,8 @@ io.on('connection', function(socket){
 			console.info('Start game: '      + match.id);
 			console.info('Start new match: ' + match.id);
 		}
-		else {
+		else
 			matchs.avaliable.push(match);
-		}
 
 		socket.match = match;
 	});
@@ -123,42 +118,54 @@ io.on('connection', function(socket){
 				sum[i] += shufflePieces[i][j][0] + shufflePieces[i][j][1];
 			}
 		}
-		match.sum = [0,0];
+		socket.match.sum = [0,0];
 		for(var i=0; i < STATIC.MAX_PLAYERS; i++){
-			match.sum[data.players[i].team] = shufflePieces[i];
+			socket.match.sum[data.players[i].team] = shufflePieces[i];
 		}
-		io.to(match.id).emit('startRound', {players:data.players,room:match.id});
-		console.info('Start new round: ' + match.id);
+		io.to(socket.match.id).emit('startRound', {players:data.players,room:socket.match.id});
+		console.info('Start new round: ' + socket.match.id);
 	});
 
 	socket.on('sendMove', function(data){
 		//verificar<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< se ta tudo ok
 		if(data.move.piece != null)
-			match.sum[data.player.team] -= data.move.piece[0] + data.move.piece[1];
+			socket.match.sum[data.player.team] -= data.move.piece[0] + data.move.piece[1];
 
-		data.sum = match.sum;
+		data.sum = socket.match.sum;
 		console.info('Player: ' + data.player.name + ' send new move: ' + data.move.piece +' '+data.move.direction);
 		io.to(socket.match.id).emit('newMove',data);
 	});
 
-	socket.on('leaveMatch', function(data){
-		if(socket.match)
-			//socket.unjoin(match.id);//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+	socket.on('leaveMatch', function(){
+		if(socket.match){
+			socket.leave(socket.match.id);
+			removePlayer(socket.match,socket.conn.id);
 			socket.player.status = 'disconnect';
-			io.to(socket.match.id).emit('updateMatch',socket.player);
-			console.info('Player: ' + socket.id + ' left: ' + socket.match.id);
-
+			//io.to(socket.match.id).emit('updateMatch',socket.player);
+			console.log(socket.match);
+			//console.info('Player: ' + socket.id + ' left: ' + socket.match.id);}
+		}
 	});
 
-	socket.on('disconnect', function(data){
-		if(socket.match)
-		{
+	socket.on('disconnect', function(){
+		if(socket.match){
+			socket.leave(socket.match.id);
+			removePlayer(socket.match,socket.conn.id);
 			socket.player.status = 'disconnect';
-			io.to(socket.match.id).emit('updateMatch',socket.player);
+			//io.to(socket.match.id).emit('updateMatch',socket.player);
 			console.info('Player: ' + socket.id + ' left: ' + socket.match.id);
 		}
 	});
 });
+
+function removePlayer(match,idPlayer){
+	var index;
+	for(var i=0; i < match.length; i++){
+		if(match.players[i].id == idPlayer)
+			index = i;
+	}
+	match.players.splice(index, 1);
+}
 
 function drawPieces(){
 	shufflePieces = [];

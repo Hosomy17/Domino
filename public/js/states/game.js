@@ -12,7 +12,6 @@ State.Game = (function(){
     this.load.spritesheet('hand',   'assets/sprites/hand.png');//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< spritesheet??????
     this.load.spritesheet('table',  'assets/sprites/table.png');//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< spritesheet??????
     this.load.spritesheet('blank',  'assets/sprites/blank.png');//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< spritesheet??????
-    this.load.spritesheet('pass',   'assets/sprites/pass.png',90,30);
     this.load.spritesheet('turn',   'assets/sprites/turn.png');
     this.load.spritesheet('final',  'assets/sprites/final.png');
 	}
