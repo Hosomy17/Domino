@@ -109,5 +109,17 @@ Edges.prototype = {
       this.edges.left.blank.normal.visible  = (this.selectedPiece.piece[0] == this.edges.left.open || this.selectedPiece.piece[1] == this.edges.left.open) ? true : false;
       this.edges.right.blank.normal.visible = (this.selectedPiece.piece[0] == this.edges.right.open || this.selectedPiece.piece[1] == this.edges.right.open) ? true : false;
     }
+  },
+
+  hideBlanks : function(){
+    this.edges.center.blank.normal.visible = false;
+    this.edges.up.blank.side.visible       = false;
+    this.edges.down.blank.side.visible     = false;
+    this.edges.left.blank.side.visible     = false;
+    this.edges.right.blank.side.visible    = false;
+    this.edges.up.blank.normal.visible     = false;
+    this.edges.down.blank.normal.visible   = false;
+    this.edges.left.blank.normal.visible   = false;
+    this.edges.right.blank.normal.visible  = false;
   }
 }

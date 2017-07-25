@@ -18,7 +18,7 @@ Core.prototype = {
       ok = false;
     }
     else {
-      Game.time.events.add(Phaser.Timer.SECOND * 15, this.autoPlay, this);
+      Game.time.events.add(Phaser.Timer.SECOND * 0.1, this.autoPlay, this);
     }
     var pieces = this.hand.pieces;
     var nums = [];
@@ -232,15 +232,7 @@ Core.prototype = {
   },
 
   finishSelect : function(direction){
-    this.edges.edges.center.blank.normal.visible = false;
-    this.edges.edges.up.blank.side.visible       = false;
-    this.edges.edges.down.blank.side.visible     = false;
-    this.edges.edges.left.blank.side.visible     = false;
-    this.edges.edges.right.blank.side.visible    = false;
-    this.edges.edges.up.blank.normal.visible     = false;
-    this.edges.edges.down.blank.normal.visible   = false;
-    this.edges.edges.left.blank.normal.visible   = false;
-    this.edges.edges.right.blank.normal.visible  = false;
+    this.edges.hideBlanks();
 
     var piece = this.edges.selectedPiece;
     if(piece){
