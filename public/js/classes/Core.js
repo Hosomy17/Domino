@@ -1,7 +1,7 @@
 var Core = function(ha, hu, e, p, s, t){
   this.hand        = ha;
   this.hud         = hu;
-  this.countPass   = 0;
+  this.countSkip   = 0;
   this.flagStart   = true;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>SOCORRO DUPLICADO
   this.maxPieceRow = 0;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>maior numero de peças em uma fila
   this.scaleTable  = 1;
@@ -13,73 +13,72 @@ var Core = function(ha, hu, e, p, s, t){
 
 Core.prototype = {
   skipMove: function(){
-    var ok=true;
-    if(this.hand.turn != Link.player.turn){
-      ok = false;
-    }
-    else {
-      Game.time.events.add(Phaser.Timer.SECOND * 0.1, this.autoPlay, this);
-    }
-    var pieces = this.hand.pieces;
-    var nums = [];
-    nums[0] = {n:this.edges.edges.up.open,d:"up"};
-    nums[1] = {n:this.edges.edges.down.open,d:"down"};
-    nums[2] = {n:this.edges.edges.right.open,d:"right"};
-    nums[3] = {n:this.edges.edges.left.open,d:"left"};
-    for (var i=0;i < pieces.length;i++) {
-      for (var j=0;j < nums.length;j++) {
-        if((pieces[i].piece[0] == nums[j].n || pieces[i].piece[1] == nums[j].n)){
-          this.hand.reservedPiece = {p:pieces[i],d:nums[j].d};//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<muito complexo
-          ok=false;
+    var skip=true;
+    if(this.hand.turn != Link.player.turn)
+      skip = false;
+    else
+      Game.time.events.add(Phaser.Timer.SECOND * 1, this.autoPlay, this);
+
+    var pcs = this.hand.pieces;
+    var eds = [];
+    eds[0] = {n:this.edges.up.open   ,d:"up"};
+    eds[1] = {n:this.edges.down.open ,d:"down"};
+    eds[2] = {n:this.edges.right.open,d:"right"};
+    eds[3] = {n:this.edges.left.open ,d:"left"};
+    for (var i=0;i < pcs.length;i++) {
+      for (var j=0;j < eds.length;j++) {
+        if((pcs[i].piece[0] == eds[j].n || pcs[i].piece[1] == eds[j].n)){
+          this.hand.reservedPiece = {p:pcs[i],d:eds[j].d};//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<muito complexo
+          skip=false;
         }
       }
     }
     if(this.flagStart){
-      if(Link.match.doublesSix){//<<<<<<<<<<<<<<<<<<<<<<<juntar isso com o de cima
-        for(var i=0; i < pieces.length; i++){
-          if(pieces[i].piece[0] + pieces[i].piece[1] == 12){
-            this.hand.reservedPiece = {p:pieces[i],d:"center"};
-            ok=false;
+      if(Link.match.sena){//<<<<<<<<<<<<<<<<<<<<<<<juntar isso com o de cima
+        for(var i=0; i < pcs.length; i++){
+          if(pcs[i].piece[0] + pcs[i].piece[1] == 12){
+            this.hand.reservedPiece = {p:pcs[i],d:"center"};
+            skip=false;
           }
         }
       }
       else {
-        for(var i=0; i < pieces.length; i++){//<<<<<<<<<<<<<<<<<<<<<<<juntar isso com o de cima
-          if(pieces[i].piece[0] == pieces[i].piece[1]){
-            this.hand.reservedPiece = {p:pieces[i],d:"center"};
-            ok=false;
+        for(var i=0; i < pcs.length; i++){//<<<<<<<<<<<<<<<<<<<<<<<juntar isso com o de cima
+          if(pcs[i].piece[0] == pcs[i].piece[1]){
+            this.hand.reservedPiece = {p:pcs[i],d:"center"};
+            skip=false;
           }
         }
       }
     }
-    if(ok){
+    if(skip){
       Game.time.events.removeAll();
       this.hand.selectedPiece = null;
       this.finishSelect(null);
     }
-    return ok;
+    return skip;
   },
 
-  doMove: function(data){
-    if(data.move.piece == null){
-      if(this.countPass == 0){
-        if(data.player.team == 0)
+  doMove: function(d){
+    if(d.move.piece == null){
+      if(this.countSkip == 0){
+        if(d.player.team == 0)
           this.gainPoints(20,1);
         else
           this.gainPoints(20,0);
       }
-      this.countPass++
-      if(this.countPass == 4){
+      this.countSkip++;
+      if(this.countSkip == 4){
 
-        if(data.sum[0] < data.sum[1])
-          this.gainPoints(Math.floor(data.sum[1]/5) * 5,0);
-        else if(data.sum[1] < data.sum[0])
-          this.gainPoints(Math.floor(data.sum[0]/5) * 5,1);
+        if(d.sum[0] < d.sum[1])
+          this.gainPoints(Math.floor(d.sum[1]/5) * 5,0);
+        else if(d.sum[1] < d.sum[0])
+          this.gainPoints(Math.floor(d.sum[0]/5) * 5,1);
 
         Link.match.score = [this.score[0].total, this.score[1].total];
-        Link.match.turn = data.player.turn;
-        Link.match.doublesSix = true;
-        this.finalRound();
+        Link.match.turn = d.player.turn;
+        Link.match.sena = true;
+        this.endRound();
       }
       else{
         this.nextTurn();
@@ -88,31 +87,31 @@ Core.prototype = {
       return 0;
     }
     else{
-      if(this.countPass == 3)
-        this.gainPoints(50,data.player.team);
-      this.countPass = 0;
+      if(this.countSkip == 3)
+        this.gainPoints(50,d.player.team);
+      this.countSkip = 0;
     }
 
-    this.drawMove(data);
-    this.players[data.player.turn].ctn--;
+    this.drawMove(d);
+    this.players[d.player.turn].ctn--;
     var points = this.calculatePoints();
     if(points % 5 == 0)
-      this.gainPoints(points,data.player.team);
+      this.gainPoints(points,d.player.team);
 
-    if(Link.player.turn != data.player.turn)
-      this.players[data.player.turn].totalPieces.text = this.players[data.player.turn].ctn;
+    if(Link.player.turn != d.player.turn)
+      this.players[d.player.turn].totalPieces.text = this.players[d.player.turn].ctn;
 
     if(this.edges.flagStart){
       this.flagStart = false;
       this.edges.flagStart = false;
-      this.edges.edges.up.open     = data.move.piece[0];
-      this.edges.edges.down.open   = data.move.piece[0];
-      this.edges.edges.left.open   = data.move.piece[0];
-      this.edges.edges.right.open  = data.move.piece[0];
-      this.edges.edges.center.open = data.move.piece[0];
+      this.edges.up.open     = d.move.piece[0];
+      this.edges.down.open   = d.move.piece[0];
+      this.edges.left.open   = d.move.piece[0];
+      this.edges.right.open  = d.move.piece[0];
+      this.edges.center.open = d.move.piece[0];
     }
 
-    var edge = this.edges.edges[data.move.direction];
+    var edge = this.edges[d.move.direction];
     //Zoom out
     if(this.maxPieceRow < edge.total){
       this.maxPieceRow = edge.total;
@@ -123,18 +122,18 @@ Core.prototype = {
       Game.add.tween(this.table.scale).to( { x: this.scaleTable, y: this.scaleTable,}, 500, Phaser.Easing.Linear.None, true);
     }
 
-    if(this.players[data.player.turn].ctn == 0){
+    if(this.players[d.player.turn].ctn == 0){
 
-      if(data.move.piece[0] == data.move.piece[1])
-        this.gainPoints(20,data.player.team);
+      if(d.move.piece[0] == d.move.piece[1])
+        this.gainPoints(20,d.player.team);
 
       var score = [this.score[0].total, this.score[1].total];
-      this.gainPoints(Math.floor(data.sum[data.player.team]/5) * 5,data.player.team);
+      this.gainPoints(Math.floor(d.sum[d.player.team]/5) * 5,d.player.team);
 
       Link.match.score = score;//<<<<<<<<<<<<<<<<<<<<<<<<<<<verificar
-      Link.match.turn = data.player.turn;
-      Link.match.doublesSix = false;
-      this.finalRound();
+      Link.match.turn = d.player.turn;
+      Link.match.sena = false;
+      this.endRound();
     }
     else{
       this.nextTurn();
@@ -152,32 +151,32 @@ Core.prototype = {
     this.players[this.hand.turn].turn.visible = true;
   },
 
-  drawMove: function(data){
-    var orientation = (data.move.piece[0] == data.move.piece[1] ) ? 'side' : 'normal';
-    var edge = this.edges.edges[data.move.direction];
+  drawMove: function(d){
+    var orientation = (d.move.piece[0] == d.move.piece[1] ) ? 'side' : 'normal';
+    var edge = this.edges[d.move.direction];
 
-    var sprite = Game.add.sprite(edge.blank[orientation].x,edge.blank[orientation].y,'domino',data.move.piece[2]);//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<melhorar atributos
+    var sprite = Game.add.sprite(edge.blank[orientation].x,edge.blank[orientation].y,'domino',d.move.piece[2]);//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<melhorar atributos
     sprite.angle = edge.blank[orientation].angle;
     sprite.anchor.set(0.5);
     this.table.addChild(sprite);
 
     edge.total++;
-    if(edge.open == data.move.piece[0]){
+    if(edge.open == d.move.piece[0]){
       sprite.angle += 180;
-      edge.open = data.move.piece[1];
-      edge.points = data.move.piece[1];
+      edge.open = d.move.piece[1];
+      edge.points = d.move.piece[1];
     }
     else{
-      edge.open = data.move.piece[0];
-      edge.points = data.move.piece[0];
+      edge.open = d.move.piece[0];
+      edge.points = d.move.piece[0];
     }
 
-    edge.points *= (data.move.piece[0]==data.move.piece[1]) ? 2 : 1;
+    edge.points *= (d.move.piece[0]==d.move.piece[1]) ? 2 : 1;
 
-    if(edge.total == 7 && (data.move.direction == 'right' || data.move.direction == 'left')){
+    if(edge.total == 7 && (d.move.direction == 'right' || d.move.direction == 'left')){
       edge.blank.normal.angle += 90;
       edge.blank.side.angle += 90;
-      switch (data.move.direction) {
+      switch (d.move.direction) {
         case 'right':
           edge.nextPosition    = this.edges.formulaPositions.down;
           edge.blank.normal.y -= STATIC.WIDTH_PIECE/2;
@@ -194,10 +193,10 @@ Core.prototype = {
         break;
       }
     }
-    else if (edge.total == 5 &&  (data.move.direction == 'up' || data.move.direction == 'down')) {
+    else if (edge.total == 5 &&  (d.move.direction == 'up' || d.move.direction == 'down')) {
       edge.blank.normal.angle += 90;
       edge.blank.side.angle   += 90;
-      switch (data.move.direction) {
+      switch (d.move.direction) {
         case 'up':
           edge.nextPosition    = this.edges.formulaPositions.right;
           edge.blank.normal.x -= STATIC.WIDTH_PIECE/2;
@@ -220,9 +219,9 @@ Core.prototype = {
   },
 
   calculatePoints: function(){
-    this.edges.edges.center.points *= (this.edges.edges.left.total > 0 && this.edges.edges.right.total > 0) ? 0 : 1;
+    this.edges.center.points *= (this.edges.left.total > 0 && this.edges.right.total > 0) ? 0 : 1;
 
-    var points = this.edges.edges.center.points + this.edges.edges.up.points + this.edges.edges.right.points + this.edges.edges.down.points + this.edges.edges.left.points;
+    var points = this.edges.center.points + this.edges.up.points + this.edges.right.points + this.edges.down.points + this.edges.left.points;
     return points;
   },
 
@@ -253,7 +252,7 @@ Core.prototype = {
     this.finishSelect(this.hand.reservedPiece.d);
   },
 
-  finalRound: function(){
+  endRound: function(){
     if((this.score[0].total >= 200 || this.score[1].total >= 200) && (this.score[0].total != this.score[1].total))//<<<<<<<<<<<<<<<<<<<<<<pontuação n static
       this.hud.showScore();
     else

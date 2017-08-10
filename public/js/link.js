@@ -20,7 +20,7 @@ Link = (function(){
 		score     : [0,0],
 		round     : 1,
 		turn      : 0,
-		doublesSix: true,
+		sena: true,
 		status    : 'Created'
 	};
 
@@ -83,7 +83,7 @@ Link = (function(){
 
 		},
 		match  : {
-			get doublesSix(){return _match.doublesSix}, set doublesSix(v){_match.doublesSix = v},
+			get sena(){return _match.sena}, set sena(v){_match.sena = v},
 			get status(){return _match.status},         set status(v){_match.status = v},
 			get score(){return _match.score},           set score(v){_match.score = v},
 			get round(){return _match.round},           set round(v){_match.round = v},

@@ -1,25 +1,23 @@
 var Edges = function(){
-  this.edges = {
-    center : {
-      blank  : {normal : null, side : null},
-      open   : null, points : 0, total : 0, block : false
-    },
-    up : {
-      blank : {normal : null, side : null},
-      open  : null, points : 0, total : 0
-    },
-    down : {
-      blank : {normal : null, side : null},
-      open  : null, points : 0, total : 0
-    },
-    right : {
-      blank : {normal : null, side : null},
-      open  : null, points : 0, total : 0
-    },
-    left : {
-      blank : {normal : null, side : null},
-      open  : null, points : 0, total : 0
-    }
+  this.center = {
+    blank  : {normal : null, side : null},
+    open   : null, points : 0, total : 0, block : false
+  };
+  this.up = {
+    blank : {normal : null, side : null},
+    open  : null, points : 0, total : 0
+  };
+  this.down = {
+    blank : {normal : null, side : null},
+    open  : null, points : 0, total : 0
+  };
+  this.right = {
+    blank : {normal : null, side : null},
+    open  : null, points : 0, total : 0
+  };
+  this.left = {
+    blank : {normal : null, side : null},
+    open  : null, points : 0, total : 0
   };
   this.formulaPositions = {
     up : null, down : null, right : null, left : null
@@ -30,8 +28,8 @@ var Edges = function(){
 
 Edges.prototype = {
   create : function(){
-    this.edges.center.nextPosition = function(blank, orietantion){};
-    this.edges.up.nextPosition = function(blank, orietantion){
+    this.center.nextPosition = function(blank, orietantion){};
+    this.up.nextPosition = function(blank, orietantion){
       if(orietantion == 'normal'){
         blank.side.y = blank.normal.y - (STATIC.WIDTH_PIECE+ STATIC.HEIGHT_PIECE)/2;
         blank.normal.y -= STATIC.HEIGHT_PIECE;
@@ -41,7 +39,7 @@ Edges.prototype = {
         blank.side.y -= STATIC.WIDTH_PIECE;
       }
     }
-    this.edges.down.nextPosition = function(blank, orietantion) {
+    this.down.nextPosition = function(blank, orietantion) {
       if(orietantion == 'normal'){
         blank.side.y = blank.normal.y + (STATIC.WIDTH_PIECE+ STATIC.HEIGHT_PIECE)/2;
         blank.normal.y += STATIC.HEIGHT_PIECE;
@@ -51,7 +49,7 @@ Edges.prototype = {
         blank.side.y += STATIC.WIDTH_PIECE;
       }
     }
-    this.edges.right.nextPosition = function(blank, orietantion) {
+    this.right.nextPosition = function(blank, orietantion) {
       if(orietantion == 'normal'){
         blank.side.x = blank.normal.x + (STATIC.WIDTH_PIECE + STATIC.HEIGHT_PIECE)/2;
         blank.normal.x += STATIC.HEIGHT_PIECE;
@@ -61,7 +59,7 @@ Edges.prototype = {
         blank.side.x += STATIC.WIDTH_PIECE;
       }
     }
-    this.edges.left.nextPosition = function(blank, orietantion) {
+    this.left.nextPosition = function(blank, orietantion) {
       if(orietantion == 'normal'){
         blank.side.x = blank.normal.x - (STATIC.WIDTH_PIECE + STATIC.HEIGHT_PIECE)/2;
         blank.normal.x -= STATIC.HEIGHT_PIECE;
@@ -72,54 +70,54 @@ Edges.prototype = {
       }
     }
 
-    this.formulaPositions.up    = this.edges.up.nextPosition;
-    this.formulaPositions.down  = this.edges.down.nextPosition;
-    this.formulaPositions.right = this.edges.right.nextPosition;
-    this.formulaPositions.left  = this.edges.left.nextPosition;
+    this.formulaPositions.up    = this.up.nextPosition;
+    this.formulaPositions.down  = this.down.nextPosition;
+    this.formulaPositions.right = this.right.nextPosition;
+    this.formulaPositions.left  = this.left.nextPosition;
   },
   showBlanks : function(){
-    this.edges.center.blank.visible       = false;
-    this.edges.up.blank.side.visible      = false;
-    this.edges.down.blank.side.visible    = false;
-    this.edges.left.blank.side.visible    = false;
-    this.edges.right.blank.side.visible   = false;
-    this.edges.up.blank.normal.visible    = false;
-    this.edges.down.blank.normal.visible  = false;
-    this.edges.left.blank.normal.visible  = false;
-    this.edges.right.blank.normal.visible = false;
+    this.center.blank.visible       = false;
+    this.up.blank.side.visible      = false;
+    this.down.blank.side.visible    = false;
+    this.left.blank.side.visible    = false;
+    this.right.blank.side.visible   = false;
+    this.up.blank.normal.visible    = false;
+    this.down.blank.normal.visible  = false;
+    this.left.blank.normal.visible  = false;
+    this.right.blank.normal.visible = false;
     if(this.flagStart){
-      if(Link.match.doublesSix)
-        this.edges.center.blank.normal.visible = (this.selectedPiece.piece[0] + this.selectedPiece.piece[1] == 12) ? true : false;
+      if(Link.match.sena)
+        this.center.blank.normal.visible = (this.selectedPiece.piece[0] + this.selectedPiece.piece[1] == 12) ? true : false;
       else
-        this.edges.center.blank.normal.visible = (this.selectedPiece.piece[0] == this.selectedPiece.piece[1]) ? true : false;
+        this.center.blank.normal.visible = (this.selectedPiece.piece[0] == this.selectedPiece.piece[1]) ? true : false;
     }
     else if (this.selectedPiece.piece[0] == this.selectedPiece.piece[1]){
-      if(this.edges.left.total > 0 && this.edges.right.total > 0){
-        this.edges.up.blank.side.visible    = (this.selectedPiece.piece[0] == this.edges.up.open) ? true : false;
-        this.edges.down.blank.side.visible  = (this.selectedPiece.piece[0] == this.edges.down.open) ? true : false;
+      if(this.left.total > 0 && this.right.total > 0){
+        this.up.blank.side.visible    = (this.selectedPiece.piece[0] == this.up.open) ? true : false;
+        this.down.blank.side.visible  = (this.selectedPiece.piece[0] == this.down.open) ? true : false;
       }
-      this.edges.left.blank.side.visible  = (this.selectedPiece.piece[0] == this.edges.left.open) ? true : false;
-      this.edges.right.blank.side.visible = (this.selectedPiece.piece[0] == this.edges.right.open) ? true : false;
+      this.left.blank.side.visible  = (this.selectedPiece.piece[0] == this.left.open) ? true : false;
+      this.right.blank.side.visible = (this.selectedPiece.piece[0] == this.right.open) ? true : false;
     }
     else{
-      if(this.edges.left.total > 0 && this.edges.right.total > 0){
-        this.edges.up.blank.normal.visible   = (this.selectedPiece.piece[0] == this.edges.up.open || this.selectedPiece.piece[1] == this.edges.up.open) ? true : false;
-        this.edges.down.blank.normal.visible = (this.selectedPiece.piece[0] == this.edges.down.open || this.selectedPiece.piece[1] == this.edges.down.open) ? true : false;
+      if(this.left.total > 0 && this.right.total > 0){
+        this.up.blank.normal.visible   = (this.selectedPiece.piece[0] == this.up.open || this.selectedPiece.piece[1] == this.up.open) ? true : false;
+        this.down.blank.normal.visible = (this.selectedPiece.piece[0] == this.down.open || this.selectedPiece.piece[1] == this.down.open) ? true : false;
       }
-      this.edges.left.blank.normal.visible  = (this.selectedPiece.piece[0] == this.edges.left.open || this.selectedPiece.piece[1] == this.edges.left.open) ? true : false;
-      this.edges.right.blank.normal.visible = (this.selectedPiece.piece[0] == this.edges.right.open || this.selectedPiece.piece[1] == this.edges.right.open) ? true : false;
+      this.left.blank.normal.visible  = (this.selectedPiece.piece[0] == this.left.open || this.selectedPiece.piece[1] == this.left.open) ? true : false;
+      this.right.blank.normal.visible = (this.selectedPiece.piece[0] == this.right.open || this.selectedPiece.piece[1] == this.right.open) ? true : false;
     }
   },
 
   hideBlanks : function(){
-    this.edges.center.blank.normal.visible = false;
-    this.edges.up.blank.side.visible       = false;
-    this.edges.down.blank.side.visible     = false;
-    this.edges.left.blank.side.visible     = false;
-    this.edges.right.blank.side.visible    = false;
-    this.edges.up.blank.normal.visible     = false;
-    this.edges.down.blank.normal.visible   = false;
-    this.edges.left.blank.normal.visible   = false;
-    this.edges.right.blank.normal.visible  = false;
+    this.center.blank.normal.visible = false;
+    this.up.blank.side.visible       = false;
+    this.down.blank.side.visible     = false;
+    this.left.blank.side.visible     = false;
+    this.right.blank.side.visible    = false;
+    this.up.blank.normal.visible     = false;
+    this.down.blank.normal.visible   = false;
+    this.left.blank.normal.visible   = false;
+    this.right.blank.normal.visible  = false;
   }
 }

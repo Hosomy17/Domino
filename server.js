@@ -33,7 +33,7 @@ matchs = {
 
 io.on('connection', function(socket){
 
-	console.info('New player: ' + socket.id);
+	console.info('New player: ' + socket.conn.id);
 
 	socket.on('findMatch', function(data){
 
@@ -78,14 +78,13 @@ io.on('connection', function(socket){
 			// 0 1 2 3
 			nextTurn = 1;
 			for(var i = 0; i < STATIC.MAX_PLAYERS; i++){
+				match.players[i].team = 0;
 				if(searchPiece(match.players[i].pieces, 27)){
-					match.players[i].team = 0;
 					match.players[i].turn = 0;
 					match.sum[0] += sum[i];
 				}
 				else{
 					if(nextTurn == 2){
-						match.players[i].team = 0;
 						match.sum[0] += sum[i];
 					}
 					else{
@@ -153,7 +152,7 @@ io.on('connection', function(socket){
 			removePlayer(socket.match,socket.conn.id);
 			socket.player.status = 'disconnect';
 			//io.to(socket.match.id).emit('updateMatch',socket.player);
-			console.info('Player: ' + socket.id + ' left: ' + socket.match.id);
+			console.info('Player: ' + socket.conn.id + ' left: ' + socket.match.id);
 		}
 	});
 });
@@ -168,8 +167,8 @@ function removePlayer(match,idPlayer){
 }
 
 function drawPieces(){
-	shufflePieces = [];
-	pieces = STATIC.DOMINO.slice();
+	var shufflePieces = [];
+	var pieces = STATIC.DOMINO.slice();
 
 	while(pieces.length > 0){
 			var piecesPlayer = [];
