@@ -17,7 +17,7 @@ Core.prototype = {
     if(this.hand.turn != Link.player.turn)
       skip = false;
     else
-      Game.time.events.add(Phaser.Timer.SECOND * 1, this.autoPlay, this);
+      Game.time.events.add(Phaser.Timer.SECOND * 0.1, this.autoPlay, this);
 
     var pcs = this.hand.pieces;
     var eds = [];
