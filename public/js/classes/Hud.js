@@ -42,14 +42,14 @@ Hud.prototype = {
     //Config enemy team score
     text = Game.add.text(450, -400, eScr, style);
     text.anchor.set(0.5);
-    text.addColor('#ff0000', 0);
+    text.addColor('#FF0044', 0);
     this.group.addChild(text);
     this.score[eTeam] = {text:text,total:eScr};//<<<<<<<<<<<<<<<<<<<<<<<total não devia estar em hud que é so grafico
 
     //Config player team score
     text = Game.add.text(-450, 400,pScr, style);
     text.anchor.set(0.5);
-    text.addColor('#0000ff', 0);
+    text.addColor('#0095E9', 0);
     this.group.addChild(text);
     this.score[pTeam] = {text:text,total:pScr};
   },
