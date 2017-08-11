@@ -160,6 +160,11 @@ Core.prototype = {
     sprite.anchor.set(0.5);
     this.table.addChild(sprite);
 
+    // sprite = Game.add.sprite(edge.blank[orientation].x,edge.blank[orientation].y,'shadow');
+    // sprite.anchor.set(0.5);
+    // this.table.addChild(sprite);
+    // this.table.sort();
+
     edge.total++;
     if(edge.open == d.move.piece[0]){
       sprite.angle += 180;

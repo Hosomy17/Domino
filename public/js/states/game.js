@@ -24,8 +24,8 @@ State.Game = (function(){
     var table = new Table(edges,hand);
     var hud = new Hud(table);
     edges.create();
-    hand.create();
     table.create();
+    hand.create();
     hud.create();
     var players = hud.players;
     var score = hud.score;
