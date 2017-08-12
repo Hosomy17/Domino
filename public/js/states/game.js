@@ -29,8 +29,10 @@ State.Game = (function(){
     hud.create();
     var players = hud.players;
     var score = hud.score;
+    var shadow = table.shadow;
     var table = table.group;
-    _core = new Core(hand, hud, edges, players, score, table);
+    console.log(shadow);
+    _core = new Core(hand, hud, edges, players, score, table, shadow);
     _core.skipMove();
 	}
 

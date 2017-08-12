@@ -1,4 +1,4 @@
-var Core = function(ha, hu, e, p, s, t){
+var Core = function(ha, hu, e, p, s, t, s){
   this.hand        = ha;
   this.hud         = hu;
   this.countSkip   = 0;
@@ -9,6 +9,7 @@ var Core = function(ha, hu, e, p, s, t){
   this.edges       = e;
   this.score       = s;
   this.table       = t;
+  this.shadow = s;
 }
 
 Core.prototype = {
@@ -160,10 +161,10 @@ Core.prototype = {
     sprite.anchor.set(0.5);
     this.table.addChild(sprite);
 
-    // sprite = Game.add.sprite(edge.blank[orientation].x,edge.blank[orientation].y,'shadow');
-    // sprite.anchor.set(0.5);
-    // this.table.addChild(sprite);
-    // this.table.sort();
+    //var s1 = Game.add.sprite(edge.blank[orientation].x,edge.blank[orientation].y,'shadow');
+    //s1.anchor.set(0.5);
+    //this.shadow.addChild(s1);
+    //this.table.sort();
 
     edge.total++;
     if(edge.open == d.move.piece[0]){
@@ -236,6 +237,7 @@ Core.prototype = {
   },
 
   finishSelect : function(direction){
+    Game.time.events.removeAll();
     this.edges.hideBlanks();
 
     var piece = this.edges.selectedPiece;
