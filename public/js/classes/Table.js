@@ -8,7 +8,6 @@ var Table = function(edges,hand){//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<melhorar
 
 Table.prototype = {
   create : function(){
-    this.shadow = Game.add.sprite(Game.world.centerX,Game.world.centerY,'table');//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     this.group = Game.add.sprite(Game.world.centerX,Game.world.centerY,'table');
     //this.group.scale.set(20,20);
     var up = Game.add.sprite(Game.world.centerX,0,'turn');//<<<<<<<<<<<<<<<<<<<<<posição

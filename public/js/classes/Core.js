@@ -1,4 +1,4 @@
-var Core = function(ha, hu, e, p, s, t, s){
+var Core = function(ha, hu, e, p, s, t){
   this.hand        = ha;
   this.hud         = hu;
   this.countSkip   = 0;
@@ -9,7 +9,6 @@ var Core = function(ha, hu, e, p, s, t, s){
   this.edges       = e;
   this.score       = s;
   this.table       = t;
-  this.shadow = s;
 }
 
 Core.prototype = {
@@ -18,7 +17,7 @@ Core.prototype = {
     if(this.hand.turn != Link.player.turn)
       skip = false;
     else
-      Game.time.events.add(Phaser.Timer.SECOND * 0.1, this.autoPlay, this);
+      Game.time.events.add(Phaser.Timer.SECOND * 15, this.autoPlay, this);
 
     var pcs = this.hand.pieces;
     var eds = [];
