@@ -1,6 +1,10 @@
 express = require('express');
 app     = express();
-server  = require('http').Server(app);
+app.set('port', (process.env.PORT || 8080));
+server = app.listen(app.get('port'), function() {
+  console.log('Server on port', app.get('port'));
+});
+//server  = require('http').Server(app);
 io      = require('socket.io')(server);
 
 STATIC = {
@@ -15,20 +19,9 @@ STATIC = {
 								[6,6,27]
               ]
 }
-app.set('port', (process.env.PORT || 8080));
-app.listen(app.get('port'), function() {
-  console.log('Server on port', app.get('port'));
-});
-// http.listen(3000, function(){
-// 	console.log('Server on port 3000');
-// });
 
 //Routes
 app.use(express.static(__dirname + '/public'));
-
-//app.get('/', function(req,res){
-//	res.sendFile(__dirname + '/index.html');
-//});
 
 //Socket
 matchs = {
