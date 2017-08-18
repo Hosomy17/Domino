@@ -1,7 +1,7 @@
-express = require('express'),
-app     = express(),
-http    = require('http').Server(app),
-io      = require('socket.io')(http);
+express = require('express');
+app     = express();
+server  = require('http').Server(app);
+io      = require('socket.io')(server);
 
 STATIC = {
 	MAX_PLAYERS : 4,
@@ -15,6 +15,13 @@ STATIC = {
 								[6,6,27]
               ]
 }
+app.set('port', (process.env.PORT || 8080));
+app.listen(app.get('port'), function() {
+  console.log('Server on port', app.get('port'));
+});
+// http.listen(3000, function(){
+// 	console.log('Server on port 3000');
+// });
 
 //Routes
 app.use(express.static(__dirname + '/public'));
@@ -197,7 +204,3 @@ function searchPiece(array, value){
 	}
 	return result;
 }
-
-http.listen(3000, function(){
-	console.log('Server on port 3000');
-});
