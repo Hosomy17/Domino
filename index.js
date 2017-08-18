@@ -26,9 +26,9 @@ app.listen(app.get('port'), function() {
 //Routes
 app.use(express.static(__dirname + '/public'));
 
-app.get('/', function(req,res){
-	res.sendFile('/index.html');
-});
+//app.get('/', function(req,res){
+//	res.sendFile(__dirname + '/index.html');
+//});
 
 //Socket
 matchs = {
