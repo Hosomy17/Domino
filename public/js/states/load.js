@@ -7,6 +7,11 @@ State.Load.prototype = {
 	 preload : function()	{
 		this.load.script('link','/js/link.js');
 		this.load.spritesheet('load', 'assets/sprites/load.png',50,50);
+		this.load.script('core','/js/classes/core.js');
+		this.load.script('hud','/js/classes/hud.js');
+		this.load.script('table','/js/classes/table.js');
+		this.load.script('hand','/js/classes/hand.js');
+		this.load.script('edges','/js/classes/edges.js');
 	},
 
 	create : function(){

@@ -10,12 +10,6 @@ function preload(){
 	Game.load.script('load','/js/states/load.js');
 	Game.load.script('game','/js/states/game.js');
 	Game.load.script('gameover','/js/states/gameover.js');
-
-	Game.load.script('core','/js/classes/core.js');
-	Game.load.script('hud','/js/classes/hud.js');
-	Game.load.script('table','/js/classes/table.js');
-	Game.load.script('hand','/js/classes/hand.js');
-	Game.load.script('edges','/js/classes/edges.js');
 }
 
 function create(){
