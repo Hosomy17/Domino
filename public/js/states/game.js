@@ -2,7 +2,11 @@ var STATIC = {
     TOTAL_PLAYERS : 4,
     TOTAL_PIECES  : 7,
     WIDTH_PIECE   : 68,
-    HEIGHT_PIECE  : 134
+    HEIGHT_PIECE  : 134,
+    POINT_SKIP    : 20,
+    POINT_GALO    : 50,
+    POINT_CARROCA : 20,
+    POINT_GOAL    : 200
 }
 State.Game = (function(){
   var _core;

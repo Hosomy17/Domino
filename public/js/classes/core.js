@@ -1,14 +1,15 @@
 var Core = function(ha, hu, e, p, s, t){
   this.hand        = ha;
   this.hud         = hu;
-  this.countSkip   = 0;
-  this.flagStart   = true;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>SOCORRO DUPLICADO
+  this.cntSkip     = 0;
+  this.noPiece   = true;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>SOCORRO DUPLICADO
   this.maxPieceRow = 0;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>maior numero de peças em uma fila
   this.scaleTable  = 1;
   this.players     = p;
   this.edges       = e;
   this.score       = s;
-  this.table       = t;
+  this.table       = t
+  this.timer = null;
 }
 
 Core.prototype = {
@@ -17,7 +18,7 @@ Core.prototype = {
     if(this.hand.turn != Link.player.turn)
       skip = false;
     else
-      Game.time.events.add(Phaser.Timer.SECOND * 15, this.autoPlay, this);
+      this.timer = Game.time.events.add(Phaser.Timer.SECOND * 60, this.autoPlay, this);
 
     var pcs = this.hand.pieces;
     var eds = [];
@@ -26,34 +27,33 @@ Core.prototype = {
     eds[2] = {n:this.edges.right.open,d:"right"};
     eds[3] = {n:this.edges.left.open ,d:"left"};
     for (var i=0;i < pcs.length;i++) {
+      var piece = pcs[i].piece;
       for (var j=0;j < eds.length;j++) {
-        if((pcs[i].piece[0] == eds[j].n || pcs[i].piece[1] == eds[j].n)){
-          this.hand.reservedPiece = {p:pcs[i],d:eds[j].d};//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<muito complexo
+        //If there is piece to place
+        if((piece[0] == eds[j].n || piece[1] == eds[j].n)){
+          this.hand.autoPiece = {p:pcs[i],d:eds[j].d};
+          skip=false;
+        }
+      }
+      //If there is carroça to place in center
+      if(this.noPiece){
+        //If have to be a sena
+        if(Link.match.sena){
+          if(piece[2] == 27){
+            this.hand.autoPiece = {p:pcs[i],d:"center"};
+            skip=false;
+          }
+        }
+        else if(piece[0] == piece[1]){
+          this.hand.autoPiece = {p:pcs[i],d:"center"};
           skip=false;
         }
       }
     }
-    if(this.flagStart){
-      if(Link.match.sena){//<<<<<<<<<<<<<<<<<<<<<<<juntar isso com o de cima
-        for(var i=0; i < pcs.length; i++){
-          if(pcs[i].piece[0] + pcs[i].piece[1] == 12){
-            this.hand.reservedPiece = {p:pcs[i],d:"center"};
-            skip=false;
-          }
-        }
-      }
-      else {
-        for(var i=0; i < pcs.length; i++){//<<<<<<<<<<<<<<<<<<<<<<<juntar isso com o de cima
-          if(pcs[i].piece[0] == pcs[i].piece[1]){
-            this.hand.reservedPiece = {p:pcs[i],d:"center"};
-            skip=false;
-          }
-        }
-      }
-    }
+
     if(skip){
       Game.time.events.removeAll();
-      this.hand.selectedPiece = null;
+      this.hand.selected = null;
       this.finishSelect(null);
     }
     return skip;
@@ -61,15 +61,11 @@ Core.prototype = {
 
   doMove: function(d){
     if(d.move.piece == null){
-      if(this.countSkip == 0){
-        if(d.player.team == 0)
-          this.gainPoints(20,1);
-        else
-          this.gainPoints(20,0);
+      if(this.cntSkip == 0){
+        this.gainPoints(STATIC.POINT_SKIP, (d.player.team == 0) ? 1 : 0);
       }
-      this.countSkip++;
-      if(this.countSkip == 4){
-
+      this.cntSkip++;
+      if(this.cntSkip == 4){
         if(d.sum[0] < d.sum[1])
           this.gainPoints(Math.floor(d.sum[1]/5) * 5,0);
         else if(d.sum[1] < d.sum[0])
@@ -87,9 +83,9 @@ Core.prototype = {
       return 0;
     }
     else{
-      if(this.countSkip == 3)
-        this.gainPoints(50,d.player.team);
-      this.countSkip = 0;
+      if(this.cntSkip == 3)
+        this.gainPoints(STATIC.POINT_GALO,d.player.team);
+      this.cntSkip = 0;
     }
 
     this.drawMove(d);
@@ -101,9 +97,9 @@ Core.prototype = {
     if(Link.player.turn != d.player.turn)
       this.players[d.player.turn].totalPieces.text = this.players[d.player.turn].ctn;
 
-    if(this.edges.flagStart){
-      this.flagStart = false;
-      this.edges.flagStart = false;
+    if(this.edges.noPiece){
+      this.noPiece = false;
+      this.edges.noPiece = false;
       this.edges.up.open     = d.move.piece[0];
       this.edges.down.open   = d.move.piece[0];
       this.edges.left.open   = d.move.piece[0];
@@ -117,20 +113,19 @@ Core.prototype = {
       this.maxPieceRow = edge.total;
       var tableScale = this.scaleTable;
       if(this.scaleTable > 0.6)
-        //this.table.scale.set(tableScale.x - 0.1);
-        this.scaleTable -= 0.1;
+        this.scaleTable -= 0.3/this.maxPieceRow;
       Game.add.tween(this.table.scale).to( { x: this.scaleTable, y: this.scaleTable,}, 500, Phaser.Easing.Linear.None, true);
     }
 
     if(this.players[d.player.turn].ctn == 0){
 
       if(d.move.piece[0] == d.move.piece[1])
-        this.gainPoints(20,d.player.team);
+        this.gainPoints(STATIC.POINT_CARROCA,d.player.team);
 
-      var score = [this.score[0].total, this.score[1].total];
       this.gainPoints(Math.floor(d.sum[d.player.team]/5) * 5,d.player.team);
+      var score = [this.score[0].total, this.score[1].total];
 
-      Link.match.score = score;//<<<<<<<<<<<<<<<<<<<<<<<<<<<verificar
+      Link.match.score = score;
       Link.match.turn = d.player.turn;
       Link.match.sena = false;
       this.endRound();
@@ -152,18 +147,13 @@ Core.prototype = {
   },
 
   drawMove: function(d){
-    var orientation = (d.move.piece[0] == d.move.piece[1] ) ? 'side' : 'normal';
+    var ori = (d.move.piece[0] == d.move.piece[1] ) ? 'side' : 'normal';
     var edge = this.edges[d.move.direction];
 
-    var sprite = Game.add.sprite(edge.blank[orientation].x,edge.blank[orientation].y,'domino',d.move.piece[2]);//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<melhorar atributos
-    sprite.angle = edge.blank[orientation].angle;
+    var sprite = Game.add.sprite(edge.blank[ori].x,edge.blank[ori].y,'domino',d.move.piece[2]);
+    sprite.angle = edge.blank[ori].angle;
     sprite.anchor.set(0.5);
     this.table.addChild(sprite);
-
-    //var s1 = Game.add.sprite(edge.blank[orientation].x,edge.blank[orientation].y,'shadow');
-    //s1.anchor.set(0.5);
-    //this.shadow.addChild(s1);
-    //this.table.sort();
 
     edge.total++;
     if(edge.open == d.move.piece[0]){
@@ -183,44 +173,44 @@ Core.prototype = {
       edge.blank.side.angle += 90;
       switch (d.move.direction) {
         case 'right':
-          edge.nextPosition    = this.edges.formulaPositions.down;
-          edge.blank.normal.y -= STATIC.WIDTH_PIECE/2;
-          edge.blank.side.y   -= STATIC.WIDTH_PIECE/2;
+          edge.nextPos    = this.edges.newPosForm.down;
           edge.blank.normal.x += STATIC.WIDTH_PIECE/2;
+          edge.blank.normal.y -= STATIC.WIDTH_PIECE/2;
           edge.blank.side.x   += STATIC.WIDTH_PIECE;
+          edge.blank.side.y   -= STATIC.WIDTH_PIECE/2;
         break;
         case 'left':
-          edge.nextPosition    = this.edges.formulaPositions.up;
-          edge.blank.normal.y += STATIC.WIDTH_PIECE/2;
-          edge.blank.side.y   += STATIC.WIDTH_PIECE/2;
+          edge.nextPos    = this.edges.newPosForm.up;
           edge.blank.normal.x -= STATIC.WIDTH_PIECE/2;
+          edge.blank.normal.y += STATIC.WIDTH_PIECE/2;
           edge.blank.side.x   -= STATIC.WIDTH_PIECE;
+          edge.blank.side.y   += STATIC.WIDTH_PIECE/2;
         break;
       }
     }
-    else if (edge.total == 5 &&  (d.move.direction == 'up' || d.move.direction == 'down')) {
+    else if (edge.total == 7 &&  (d.move.direction == 'up' || d.move.direction == 'down')) {
       edge.blank.normal.angle += 90;
       edge.blank.side.angle   += 90;
       switch (d.move.direction) {
         case 'up':
-          edge.nextPosition    = this.edges.formulaPositions.right;
+          edge.nextPos    = this.edges.newPosForm.right;
           edge.blank.normal.x -= STATIC.WIDTH_PIECE/2;
-          edge.blank.side.x   -= STATIC.WIDTH_PIECE/2;
           edge.blank.normal.y -= STATIC.WIDTH_PIECE/2;
+          edge.blank.side.x   -= STATIC.WIDTH_PIECE/2;
           edge.blank.side.y   -= STATIC.WIDTH_PIECE;
         break;
         case 'down':
-          edge.nextPosition    = this.edges.formulaPositions.left;
+          edge.nextPos    = this.edges.newPosForm.left;
           edge.blank.normal.x += STATIC.WIDTH_PIECE/2;
-          edge.blank.side.x   += STATIC.WIDTH_PIECE/2;
           edge.blank.normal.y += STATIC.WIDTH_PIECE/2;
+          edge.blank.side.x   += STATIC.WIDTH_PIECE/2;
           edge.blank.side.y   += STATIC.WIDTH_PIECE;
         break;
       }
     }
 
     //Move blank to the next edge
-    edge.nextPosition(edge.blank, orientation);
+    edge.nextPos(edge.blank, ori);
   },
 
   calculatePoints: function(){
@@ -230,7 +220,7 @@ Core.prototype = {
     return points;
   },
 
-  gainPoints: function(pts, team){//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Deveria estar no HUD o colocar pontos
+  gainPoints: function(pts, team){
     this.score[team].total += pts;
     this.score[team].text.text = this.score[team].total;
   },
@@ -239,27 +229,29 @@ Core.prototype = {
     Game.time.events.removeAll();
     this.edges.hideBlanks();
 
-    var piece = this.edges.selectedPiece;
+    var piece = this.edges.selected;
     if(piece){
       piece.visible = false;
       piece = piece.piece;
-      for(i = 0; i < this.hand.pieces.length; i++){ //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<alterar isso para hand
+      for(i = 0; i < this.hand.pieces.length; i++){
         if(this.hand.pieces[i].piece[2] == piece[2])
           this.hand.pieces.splice(i,1);
       }
     }
     var move = {piece:piece, direction:direction};
     Link.sendMove(move);
-    this.edges.selectedPiece = null;//<<<<<<<<<<<<<<<<<<<<<<<<<<<<ainda em edge?
+    this.edges.selected = null;
   },
 
   autoPlay: function(){
-    this.edges.selectedPiece = this.hand.reservedPiece.p;
-    this.finishSelect(this.hand.reservedPiece.d);
+    this.edges.selected = this.hand.autoPiece.p;
+    this.finishSelect(this.hand.autoPiece.d);
   },
 
   endRound: function(){
-    if((this.score[0].total >= 200 || this.score[1].total >= 200) && (this.score[0].total != this.score[1].total))//<<<<<<<<<<<<<<<<<<<<<<pontuação n static
+    if(this.score[0].total >= STATIC.POINT_GOAL && this.score[0].total > this.score[1].total)
+      this.hud.showScore();
+    else if(this.score[1].total >= STATIC.POINT_GOAL && this.score[1].total > this.score[0].total)
       this.hud.showScore();
     else
       Game.state.start("GameoverState");

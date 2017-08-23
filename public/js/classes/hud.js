@@ -6,32 +6,21 @@ var Hud = function(table){
 
 Hud.prototype = {
   create : function(){
-    this.group = Game.add.group();
-    this.group.x = Game.world.centerX;
-    this.group.y = Game.world.centerY;
-
     var turn = Link.player.turn;
     var style = { font: "40px Arial", fill: "#ffffff", align: "center" };
-    var a=-400;
-    var b=0;
     var text;
 
-    for(i = 0;i < 4;i++){//<<<<<<<<<<<<<<<<<<<<diminuir para 3
-      turn++;//<<<<<<<<<<<<<<<<<<<<<mudar para divisão???????????
-      if(turn >= 4)
-        turn = 0;
+    for(i = 0;i < 4;i++){
+      turn = (turn + 1)%4;
 
       text = null;
       if(turn != Link.player.turn){
-        text = Game.add.text(a, b%2*(-500), 7, style);
+        text = Game.add.text(this.turns[i].x, this.turns[i].y, 7, style);
         text.anchor.set(0.5);
-        this.group.addChild(text);
       }
-      a+= 400;
-      b++;
-
       this.players[turn] = {id:turn, ctn : 7, totalPieces : text, turn: this.turns[i]};
     }
+    console.log(this.players[Link.match.turn]);
     this.players[Link.match.turn].turn.visible=true;
 
     var pTeam = Link.player.team;
@@ -40,17 +29,15 @@ Hud.prototype = {
     var eScr = Link.match.score[eTeam];
 
     //Config enemy team score
-    text = Game.add.text(450, -400, eScr, style);
+    text = Game.add.text(Game.world.width * 0.18, Game.world.height * (1 - 0.06), eScr, style);
     text.anchor.set(0.5);
     text.addColor('#FF0044', 0);
-    this.group.addChild(text);
-    this.score[eTeam] = {text:text,total:eScr};//<<<<<<<<<<<<<<<<<<<<<<<total não devia estar em hud que é so grafico
+    this.score[eTeam] = {text:text,total:eScr};
 
     //Config player team score
-    text = Game.add.text(-450, 400,pScr, style);
+    text = Game.add.text(Game.world.width * 0.06, Game.world.height * (1 - 0.06) ,pScr, style);
     text.anchor.set(0.5);
     text.addColor('#0095E9', 0);
-    this.group.addChild(text);
     this.score[pTeam] = {text:text,total:pScr};
   },
 

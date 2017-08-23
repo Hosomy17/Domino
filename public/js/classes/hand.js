@@ -3,7 +3,7 @@ var Hand = function(e, t){
   this.turn = t;
   this.pieces = [1,2];
   this.group = null;
-  this.reservedPiece = null;
+  this.autoPiece = null;
 }
 
 Hand.prototype = {
@@ -31,7 +31,7 @@ Hand.prototype = {
         sprite.events.onInputDown.add(
         function(obj){
             if(hand.turn == Link.player.turn){
-                edges.selectedPiece = obj;
+                edges.selected = obj;
                 edges.showBlanks();
             }
         });
@@ -44,7 +44,7 @@ Hand.prototype = {
   finishSelect : function(direction){//<<<<<<<<<<<<<<<<<<<<<<<<<<<duplicado no core
     this.edges.hideBlanks();
 
-    var piece = this.edges.selectedPiece;
+    var piece = this.edges.selected;
     if(piece){
       piece.visible = false;
       piece = piece.piece;
@@ -55,6 +55,6 @@ Hand.prototype = {
     }
     var move = {piece:piece, direction:direction};
     Link.sendMove(move);
-    this.edges.selectedPiece = null;//<<<<<<<<<<<<<<<<<<<<<<<<<<<<ainda em edge?
+    this.edges.selected = null;//<<<<<<<<<<<<<<<<<<<<<<<<<<<<ainda em edge?
   }
 };

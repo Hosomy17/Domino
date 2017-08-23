@@ -1,5 +1,4 @@
-var Game = new Phaser.Game(1000, 1000, Phaser.AUTO, 'phaser-game', {preload:preload,create:create,update:update});
-
+var Game = new Phaser.Game("100%", "100%", Phaser.AUTO, 'phaser-game', {preload:preload,create:create,update:update});
 var State = {
 	LudusSplash: function () {
 	}
@@ -14,6 +13,18 @@ function preload(){
 
 function create(){
 	Game.stage.disableVisibilityChange = true;
+
+	Game.stage.backgroundColor = '#3F2832';
+	Game.scale.pageAlignHorizontally = true;
+	Game.scale.pageAlignVertically = true;
+	Game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+	Game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
+
+	//Game.scale.minWidth = 200;
+	//Game.scale.minHeight = 200;
+	//Game.scale.maxWidth = 600;
+	//Game.scale.maxHeight = 600;
+	Game.scale.forceLandscape = true;
 
 	Game.state.add('MenuState', new State.Menu());
 	Game.state.add('LoadState', new State.Load());
