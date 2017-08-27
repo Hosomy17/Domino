@@ -164,7 +164,7 @@ function removePlayer(match,idPlayer){
 			index = i;
 	}
 	match.players.splice(index, 1);
-}
+};
 
 function drawPieces(){
 	var shufflePieces = [];

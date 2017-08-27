@@ -2,6 +2,7 @@ var Hud = function(table){
   this.turns   = table.turns;
   this.players = [];
   this.score   = [];
+  this.timer   = null;
 }
 
 Hud.prototype = {
@@ -20,7 +21,6 @@ Hud.prototype = {
       }
       this.players[turn] = {id:turn, ctn : 7, totalPieces : text, turn: this.turns[i]};
     }
-    console.log(this.players[Link.match.turn]);
     this.players[Link.match.turn].turn.visible=true;
 
     var pTeam = Link.player.team;
@@ -39,6 +39,10 @@ Hud.prototype = {
     text.anchor.set(0.5);
     text.addColor('#0095E9', 0);
     this.score[pTeam] = {text:text,total:pScr};
+
+    text = Game.add.text(Game.world.width - 30, Game.world.height - 30, 0, style);
+    text.anchor.set(0.5);
+    this.timer = text;
   },
 
   showScore : function(){

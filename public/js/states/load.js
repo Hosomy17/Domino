@@ -5,16 +5,22 @@ State.Load = function(){
 State.Load.prototype = {
 
 	 preload : function()	{
-		this.load.script('link','/js/link.js');
-		this.load.spritesheet('load', 'assets/sprites/load.png',50,50);
-		this.load.script('core','/js/classes/core.js');
-		this.load.script('hud','/js/classes/hud.js');
-		this.load.script('table','/js/classes/table.js');
-		this.load.script('hand','/js/classes/hand.js');
-		this.load.script('edges','/js/classes/edges.js');
+		Game.load.script('game','/js/states/game.js');
+		Game.load.script('gameover','/js/states/gameover.js');
+
+		Game.load.script('link','/js/link.js');
+		Game.load.spritesheet('load', 'assets/sprites/load.png',50,50);
+		Game.load.script('core','/js/classes/core.js');
+		Game.load.script('hud','/js/classes/hud.js');
+		Game.load.script('table','/js/classes/table.js');
+		Game.load.script('hand','/js/classes/hand.js');
+		Game.load.script('edges','/js/classes/edges.js');
 	},
 
 	create : function(){
+		Game.state.add('GameState', State.Game);
+		Game.state.add('GameoverState', State.GameOver);
+
 		Link.requestMatch();
 		var load = Game.add.sprite(Game.world.centerX, Game.world.centerY, 'load', 0);
 		load.anchor.set(0.5);

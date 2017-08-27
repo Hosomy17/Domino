@@ -27,14 +27,13 @@ State.Game = (function(){
     var hand = new Hand(edges);
     var table = new Table(edges,hand);
     var hud = new Hud(table);
+
     edges.create();
     table.create();
     hand.create();
     hud.create();
-    var players = hud.players;
-    var score = hud.score;
-    var table = table.group;
-    _core = new Core(hand, hud, edges, players, score, table);
+
+    _core = new Core(hand, hud, edges, table);
     _core.skipMove();
 	}
 
@@ -43,6 +42,7 @@ State.Game = (function(){
     if(move){
       _core.doMove(move);
     }
+    _core.update();
 	}
 
   return {preload: preload, create:create, update:update};

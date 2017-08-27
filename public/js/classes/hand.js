@@ -12,7 +12,7 @@ Hand.prototype = {
     this.turn = Link.match.turn;
     this.group = Game.add.sprite(Game.world.centerX, Game.world.height - 50, 'hand');//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< posição
     this.group.anchor.set(0.5);
-    this.group.scale.set(0.9);
+    //this.group.scale.set(0.7);
     var pieces = Link.player.pieces;
     var hand = this;
     for (var i = 0; i < STATIC.TOTAL_PIECES; i++){
@@ -42,6 +42,7 @@ Hand.prototype = {
   },
 
   finishSelect : function(direction){//<<<<<<<<<<<<<<<<<<<<<<<<<<<duplicado no core
+    Game.time.events.removeAll();    
     this.edges.hideBlanks();
 
     var piece = this.edges.selected;

@@ -1,25 +1,33 @@
-var Core = function(ha, hu, e, p, s, t){
-  this.hand        = ha;
-  this.hud         = hu;
+var Core = function(hand, hud, edges, table){
+  this.hand        = hand;
+  this.hud         = hud;
   this.cntSkip     = 0;
-  this.noPiece   = true;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>SOCORRO DUPLICADO
-  this.maxPieceRow = 0;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>maior numero de peças em uma fila
+  this.noPiece     = true;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>SOCORRO DUPLICADO
+  this.maxPieceRow = 0;
   this.scaleTable  = 1;
-  this.players     = p;
-  this.edges       = e;
-  this.score       = s;
-  this.table       = t
-  this.timer = null;
+  this.players     = hud.players;
+  this.edges       = edges;
+  this.score       = hud.score;
+  this.table       = table.group;
+  this.timer       = null;
 }
 
 Core.prototype = {
+  update: function(){
+    if(Game.time.events.events.length){
+      this.hud.timer.text = Math.floor(this.timer.timer.duration);
+    }
+    else{
+      this.hud.timer.text = 0;
+    }
+  },
+
   skipMove: function(){
     var skip=true;
     if(this.hand.turn != Link.player.turn)
       skip = false;
     else
-      this.timer = Game.time.events.add(Phaser.Timer.SECOND * 60, this.autoPlay, this);
-
+      this.timer = Game.time.events.add(Phaser.Timer.SECOND * 15, this.autoPlay, this);
     var pcs = this.hand.pieces;
     var eds = [];
     eds[0] = {n:this.edges.up.open   ,d:"up"};
@@ -113,7 +121,7 @@ Core.prototype = {
       this.maxPieceRow = edge.total;
       var tableScale = this.scaleTable;
       if(this.scaleTable > 0.6)
-        this.scaleTable -= 0.3/this.maxPieceRow;
+        this.scaleTable -= 0.2;
       Game.add.tween(this.table.scale).to( { x: this.scaleTable, y: this.scaleTable,}, 500, Phaser.Easing.Linear.None, true);
     }
 

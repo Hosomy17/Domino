@@ -7,8 +7,6 @@ var State = {
 function preload(){
 	Game.load.script('menu','/js/states/menu.js');
 	Game.load.script('load','/js/states/load.js');
-	Game.load.script('game','/js/states/game.js');
-	Game.load.script('gameover','/js/states/gameover.js');
 }
 
 function create(){
@@ -28,8 +26,6 @@ function create(){
 
 	Game.state.add('MenuState', new State.Menu());
 	Game.state.add('LoadState', new State.Load());
-	Game.state.add('GameState', State.Game);
-	Game.state.add('GameoverState', State.GameOver);
 
 	Game.state.start('MenuState');
 }
