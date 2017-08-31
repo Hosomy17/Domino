@@ -8,8 +8,9 @@ var Table = function(edges,hand){//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<melhorar
 
 Table.prototype = {
   create : function(){
-    this.group = Game.add.sprite(Game.world.centerX,Game.world.centerY,'table');
-    //this.group.scale.set(20,20);
+    this.group = Game.add.group();
+    this.group.x = Game.world.centerX;
+    this.group.y = Game.world.centerY;
     var up = Game.add.sprite(Game.world.centerX,0,'turn');//<<<<<<<<<<<<<<<<<<<<<posição
     var down = Game.add.sprite(Game.world.centerX,Game.world.height,'turn');//<<<<<<<<<<<<<<<<<<<<<posição
     var left = Game.add.sprite(0,Game.world.centerY,'turn');//<<<<<<<<<<<<<<<<<<<<<posição
@@ -39,8 +40,8 @@ Table.prototype = {
     right.angle = 270;
     right.anchor.set(0.5,1);
 
-    this.group.anchor.set(0.5);
-    this.group.scale.set(1);
+    //this.group.anchor.set(0.5);
+    //this.group.scale.set(1);
     var edges = this.edges;
     var hand  = this.hand;//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<????????????????????????????pq
     var s = Game.add.sprite(0,0,'blank');

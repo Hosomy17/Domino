@@ -65,6 +65,8 @@ Link = (function(){
 
 	function sendMove(move){
 		var player = {name:_player.name,turn:_player.turn,team:_player.team};
+		if(move.direction != "center")
+			move.direction = "up";
 		var msg = {player:player,move:move};
 		_socket.emit('sendMove',msg);
 	}
@@ -83,11 +85,11 @@ Link = (function(){
 
 		},
 		match  : {
-			get sena(){return _match.sena}, set sena(v){_match.sena = v},
-			get status(){return _match.status},         set status(v){_match.status = v},
-			get score(){return _match.score},           set score(v){_match.score = v},
-			get round(){return _match.round},           set round(v){_match.round = v},
-			get turn(){return _match.turn},             set turn(v){_match.turn = v}
+			get sena(){return _match.sena},     set sena(v){_match.sena = v},
+			get status(){return _match.status}, set status(v){_match.status = v},
+			get score(){return _match.score},   set score(v){_match.score = v},
+			get round(){return _match.round},   set round(v){_match.round = v},
+			get turn(){return _match.turn},     set turn(v){_match.turn = v}
 		},
 		requestMatch :requestMatch,
 		sendMove     :sendMove,

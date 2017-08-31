@@ -19,6 +19,7 @@ State.Game = (function(){
     this.load.spritesheet('turn',   'assets/sprites/turn.png');
     this.load.spritesheet('final',  'assets/sprites/final.png');
     this.load.spritesheet('shadow',  'assets/sprites/shadow.png');
+    this.load.spritesheet('shadow-s',  'assets/sprites/shadow-s.png');
 	}
 
 	function create(){
