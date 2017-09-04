@@ -65,8 +65,6 @@ Link = (function(){
 
 	function sendMove(move){
 		var player = {name:_player.name,turn:_player.turn,team:_player.team};
-		if(move.direction != "center")
-			move.direction = "up";
 		var msg = {player:player,move:move};
 		_socket.emit('sendMove',msg);
 	}
@@ -74,6 +72,10 @@ Link = (function(){
 	function newRound(){
 		var msg = {players:_players};
 		_socket.emit('newRound',msg);
+	}
+
+	function leaveMacth(){
+		_socket.disconnect();
 	}
 
 	return {
@@ -93,6 +95,7 @@ Link = (function(){
 		},
 		requestMatch :requestMatch,
 		sendMove     :sendMove,
-		newRound     :newRound
+		newRound     :newRound,
+		leaveMacth   :leaveMacth
 	};
 })();

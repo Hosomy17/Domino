@@ -13,6 +13,14 @@ var Core = function(hand, hud, edges, table){
 }
 
 Core.prototype = {
+
+  create:function(){
+    var key = Game.input.keyboard.addKey(Phaser.Keyboard.ESC);
+        key.onDown.add(function(){
+          Link.leaveMacth();
+          Game.state.start("MenuState");
+        }, this);
+  },
   update: function(){
     if(Game.time.events.events.length){
       this.hud.timer.text = Math.floor(this.timer.timer.duration);

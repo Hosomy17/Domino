@@ -3,7 +3,7 @@ State.Menu = function(){
 
 State.Menu.prototype = {
 	preload : function (){
-		this.load.spritesheet('start', 'assets/sprites/start.png',100,50);
+		this.load.spritesheet('start', 'assets/sprites/start.png',75,25);
 	},
 
 	create : function (){

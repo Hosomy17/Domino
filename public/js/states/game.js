@@ -18,6 +18,7 @@ State.Game = (function(){
     this.load.spritesheet('blank',  'assets/sprites/blank.png');//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< spritesheet??????
     this.load.spritesheet('turn',   'assets/sprites/turn.png');
     this.load.spritesheet('final',  'assets/sprites/final.png');
+    this.load.spritesheet('options','assets/sprites/options.png');
     this.load.spritesheet('shadow',  'assets/sprites/shadow.png');
     this.load.spritesheet('shadow-s',  'assets/sprites/shadow-s.png');
 	}
@@ -35,6 +36,7 @@ State.Game = (function(){
     hud.create();
 
     _core = new Core(hand, hud, edges, table);
+    _core.create();
     _core.skipMove();
 	}
 
