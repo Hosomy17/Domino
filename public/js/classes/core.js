@@ -2,7 +2,6 @@ var Core = function(hand, hud, edges, table){
   this.hand        = hand;
   this.hud         = hud;
   this.cntSkip     = 0;
-  this.noPiece     = true;//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>SOCORRO DUPLICADO
   this.maxPieceRow = 0;
   this.scaleTable  = 1;
   this.players     = hud.players;
@@ -54,7 +53,7 @@ Core.prototype = {
         }
       }
       //If there is carroça to place in center
-      if(this.noPiece){
+      if(this.edges.noPiece){
         //If have to be a sena
         if(Link.match.sena){
           if(piece[2] == 27){
@@ -116,7 +115,6 @@ Core.prototype = {
       this.players[d.player.turn].totalPieces.text = this.players[d.player.turn].ctn;
 
     if(this.edges.noPiece){
-      this.noPiece = false;
       this.edges.noPiece = false;
       this.edges.up.open     = d.move.piece[0];
       this.edges.down.open   = d.move.piece[0];
