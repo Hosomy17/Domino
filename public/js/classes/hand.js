@@ -42,7 +42,7 @@ Hand.prototype = {
   },
 
   finishSelect : function(direction){//<<<<<<<<<<<<<<<<<<<<<<<<<<<duplicado no core
-    Game.time.events.removeAll();    
+    Game.time.events.removeAll();
     this.edges.hideBlanks();
 
     var piece = this.edges.selected;
@@ -50,8 +50,8 @@ Hand.prototype = {
       piece.visible = false;
       piece = piece.piece;
       for(i = 0; i < this.pieces.length; i++){ //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<alterar isso para hand
-        if(this.pieces[i].piece[2] == piece[2])
-          this.pieces.splice(i,1);
+        // if(this.pieces[i].piece[2] == piece[2])
+        //   this.pieces.splice(i,1);
       }
     }
     var move = {piece:piece, direction:direction};

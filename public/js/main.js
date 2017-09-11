@@ -1,4 +1,4 @@
-var Game = new Phaser.Game("100%", "100%", Phaser.AUTO, 'phaser-game', {preload:preload,create:create,update:update});
+var Game = new Phaser.Game(1600, 850, Phaser.AUTO, 'phaser-game', {preload:preload,create:create,update:update});
 var State = {
 	LudusSplash: function () {
 	}
@@ -18,10 +18,10 @@ function create(){
 	Game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
 	Game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
 
-	//Game.scale.minWidth = 200;
-	//Game.scale.minHeight = 200;
-	//Game.scale.maxWidth = 600;
-	//Game.scale.maxHeight = 600;
+	Game.scale.minWidth = 320;
+	Game.scale.minHeight = 170;
+  Game.scale.maxWidth = 1600;
+	Game.scale.maxHeight = 850;
 	Game.scale.forceLandscape = true;
 
 	Game.state.add('MenuState', new State.Menu());

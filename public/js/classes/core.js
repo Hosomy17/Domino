@@ -2,8 +2,8 @@ var Core = function(hand, hud, edges, table){
   this.hand        = hand;
   this.hud         = hud;
   this.cntSkip     = 0;
-  this.maxPieceRow = 0;
-  this.scaleTable  = 1;
+  this.maxPieceRow = 1;
+  this.scaleTable  = 100;
   this.players     = hud.players;
   this.edges       = edges;
   this.score       = hud.score;
@@ -150,9 +150,10 @@ Core.prototype = {
     if(this.maxPieceRow < total){
       this.maxPieceRow = total;
       var tableScale = this.scaleTable;
-      if(this.scaleTable > 0.6)
-        this.scaleTable -= 0.2;
-      Game.add.tween(this.table.scale).to( { x: this.scaleTable, y: this.scaleTable,}, 500, Phaser.Easing.Linear.None, true);
+      console.log(this.scaleTable);
+      if(this.scaleTable > 45)
+        this.scaleTable -= 55;
+      Game.add.tween(this.table.scale).to( { x: this.scaleTable/100, y: this.scaleTable/100,}, Phaser.Timer.SECOND * 2, Phaser.Easing.Linear.None, true);
     }
   },
 
@@ -175,7 +176,7 @@ Core.prototype = {
     sprite.anchor.set(0.5);
     this.table.addChild(sprite);
 
-    edge.total++;
+    edge.total ++;
     if(edge.open == d.move.piece[0]){
       sprite.angle += 180;
       edge.open = d.move.piece[1];
@@ -186,7 +187,7 @@ Core.prototype = {
       edge.points = d.move.piece[0];
     }
 
-    var shadow = (sprite.angle%180 == 0) ? 'shadow' : 'shadow-s' ;
+    var shadow = (sprite.angle % 180 == 0) ? 'shadow' : 'shadow-s' ;
     sprite = Game.add.sprite(edge.blank[ori].x,edge.blank[ori].y,shadow,d.move.piece[2]);
     sprite.anchor.set(0.5);
     this.table.addChild(sprite);
@@ -243,13 +244,9 @@ Core.prototype = {
   calcPositionsEdges: function(edge,direction){
     var total = edge.total;
     var doit = false;
-    if((direction == "left" || direction == "right") && (total == 7 || total == 12 || total == 18 || total == 22)){
-      edge.idDir++;
-      edge.blank.normal.angle += 90;
-      edge.blank.side.angle += 90;
-      doit = true;
-    }
-    else if((direction == "up" || direction == "down") && (total == 5 || total == 12 || total == 16 || total == 22)){
+    if(((direction == "left" || direction == "right") && (total == 11 || total == 16))
+    ||
+      ((direction == "up" || direction == "down") && (total == 4 || total == 14 || total == 17))){
       edge.idDir++;
       edge.blank.normal.angle += 90;
       edge.blank.side.angle += 90;
@@ -347,8 +344,8 @@ Core.prototype = {
       piece.visible = false;
       piece = piece.piece;
       for(i = 0; i < this.hand.pieces.length; i++){
-        if(this.hand.pieces[i].piece[2] == piece[2])
-          this.hand.pieces.splice(i,1);
+        // if(this.hand.pieces[i].piece[2] == piece[2])
+        //   this.hand.pieces.splice(i,1);
       }
     }
     var move = {piece:piece, direction:direction};
