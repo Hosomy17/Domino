@@ -67,9 +67,6 @@ Link = (function(){
 		var player = {name:_player.name,turn:_player.turn,team:_player.team};
 		var msg = {player:player,move:move};
 
-		if(msg.move.direction != "center")
-			msg.move.direction = "up";
-
 		_socket.emit('sendMove',msg);
 	}
 

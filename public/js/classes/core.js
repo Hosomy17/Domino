@@ -344,8 +344,8 @@ Core.prototype = {
       piece.visible = false;
       piece = piece.piece;
       for(i = 0; i < this.hand.pieces.length; i++){
-        // if(this.hand.pieces[i].piece[2] == piece[2])
-        //   this.hand.pieces.splice(i,1);
+         if(this.hand.pieces[i].piece[2] == piece[2])
+           this.hand.pieces.splice(i,1);
       }
     }
     var move = {piece:piece, direction:direction};
