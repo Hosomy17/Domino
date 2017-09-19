@@ -1,9 +1,12 @@
 express = require('express');
+ai      = require('./modules/ai');
 app     = express();
+
 app.set('port', (process.env.PORT || 8080));
 server = app.listen(app.get('port'), function() {
   console.log('Server on port', app.get('port'));
 });
+
 //server  = require('http').Server(app);
 io      = require('socket.io')(server);
 
@@ -44,7 +47,8 @@ io.on('connection', function(socket){
 			match = {
 				id		  : 'Room ' + matchs.total++,
 				players : [],
-				sum     : [0,0]
+				sum     : [0,0],
+        log     : []
 			}
 
 			console.info('New match: ' + match.id);
@@ -131,6 +135,10 @@ io.on('connection', function(socket){
 			socket.match.sum[data.player.team] -= data.move.piece[0] + data.move.piece[1];
 
 		data.sum = socket.match.sum;
+
+    var log = {"piece":data.move.piece, "direction":data.move.direction,"player":{"turn":data.player.turn,"team":data.player.team}};
+    socket.match.log.push({data.move});
+    
 		console.info('Player: ' + data.player.name + ' send new move: ' + data.move.piece +' '+data.move.direction);
 		io.to(socket.match.id).emit('newMove',data);
 	});
