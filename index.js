@@ -137,8 +137,8 @@ io.on('connection', function(socket){
 		data.sum = socket.match.sum;
 
     var log = {"piece":data.move.piece, "direction":data.move.direction,"player":{"turn":data.player.turn,"team":data.player.team}};
-    socket.match.log.push({data.move});
-    
+    socket.match.log.push(log);
+
 		console.info('Player: ' + data.player.name + ' send new move: ' + data.move.piece +' '+data.move.direction);
 		io.to(socket.match.id).emit('newMove',data);
 	});
