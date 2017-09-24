@@ -55,6 +55,7 @@ Link = (function(){
 	});
 
 	_socket.on('updateMatch', function(data){
+		_players = data.players;
 		_status = 'Update';
 	});
 
