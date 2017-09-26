@@ -3,11 +3,9 @@ ai      = require('./modules/ai');
 app     = express();
 
 app.set('port', (process.env.PORT || 8080));
-server = app.listen(app.get('port'), function() {
+server  = app.listen(app.get('port'), function() {
   console.log('Server on port', app.get('port'));
 });
-
-//server  = require('http').Server(app);
 io      = require('socket.io')(server);
 
 //Routes
