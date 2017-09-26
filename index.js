@@ -10,6 +10,10 @@ server = app.listen(app.get('port'), function() {
 //server  = require('http').Server(app);
 io      = require('socket.io')(server);
 
+//Routes
+app.use(express.static(__dirname + '/public'));
+
+//Socket
 STATIC = {
 	MAX_PLAYERS : 4,
 	DOMINO 		: [
@@ -23,10 +27,6 @@ STATIC = {
               ]
 }
 
-//Routes
-app.use(express.static(__dirname + '/public'));
-
-//Socket
 matchs = {
 	avaliable : [],//match
 	progress  : [],//match
