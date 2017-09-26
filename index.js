@@ -37,10 +37,8 @@ io.on('connection', function(socket){
 	console.info('New player: ' + socket.conn.id);
 
 	socket.on('findMatch', function(data){
-
 		//Search an avaiable match
 		var match = matchs.avaliable.shift();
-
 		if(!match){
 			match = {
 				id		  : 'Room ' + matchs.total++,
@@ -48,14 +46,12 @@ io.on('connection', function(socket){
 				sum     : [0,0],
         log     : []
 			}
-
-			console.info('New match: ' + match.id);
+			console.info('New match created: ' + match.id);
 		}
 		//Put player in the match
 		player = data.player;
-		player.id = socket.conn.id;//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<problema com o '/#' dos ids
+		player.id = socket.conn.id;
 		socket.player = player;
-
 		match.players.push(player);
 		socket.join(match.id);
 
