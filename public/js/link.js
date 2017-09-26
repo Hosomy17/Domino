@@ -2,7 +2,6 @@ Link = (function(){
 	var _socket = io();
 
 	//Info about player in the current match
-
 	var _players = [];
 	var _player = {
 		id     : _socket.id,
