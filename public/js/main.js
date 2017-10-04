@@ -27,7 +27,7 @@ function create(){
 	Game.state.add('MenuState', new State.Menu());
 	Game.state.add('LoadState', new State.Load());
 
-	Game.state.start('MenuState');
+	Game.state.start('LoadState');
 }
 
 function update(){

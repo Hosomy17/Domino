@@ -36,7 +36,7 @@ Core.prototype = {
     if(this.hand.turn != Link.player.turn)
       skip = false;
     else
-      this.timer = Game.time.events.add(Phaser.Timer.SECOND * 6000, this.autoPlay, this);
+      this.timer = Game.time.events.add(Phaser.Timer.SECOND * 0.1, this.autoPlay, this);
     var pcs = this.hand.pieces;
     var eds = [];
     eds[0] = {n:this.edges.up.open   ,d:"up"};
@@ -359,11 +359,11 @@ Core.prototype = {
   },
 
   endRound: function(){
-    if(this.score[0].total >= STATIC.POINT_GOAL && this.score[0].total > this.score[1].total)
-      this.hud.showScore();
-    else if(this.score[1].total >= STATIC.POINT_GOAL && this.score[1].total > this.score[0].total)
-      this.hud.showScore();
-    else
+    // if(this.score[0].total >= STATIC.POINT_GOAL && this.score[0].total > this.score[1].total)
+    //   this.hud.showScore();
+    // else if(this.score[1].total >= STATIC.POINT_GOAL && this.score[1].total > this.score[0].total)
+    //   this.hud.showScore();
+    // else
       Game.state.start("GameoverState");
   }
 }
