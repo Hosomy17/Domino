@@ -19,7 +19,7 @@ Link = (function(){
 		score     : [0,0],
 		round     : 1,
 		turn      : 0,
-		sena: true,
+		sena      : true,
 		status    : 'Created'
 	};
 
@@ -44,7 +44,7 @@ Link = (function(){
 				_player = players[3];
 			break;
 		}
-		_players[0] = {name:players[0].name, team:players[0].team, pieces:[]};//<<<<<<<<<<<<<<<<<<<<<verificar se está certo
+		_players[0] = {name:players[0].name, team:players[0].team, pieces:[]};
 		_players[1] = {name:players[1].name, team:players[1].team, pieces:[]};
 		_players[2] = {name:players[2].name, team:players[2].team, pieces:[]};
 		_players[3] = {name:players[3].name, team:players[3].team, pieces:[]};
@@ -64,9 +64,7 @@ Link = (function(){
 	}
 
 	function sendMove(move){
-		var player ={
-			name:_player.name,
-			turn:_player.turn,team:_player.team};
+		var player ={name:_player.name,turn:_player.turn,team:_player.team};
 		var msg = {player:player,move:move};
 
 		_socket.emit('sendMove',msg);

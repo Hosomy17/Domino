@@ -56,7 +56,7 @@ io.on('connection', function(socket){
 		socket.join(match.id);
 
 		socket.to(match.id).emit('newMatch', match);
-		console.info('Player: ' + data.player.name + ' enter: ' + match.id);
+		console.info('Player: ' + data.player.id + ' enter: ' + match.id);
 
 		//Check if game already to start
 		if(match.players.length == STATIC.MAX_PLAYERS) {
@@ -124,7 +124,6 @@ io.on('connection', function(socket){
 	});
 
 	socket.on('sendMove', function(data){
-		//verificar<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< se ta tudo ok
 		if(data.move.piece != null)
 			socket.match.sum[data.player.team] -= data.move.piece[0] + data.move.piece[1];
 

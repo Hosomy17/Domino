@@ -196,47 +196,6 @@ Core.prototype = {
 
     //Calc positions of edge
     this.calcPositionsEdges(edge,d.move.direction);
-    // if(edge.total == 7 && (d.move.direction == 'right' || d.move.direction == 'left')){
-    //   edge.blank.normal.angle += 90;
-    //   edge.blank.side.angle += 90;
-    //   switch (d.move.direction) {
-    //     case 'right':
-    //       edge.nextPos    = this.edges.newPosForm.down;
-    //       edge.blank.normal.x += STATIC.WIDTH_PIECE/2;
-    //       edge.blank.normal.y -= STATIC.WIDTH_PIECE/2;
-    //       edge.blank.side.x   += STATIC.WIDTH_PIECE;
-    //       edge.blank.side.y   -= STATIC.WIDTH_PIECE/2;
-    //     break;
-    //     case 'left':
-    //       edge.nextPos    = this.edges.newPosForm.up;
-    //       edge.blank.normal.x -= STATIC.WIDTH_PIECE/2;
-    //       edge.blank.normal.y += STATIC.WIDTH_PIECE/2;
-    //       edge.blank.side.x   -= STATIC.WIDTH_PIECE;
-    //       edge.blank.side.y   += STATIC.WIDTH_PIECE/2;
-    //     break;
-    //   }
-    // }
-    // else if (edge.total == 5 &&  (d.move.direction == 'up' || d.move.direction == 'down')) {
-    //   edge.blank.normal.angle += 90;
-    //   edge.blank.side.angle   += 90;
-    //   switch (d.move.direction) {
-    //     case 'up':
-    //       edge.nextPos    = this.edges.newPosForm.right;
-    //       edge.blank.normal.x -= STATIC.WIDTH_PIECE/2;
-    //       edge.blank.normal.y -= STATIC.WIDTH_PIECE/2;
-    //       edge.blank.side.x   -= STATIC.WIDTH_PIECE/2;
-    //       edge.blank.side.y   -= STATIC.WIDTH_PIECE;
-    //     break;
-    //     case 'down':
-    //       edge.nextPos    = this.edges.newPosForm.left;
-    //       edge.blank.normal.x += STATIC.WIDTH_PIECE/2;
-    //       edge.blank.normal.y += STATIC.WIDTH_PIECE/2;
-    //       edge.blank.side.x   += STATIC.WIDTH_PIECE/2;
-    //       edge.blank.side.y   += STATIC.WIDTH_PIECE;
-    //     break;
-    //   }
-    // }
-
     //Move blank to the next edge
     edge.nextPos[edge.idDir].f(edge.blank, ori);
   },
@@ -281,46 +240,6 @@ Core.prototype = {
         break;
       }
     }
-    // if(edge.total == 7 && (direction == 'right' || direction == 'left')){
-    //   edge.blank.normal.angle += 90;
-    //   edge.blank.side.angle += 90;
-    //   switch (direction) {
-    //     case 'right':
-    //       edge.nextPos    = this.edges.newPosForm.down;
-    //       edge.blank.normal.x += STATIC.WIDTH_PIECE/2;
-    //       edge.blank.normal.y -= STATIC.WIDTH_PIECE/2;
-    //       edge.blank.side.x   += STATIC.WIDTH_PIECE;
-    //       edge.blank.side.y   -= STATIC.WIDTH_PIECE/2;
-    //     break;
-    //     case 'left':
-    //       edge.nextPos    = this.edges.newPosForm.up;
-    //       edge.blank.normal.x -= STATIC.WIDTH_PIECE/2;
-    //       edge.blank.normal.y += STATIC.WIDTH_PIECE/2;
-    //       edge.blank.side.x   -= STATIC.WIDTH_PIECE;
-    //       edge.blank.side.y   += STATIC.WIDTH_PIECE/2;
-    //     break;
-    //   }
-    // }
-    // else if (edge.total == 5 &&  (direction == 'up' || direction == 'down')) {
-    //   edge.blank.normal.angle += 90;
-    //   edge.blank.side.angle   += 90;
-    //   switch (direction) {
-    //     case 'up':
-    //       edge.nextPos    = this.edges.newPosForm.right;
-    //       edge.blank.normal.x -= STATIC.WIDTH_PIECE/2;
-    //       edge.blank.normal.y -= STATIC.WIDTH_PIECE/2;
-    //       edge.blank.side.x   -= STATIC.WIDTH_PIECE/2;
-    //       edge.blank.side.y   -= STATIC.WIDTH_PIECE;
-    //     break;
-    //     case 'down':
-    //       edge.nextPos    = this.edges.newPosForm.left;
-    //       edge.blank.normal.x += STATIC.WIDTH_PIECE/2;
-    //       edge.blank.normal.y += STATIC.WIDTH_PIECE/2;
-    //       edge.blank.side.x   += STATIC.WIDTH_PIECE/2;
-    //       edge.blank.side.y   += STATIC.WIDTH_PIECE;
-    //     break;
-    //   }
-    // }
   },
 
   calculatePoints: function(){
