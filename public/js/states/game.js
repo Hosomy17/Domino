@@ -12,10 +12,10 @@ State.Game = (function(){
   var _core;
 
 	function preload(){
-    this.load.spritesheet('domino', 'assets/sprites/domino.png',STATIC.WIDTH_PIECE,STATIC.HEIGHT_PIECE);//<<<<<<<<<<<<<<<<<<<<<<<< dimenção
-    this.load.spritesheet('hand',   'assets/sprites/hand.png');//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< spritesheet??????
-    this.load.spritesheet('table',  'assets/sprites/table.png');//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< spritesheet??????
-    this.load.spritesheet('blank',  'assets/sprites/blank.png');//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< spritesheet??????
+    this.load.spritesheet('domino', 'assets/sprites/domino.png',STATIC.WIDTH_PIECE,STATIC.HEIGHT_PIECE);
+    this.load.spritesheet('hand',   'assets/sprites/hand.png');
+    this.load.spritesheet('table',  'assets/sprites/table.png');
+    this.load.spritesheet('blank',  'assets/sprites/blank.png');
     this.load.spritesheet('turn',   'assets/sprites/turn.png');
     this.load.spritesheet('final',  'assets/sprites/final.png');
     this.load.spritesheet('options','assets/sprites/options.png');

@@ -25,7 +25,8 @@ Link = (function(){
 
 	//Received Messages//
 	_socket.on('newMove', function(data){
-		_player.lastMoves.unshift(data);
+		if(data.teste == 0)
+			_player.lastMoves.unshift(data);
 	});
 
 	_socket.on('startRound', function(data){
@@ -64,10 +65,12 @@ Link = (function(){
 	}
 
 	function sendMove(move){
-		var player ={name:_player.name,turn:_player.turn,team:_player.team};
-		var msg = {player:player,move:move};
+		for(var j=0;j<1000;j++){
+			var player ={name:_player.name,turn:_player.turn,team:_player.team};
+			var msg = {player:player,move:move,teste:j};
 
-		_socket.emit('sendMove',msg);
+			_socket.emit('sendMove',msg);
+		}
 	}
 
 	function newRound(){
