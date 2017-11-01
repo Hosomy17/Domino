@@ -2,7 +2,7 @@ exports.randomPiece = function(pieces, hand, start) {
 	var table  =   [];
 	var indexPlay  = [];
 	var indexHand  = [];
-	var play  = [];
+	var play  = {"piece":null,"direction":null};
 	var wasPlayed = true;
 	var v0 = [0,0,0,0,0,0,0];
 	var v1 = [0,0,0,0,0,0,0];
@@ -120,6 +120,7 @@ exports.randomPiece = function(pieces, hand, start) {
 
 	for(var i = 0; i < Object.keys(hand).length;i++)
 	{
+		play = {"piece":null,"direction":null};
 		if (hand[i][0] == table.right || hand[i][1] == table.right){
 			for(var j = 0; j < Object.keys(pieces).length;j++)
 			{
@@ -135,37 +136,13 @@ exports.randomPiece = function(pieces, hand, start) {
 			if (wasPlayed == true)
 			{
 				play.piece = hand[i];
-				play.direction = "right"
+				play.direction = "right";
 				vPlay.push(play);
 				cont++;
-				//return  play;
 			}
 			wasPlayed = true;
 		}
-		play = [];
-		if (hand[i][0] == table.up || hand[i][1] == table.up){
-			for(var j = 0; j < Object.keys(pieces).length;j++)
-			{
-				if (pieces[indexPlay[j]].piece)
-				{
-					if (pieces[indexPlay[j]].piece[2] == hand[i][2])
-					{
-						wasPlayed = false;
-						break;
-					}
-				}
-			}
-			if (wasPlayed == true)
-			{
-				play.piece = hand[i];
-				play.direction = "up"
-				vPlay.push(play);
-				cont++;
-				//return  play;
-			}
-			wasPlayed = true;
-		}
-		play = [];
+		play = {"piece":null,"direction":null};
 		if (hand[i][0] == table.left || hand[i][1] == table.left){
 			for(var j = 0; j < Object.keys(pieces).length;j++)
 			{
@@ -181,14 +158,35 @@ exports.randomPiece = function(pieces, hand, start) {
 			if (wasPlayed == true)
 			{
 				play.piece = hand[i];
-				play.direction = "left"
+				play.direction = "left";
 				vPlay.push(play);
 				cont++;
-				//return  play;
 			}
 			wasPlayed = true;
 		}
-		play = [];
+		play = {"piece":null,"direction":null};
+		if (hand[i][0] == table.up || hand[i][1] == table.up){
+			for(var j = 0; j < Object.keys(pieces).length;j++)
+			{
+				if (pieces[indexPlay[j]].piece)
+				{
+					if (pieces[indexPlay[j]].piece[2] == hand[i][2])
+					{
+						wasPlayed = false;
+						break;
+					}
+				}
+			}
+			if (wasPlayed == true)
+			{
+				play.piece = hand[i];
+				play.direction = "up";
+				vPlay.push(play);
+				cont++;
+			}
+			wasPlayed = true;
+		}
+		play = {"piece":null,"direction":null};
 		if (hand[i][0] == table.down || hand[i][1] == table.down){
 			for(var j = 0; j < Object.keys(pieces).length;j++)
 			{
@@ -204,14 +202,12 @@ exports.randomPiece = function(pieces, hand, start) {
 			if (wasPlayed == true)
 			{
 				play.piece = hand[i];
-				play.direction = "down"
+				play.direction = "down";
 				vPlay.push(play);
 				cont++;
-				//return  vPlay;
 			}
 			wasPlayed = true;
 		}
-		play = [];
 	}
 	// Montagem dos vetores de cauculo
 

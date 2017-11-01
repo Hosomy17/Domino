@@ -4,7 +4,7 @@ var STATIC = {
     WIDTH_PIECE   : 68,
     HEIGHT_PIECE  : 134,
     POINT_SKIP    : 20,
-    POINT_GALO    : 50,
+    POINT_GALO    : 30,
     POINT_CARROCA : 20,
     POINT_GOAL    : 200
 }
@@ -37,6 +37,7 @@ State.Game = (function(){
 
     _core = new Core(hand, hud, edges, table);
     _core.create();
+    hand.core = _core;
     _core.skipMove();
 	}
 

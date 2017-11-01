@@ -84,11 +84,6 @@ io.on('connection', function(socket){
       match.players[2].team = 1;
       match.players[3].team = 1;
 
-      var gamb = match.players[1];
-      match.players[1] = match.players[2];
-      match.players[2] = gamb;
-
-
 			var sum = [0,0,0,0];
 			for(var i=0; i < 4; i++){
 				for(var j=0; j < shufflePieces[i].length; j++){
@@ -97,8 +92,12 @@ io.on('connection', function(socket){
 			}
       match.sum = [0,0];
   		for(var i=0; i < STATIC.MAX_PLAYERS; i++){
-  			match.sum[match.players[i].team] = shufflePieces[i];
+  			match.sum[match.players[i].team] += sum[i];
   		}
+
+      var gamb = match.players[1];
+      match.players[1] = match.players[2];
+      match.players[2] = gamb;
 
 			//Turn each player
 			// 0 1 2 3
@@ -124,9 +123,7 @@ io.on('connection', function(socket){
       for(var i=0;i < STATIC.MAX_PLAYERS; i++)
       {
         if(searchPiece(match.players[i].pieces, 27))
-          {
             aux = match.players[i].turn;
-          }
       }
 
 
@@ -143,7 +140,7 @@ io.on('connection', function(socket){
     		match.sum[1] -= move.piece[0] + move.piece[1];
     		data.sum = match.sum;
         data.move = move;
-        data.player = match.players[aux];
+        data.player = {"turn":aux,"team":1};
 
         var log = {"piece":move.piece, "direction":move.direction,"player":{"turn":aux,"team":1}};
         match.log.push(log);
@@ -168,14 +165,15 @@ io.on('connection', function(socket){
     data.players = socket.match.players;
 		var sum = [0,0,0,0];
 		for(var i=0; i < 4; i++){
-			for(var j=0; j < shufflePieces.length; j++){
+			for(var j=0; j < shufflePieces[i].length; j++){
 				sum[i] += shufflePieces[i][j][0] + shufflePieces[i][j][1];
 			}
 		}
 		socket.match.sum = [0,0];
 		for(var i=0; i < STATIC.MAX_PLAYERS; i++){
-			socket.match.sum[data.players[i].team] = shufflePieces[i];
+			socket.match.sum[data.players[i].team] += sum[i];
 		}
+
     var aux = socket.match.log[socket.match.log.length-1].player.turn;
     if(data.sena)
     {
@@ -190,11 +188,10 @@ io.on('connection', function(socket){
 		console.info('Start new round: ' + socket.match.id);
 
     //Call IA
-    console.log(socket.match.players[1].pieces);
-    console.log(socket.match.players[3].pieces);
+    socket.match.log = [];
     if(socket.match.players[aux].ia)
     {
-      var move = ia_antonio.randomPiece(socket.match.log,socket.match.players[aux].pieces,data.sena);
+      var move = ia_antonio.randomPiece(socket.match.log, socket.match.players[aux].pieces,data.sena);
 
       if(move)
         socket.match.sum[1] -= move.piece[0] + move.piece[1];
@@ -203,7 +200,7 @@ io.on('connection', function(socket){
 
       data.sum = socket.match.sum;
       data.move = move;
-      data.player = socket.match.players[aux];
+      data.player = {"turn":aux,"team":1};
 
       var log = {"piece":move.piece, "direction":move.direction,"player":{"turn":aux,"team":1}};
       socket.match.log.push(log);
@@ -229,8 +226,8 @@ io.on('connection', function(socket){
     //Call IA
     var aux = (data.player.turn+1) % 4;
     if(!data.forceBreak){
-      var move = ia_antonio.randomPiece(socket.match.log,socket.match.players[aux].pieces,data.sena);
-      console.log(ia_antonio.randomPiece(socket.match.log,socket.match.players[aux].pieces,data.sena));
+
+      var move = ia_antonio.randomPiece(socket.match.log, socket.match.players[aux].pieces,data.sena);
       if(move)
         socket.match.sum[1] -= move.piece[0] + move.piece[1];
       else
@@ -238,7 +235,7 @@ io.on('connection', function(socket){
 
       data.sum = socket.match.sum;
       data.move = move;
-      data.player = socket.match.players[aux];
+      data.player = {"turn":aux,"team":1};
 
       var log = {"piece":move.piece, "direction":move.direction,"player":{"turn":aux,"team":1}};
       socket.match.log.push(log);
@@ -254,7 +251,6 @@ io.on('connection', function(socket){
 			removePlayer(socket.match,socket.conn.id);
 			socket.player.status = 'disconnect';
 			//io.to(socket.match.id).emit('updateMatch',socket.player);
-			console.log(socket.match);
 			//console.info('Player: ' + socket.id + ' left: ' + socket.match.id);}
 		}
 	});

@@ -36,7 +36,7 @@ Core.prototype = {
     if(this.hand.turn != Link.player.turn)
       skip = false;
     else
-      this.timer = Game.time.events.add(Phaser.Timer.SECOND * 0.1, this.autoPlay, this);
+      this.timer = Game.time.events.add(Phaser.Timer.SECOND * 3600, this.autoPlay, this);
     var pcs = this.hand.pieces;
     var eds = [];
     eds[0] = {n:this.edges.up.open   ,d:"up"};
@@ -79,14 +79,15 @@ Core.prototype = {
   doMove: function(d){
     if(d.move.piece == null){
       if(this.cntSkip == 0){
-        this.gainPoints(STATIC.POINT_SKIP, (d.player.team == 0) ? 1 : 0);
+        this.gainPoints(STATIC.POINT_SKIP, (d.player.team == 0) ? 1 : 0, "passe");
       }
       this.cntSkip++;
       if(this.cntSkip == 4){
+        console.log(d.sum);
         if(d.sum[0] < d.sum[1])
-          this.gainPoints(Math.floor(d.sum[1]/5) * 5,0);
+          this.gainPoints(Math.floor(d.sum[1]/5) * 5,0,"garragem");
         else if(d.sum[1] < d.sum[0])
-          this.gainPoints(Math.floor(d.sum[0]/5) * 5,1);
+          this.gainPoints(Math.floor(d.sum[0]/5) * 5,1,"garragem");
 
         Link.match.score = [this.score[0].total, this.score[1].total];
         Link.match.turn = d.player.turn;
@@ -101,7 +102,7 @@ Core.prototype = {
     }
     else{
       if(this.cntSkip == 3)
-        this.gainPoints(STATIC.POINT_GALO,d.player.team);
+        this.gainPoints(STATIC.POINT_GALO,d.player.team,"galo");
       this.cntSkip = 0;
     }
 
@@ -109,7 +110,7 @@ Core.prototype = {
     this.players[d.player.turn].ctn--;
     var points = this.calculatePoints();
     if(points % 5 == 0)
-      this.gainPoints(points,d.player.team);
+      this.gainPoints(points,d.player.team,"pontos na mesa");
 
     if(Link.player.turn != d.player.turn)
       this.players[d.player.turn].totalPieces.text = this.players[d.player.turn].ctn;
@@ -130,9 +131,11 @@ Core.prototype = {
     if(this.players[d.player.turn].ctn == 0){
 
       if(d.move.piece[0] == d.move.piece[1])
-        this.gainPoints(STATIC.POINT_CARROCA,d.player.team);
+        this.gainPoints(STATIC.POINT_CARROCA,d.player.team,"bater de carroça");
 
-      this.gainPoints(Math.floor(d.sum[d.player.team]/5) * 5,d.player.team);
+      console.log(d.sum);
+      var eTeam = (d.player.team == 0) ? 1 : 0;
+      this.gainPoints(Math.floor(d.sum[eTeam]/5) * 5,d.player.team, "garragem");
       var score = [this.score[0].total, this.score[1].total];
 
       Link.match.score = score;
@@ -150,7 +153,6 @@ Core.prototype = {
     if(this.maxPieceRow < total){
       this.maxPieceRow = total;
       var tableScale = this.scaleTable;
-      console.log(this.scaleTable);
       if(this.scaleTable > 45)
         this.scaleTable -= 55;
       Game.add.tween(this.table.scale).to( { x: this.scaleTable/100, y: this.scaleTable/100,}, Phaser.Timer.SECOND * 2, Phaser.Easing.Linear.None, true);
@@ -249,7 +251,8 @@ Core.prototype = {
     return points;
   },
 
-  gainPoints: function(pts, team){
+  gainPoints: function(pts, team, msg){
+    console.log("Time "+team+" ganha "+pts+" pontos por "+msg);
     this.score[team].total += pts;
     this.score[team].text.text = this.score[team].total;
   },
@@ -268,8 +271,8 @@ Core.prototype = {
       }
     }
     var move = {piece:piece, direction:direction};
-    var forceBreak = (this.cntSkip == 3 && !piece) || (this.players[Link.player.turn].ctn == 1);
-    Link.sendMove(move);
+    var forceBreak = (this.cntSkip == 3 && !piece) || (this.players[Link.player.turn].ctn == 1 && piece);
+    Link.sendMove(move, forceBreak);
     this.edges.selected = null;
   },
 
@@ -279,11 +282,11 @@ Core.prototype = {
   },
 
   endRound: function(){
-    // if(this.score[0].total >= STATIC.POINT_GOAL && this.score[0].total > this.score[1].total)
-    //   this.hud.showScore();
-    // else if(this.score[1].total >= STATIC.POINT_GOAL && this.score[1].total > this.score[0].total)
-    //   this.hud.showScore();
-    // else
+    if(this.score[0].total >= STATIC.POINT_GOAL && this.score[0].total > this.score[1].total)
+      this.hud.showScore();
+    else if(this.score[1].total >= STATIC.POINT_GOAL && this.score[1].total > this.score[0].total)
+      this.hud.showScore();
+    else
       Game.state.start("GameoverState");
   }
 }

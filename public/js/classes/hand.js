@@ -4,6 +4,7 @@ var Hand = function(e){
   this.pieces = [1,2];
   this.group = null;
   this.autoPiece = null;
+  this.core = null;
 }
 
 Hand.prototype = {
@@ -50,12 +51,13 @@ Hand.prototype = {
       piece.visible = false;
       piece = piece.piece;
       for(i = 0; i < this.pieces.length; i++){ //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<alterar isso para hand
-        // if(this.pieces[i].piece[2] == piece[2])
-        //   this.pieces.splice(i,1);
+        if(this.pieces[i].piece[2] == piece[2])
+          this.pieces.splice(i,1);
       }
     }
     var move = {piece:piece, direction:direction};
-    Link.sendMove(move);
+    var forceBreak = (this.core.cntSkip == 3 && !piece) || (this.core.players[Link.player.turn].ctn == 1 && piece);
+    Link.sendMove(move,forceBreak);
     this.edges.selected = null;//<<<<<<<<<<<<<<<<<<<<<<<<<<<<ainda em edge?
   }
 };

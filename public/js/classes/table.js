@@ -11,10 +11,10 @@ Table.prototype = {
     this.group = Game.add.group();
     this.group.x = Game.world.centerX;
     this.group.y = Game.world.centerY;
-    var up = Game.add.sprite(Game.world.centerX,0,'turn');//<<<<<<<<<<<<<<<<<<<<<posição
+    var up = Game.add.sprite(Game.world.centerX,0-10,'turn');//<<<<<<<<<<<<<<<<<<<<<posição
     var down = Game.add.sprite(Game.world.centerX,Game.world.height,'turn');//<<<<<<<<<<<<<<<<<<<<<posição
-    var left = Game.add.sprite(0,Game.world.centerY,'turn');//<<<<<<<<<<<<<<<<<<<<<posição
-    var right = Game.add.sprite(Game.world.width,Game.world.centerY,'turn');//<<<<<<<<<<<<<<<<<<<<<posição
+    var left = Game.add.sprite(0+10,Game.world.centerY,'turn');//<<<<<<<<<<<<<<<<<<<<<posição
+    var right = Game.add.sprite(Game.world.width-10,Game.world.centerY,'turn');//<<<<<<<<<<<<<<<<<<<<<posição
 
     this.turns[0] = left;
     this.turns[1] = up;
