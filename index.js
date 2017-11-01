@@ -1,5 +1,5 @@
 express = require('express');
-ai      = require('./modules/ai');
+ia_antonio  = require('./modules/ai');
 app     = express();
 
 app.set('port', (process.env.PORT || 8080));
@@ -49,8 +49,9 @@ io.on('connection', function(socket){
 			console.info('New match created: ' + match.id);
 		}
 		//Put player in the match
-		player = data.player;
+		var player = data.player;
 		player.id = socket.conn.id;
+    player.ia = false;
 		socket.player = player;
 		match.players.push(player);
 		socket.join(match.id);
@@ -59,12 +60,34 @@ io.on('connection', function(socket){
 		console.info('Player: ' + data.player.id + ' enter: ' + match.id);
 
 		//Check if game already to start
-		if(match.players.length == STATIC.MAX_PLAYERS) {
-			shufflePieces = drawPieces();
+		if(match.players.length == STATIC.MAX_PLAYERS - 2) {
+      var ia = {turn:0, team:0, name: "ia 1", ia:true};
+      match.players.push(ia);
+
+      var ia = {turn:0, team:0, name: "ia 2", ia:true};
+      match.players.push(ia);
+
+
+			var shufflePieces = drawPieces();
 			match.players[0].pieces = shufflePieces[0];
 			match.players[1].pieces = shufflePieces[1];
 			match.players[2].pieces = shufflePieces[2];
 			match.players[3].pieces = shufflePieces[3];
+
+      match.players[0].turn = 0;
+      match.players[1].turn = 2;
+      match.players[2].turn = 1;
+      match.players[3].turn = 3;
+
+      match.players[0].team = 0;
+      match.players[1].team = 0;
+      match.players[2].team = 1;
+      match.players[3].team = 1;
+
+      var gamb = match.players[1];
+      match.players[1] = match.players[2];
+      match.players[2] = gamb;
+
 
 			var sum = [0,0,0,0];
 			for(var i=0; i < 4; i++){
@@ -72,30 +95,63 @@ io.on('connection', function(socket){
 					sum[i] += shufflePieces[i][j][0] + shufflePieces[i][j][1];
 				}
 			}
+      match.sum = [0,0];
+  		for(var i=0; i < STATIC.MAX_PLAYERS; i++){
+  			match.sum[match.players[i].team] = shufflePieces[i];
+  		}
+
 			//Turn each player
 			// 0 1 2 3
-			nextTurn = 1;
-			for(var i = 0; i < STATIC.MAX_PLAYERS; i++){
-				match.players[i].team = 0;
-				if(searchPiece(match.players[i].pieces, 27)){
-					match.players[i].turn = 0;
-					match.sum[0] += sum[i];
-				}
-				else{
-					if(nextTurn == 2){
-						match.sum[0] += sum[i];
-					}
-					else{
-						match.players[i].team = 1;
-						match.sum[1] += sum[i];
-					}
-					match.players[i].turn = nextTurn++;
-				}
-			}
-			matchs.progress.push(match);
-			io.to(match.id).emit('startRound', {players:match.players,room:match.id});
+			// var nextTurn = 1;
+			// for(var i = 0; i < STATIC.MAX_PLAYERS; i++){
+			// 	match.players[i].team = 0;
+			// 	if(searchPiece(match.players[i].pieces, 27)){
+			// 		match.players[i].turn = 0;
+			// 		match.sum[0] += sum[i];
+			// 	}
+			// 	else{
+			// 		if(nextTurn == 2){
+			// 			match.sum[0] += sum[i];
+			// 		}
+			// 		else{
+			// 			match.players[i].team = 1;
+			// 			match.sum[1] += sum[i];
+			// 		}
+			// 		match.players[i].turn = nextTurn++;
+			// 	}
+
+      var aux = 0;
+      for(var i=0;i < STATIC.MAX_PLAYERS; i++)
+      {
+        if(searchPiece(match.players[i].pieces, 27))
+          {
+            aux = match.players[i].turn;
+          }
+      }
+
+
+      matchs.progress.push(match);
+			io.to(match.id).emit('startRound', {players:match.players,room:match.id,turn:aux});
 			console.info('Start game: '      + match.id);
 			console.info('Start new match: ' + match.id);
+
+      //Call IA
+      if(match.players[aux].ia)
+      {
+        var move = ia_antonio.randomPiece(match.log,match.players[aux].pieces,true);
+
+    		match.sum[1] -= move.piece[0] + move.piece[1];
+    		data.sum = match.sum;
+        data.move = move;
+        data.player = match.players[aux];
+
+        var log = {"piece":move.piece, "direction":move.direction,"player":{"turn":aux,"team":1}};
+        match.log.push(log);
+
+    		console.info('Player: ' + match.players[aux].name + ' send new move: ' + move.piece +' '+move.direction);
+    		io.to(match.id).emit('newMove',data);
+      }
+
 		}
 		else
 			matchs.avaliable.push(match);
@@ -105,10 +161,11 @@ io.on('connection', function(socket){
 
 	socket.on('newRound', function(data){
 		var shufflePieces = drawPieces();
-		data.players[0].pieces = shufflePieces[0];
-		data.players[1].pieces = shufflePieces[1];
-		data.players[2].pieces = shufflePieces[2];
-		data.players[3].pieces = shufflePieces[3];
+		socket.match.players[0].pieces = shufflePieces[0];
+		socket.match.players[1].pieces = shufflePieces[1];
+		socket.match.players[2].pieces = shufflePieces[2];
+		socket.match.players[3].pieces = shufflePieces[3];
+    data.players = socket.match.players;
 		var sum = [0,0,0,0];
 		for(var i=0; i < 4; i++){
 			for(var j=0; j < shufflePieces.length; j++){
@@ -119,8 +176,42 @@ io.on('connection', function(socket){
 		for(var i=0; i < STATIC.MAX_PLAYERS; i++){
 			socket.match.sum[data.players[i].team] = shufflePieces[i];
 		}
-		io.to(socket.match.id).emit('startRound', {players:data.players,room:socket.match.id});
+    var aux = socket.match.log[socket.match.log.length-1].player.turn;
+    if(data.sena)
+    {
+      for(var i=0;i < STATIC.MAX_PLAYERS; i++)
+      {
+        if(searchPiece(socket.match.players[i].pieces, 27))
+          aux = socket.match.players[i].turn;
+      }
+    }
+
+		io.to(socket.match.id).emit('startRound', {players:data.players,room:socket.match.id,turn:aux});
 		console.info('Start new round: ' + socket.match.id);
+
+    //Call IA
+    console.log(socket.match.players[1].pieces);
+    console.log(socket.match.players[3].pieces);
+    if(socket.match.players[aux].ia)
+    {
+      var move = ia_antonio.randomPiece(socket.match.log,socket.match.players[aux].pieces,data.sena);
+
+      if(move)
+        socket.match.sum[1] -= move.piece[0] + move.piece[1];
+      else
+        move = {"piece":null,"direction":null};
+
+      data.sum = socket.match.sum;
+      data.move = move;
+      data.player = socket.match.players[aux];
+
+      var log = {"piece":move.piece, "direction":move.direction,"player":{"turn":aux,"team":1}};
+      socket.match.log.push(log);
+
+      console.info('Player: ' + socket.match.players[aux].name + ' send new move: ' + move.piece +' '+move.direction);
+      io.to(socket.match.id).emit('newMove',data);
+    }
+
 	});
 
 	socket.on('sendMove', function(data){
@@ -130,10 +221,31 @@ io.on('connection', function(socket){
 		data.sum = socket.match.sum;
 
     var log = {"piece":data.move.piece, "direction":data.move.direction,"player":{"turn":data.player.turn,"team":data.player.team}};
-    //socket.match.log.push(log);
+    socket.match.log.push(log);
 
 		console.info('Player: ' + data.player.name + ' send new move: ' + data.move.piece +' '+data.move.direction);
 		io.to(socket.match.id).emit('newMove',data);
+
+    //Call IA
+    var aux = (data.player.turn+1) % 4;
+    if(!data.forceBreak){
+      var move = ia_antonio.randomPiece(socket.match.log,socket.match.players[aux].pieces,data.sena);
+      console.log(ia_antonio.randomPiece(socket.match.log,socket.match.players[aux].pieces,data.sena));
+      if(move)
+        socket.match.sum[1] -= move.piece[0] + move.piece[1];
+      else
+        move = {"piece":null,"direction":null};
+
+      data.sum = socket.match.sum;
+      data.move = move;
+      data.player = socket.match.players[aux];
+
+      var log = {"piece":move.piece, "direction":move.direction,"player":{"turn":aux,"team":1}};
+      socket.match.log.push(log);
+
+      console.info('Player: ' + socket.match.players[aux].name + ' send new move: ' + move.piece +' '+move.direction);
+      io.to(socket.match.id).emit('newMove',data);
+    }
 	});
 
 	socket.on('leaveMatch', function(){

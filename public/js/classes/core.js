@@ -268,6 +268,7 @@ Core.prototype = {
       }
     }
     var move = {piece:piece, direction:direction};
+    var forceBreak = (this.cntSkip == 3 && !piece) || (this.players[Link.player.turn].ctn == 1);
     Link.sendMove(move);
     this.edges.selected = null;
   },

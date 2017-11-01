@@ -25,7 +25,6 @@ Link = (function(){
 
 	//Received Messages//
 	_socket.on('newMove', function(data){
-		if(data.teste == 0)
 			_player.lastMoves.unshift(data);
 	});
 
@@ -52,6 +51,7 @@ Link = (function(){
 
 		_player.room = data.room;
 		_match.status = 'Ready';
+		_match.turn = data.turn;
 	});
 
 	_socket.on('updateMatch', function(data){
@@ -64,17 +64,15 @@ Link = (function(){
 		_socket.emit('findMatch', msg);
 	}
 
-	function sendMove(move){
-		for(var j=0;j<1000;j++){
-			var player ={name:_player.name,turn:_player.turn,team:_player.team};
-			var msg = {player:player,move:move,teste:j};
+	function sendMove(move, forceBreak){
+		var player ={name:_player.name,turn:_player.turn,team:_player.team, forceBreak:forceBreak};
+		var msg = {player:player,move:move};
 
-			_socket.emit('sendMove',msg);
-		}
+		_socket.emit('sendMove',msg);
 	}
 
 	function newRound(){
-		var msg = {players:_players};
+		var msg = {players:_players, sena:_match.sena};
 		_socket.emit('newRound',msg);
 	}
 

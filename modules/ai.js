@@ -1,4 +1,4 @@
-exports.randonPiece = function(pieces, hand) {
+exports.randomPiece = function(pieces, hand, start) {
 	var table  =   [];
 	var indexPlay  = [];
 	var indexHand  = [];
@@ -23,87 +23,119 @@ exports.randonPiece = function(pieces, hand) {
 	var E1 = 0, E2 = 0, Tp = 0, Tf = -10000;
 	var teste = -1;
 
-	for (var x in pieces) 
+	for (var x in pieces)
 	{
 	   indexPlay.push(x);
 	}
-	for (var x in hand) 
+	for (var x in hand)
 	{
 	   indexHand.push(x);
 	}
 
 	///Montagem das pecas na mesa
-	for(var i = 0; i < Object.keys(pieces).length;i++) 
+
+	for(var i = 0; i < Object.keys(pieces).length;i++)
 	{
 		if (pieces[indexPlay[i]].direction == "center")
 		{
-			table.up = pieces[indexPlay[i]].piece[0];  
-			table.right = pieces[indexPlay[i]].piece[0];  
-			table.left = pieces[indexPlay[i]].piece[0];  
-			table.down = pieces[indexPlay[i]].piece[0];  
+			table.center = pieces[indexPlay[i]].piece[0];
+			table.up = pieces[indexPlay[i]].piece[0];
+			table.right = pieces[indexPlay[i]].piece[0];
+			table.left = pieces[indexPlay[i]].piece[0];
+			table.down = pieces[indexPlay[i]].piece[0];
 		}
 		if (pieces[indexPlay[i]].direction == "right")
 		{
 			if (table.right != pieces[indexPlay[i]].piece[0])
 			{
-				table.right = pieces[indexPlay[i]].piece[0]; 
+				table.right = pieces[indexPlay[i]].piece[0];
 			}
 			else
 			{
-				table.right = pieces[indexPlay[i]].piece[1]; 
+				table.right = pieces[indexPlay[i]].piece[1];
 			}
 		}
 		if (pieces[indexPlay[i]].direction == "left")
 		{
 			if (table.left != pieces[indexPlay[i]].piece[0])
 			{
-				table.left = pieces[indexPlay[i]].piece[0]; 
+				table.left = pieces[indexPlay[i]].piece[0];
 			}
 			else
 			{
-				table.left = pieces[indexPlay[i]].piece[1]; 
+				table.left = pieces[indexPlay[i]].piece[1];
 			}
 		}
 		if (pieces[indexPlay[i]].direction == "down")
 		{
 			if (table.down != pieces[indexPlay[i]].piece[0])
 			{
-				table.down = pieces[indexPlay[i]].piece[0]; 
+				table.down = pieces[indexPlay[i]].piece[0];
 			}
 			else
 			{
-				table.down = pieces[indexPlay[i]].piece[1]; 
+				table.down = pieces[indexPlay[i]].piece[1];
 			}
 		}
 		if (pieces[indexPlay[i]].direction == "up")
 		{
 			if (table.up != pieces[indexPlay[i]].piece[0])
 			{
-				table.up = pieces[indexPlay[i]].piece[0]; 
+				table.up = pieces[indexPlay[i]].piece[0];
 			}
 			else
 			{
-				table.up = pieces[indexPlay[i]].piece[1]; 
+				table.up = pieces[indexPlay[i]].piece[1];
 			}
 		}
 	}
+
+	if (table.center == null)
+	{
+		if (start)
+		{
+			for(var i = 0; i < Object.keys(hand).length;i++)
+			{
+				if (hand[i][2] == 27)
+				{
+					return {piece:hand[i],direction:"center"};
+				}
+			}
+			return null;
+		}
+		else
+		{
+			for(var i = 0; i < Object.keys(hand).length;i++)
+			{
+				if (hand[i][0] == hand[i][1])
+				{
+					return {piece:hand[i],direction:"center"};
+				}
+			}
+			return null;
+		}
+	}
+
 	// logica para saber quais sao as jogadas possiveis
 
-	for(var i = 0; i < Object.keys(hand).length;i++) 
+	for(var i = 0; i < Object.keys(hand).length;i++)
 	{
-		if (hand[i].piece[0] == table.right || hand[i].piece[1] == table.right){
-			for(var j = 0; j < Object.keys(pieces).length;j++) 
-			{		
-				if (pieces[indexPlay[j]].piece[2] == hand[i].piece[2])
+		if (hand[i][0] == table.right || hand[i][1] == table.right){
+			for(var j = 0; j < Object.keys(pieces).length;j++)
+			{
+				if (pieces[indexPlay[j]].piece)
 				{
-					wasPlayed = false;
-					break;
+					if (pieces[indexPlay[j]].piece[2] == hand[i][2])
+					{
+						wasPlayed = false;
+						break;
+					}
 				}
 			}
 			if (wasPlayed == true)
 			{
-				play.piece = hand[i].piece;
-				play.place = "right"
+				play.piece = hand[i];
+				play.direction = "right"
 				vPlay.push(play);
 				cont++;
 				//return  play;
@@ -111,19 +143,22 @@ exports.randonPiece = function(pieces, hand) {
 			wasPlayed = true;
 		}
 		play = [];
-		if (hand[i].piece[0] == table.up || hand[i].piece[1] == table.up){
-			for(var j = 0; j < Object.keys(pieces).length;j++) 
-			{		
-				if (pieces[indexPlay[j]].piece[2] == hand[i].piece[2])
+		if (hand[i][0] == table.up || hand[i][1] == table.up){
+			for(var j = 0; j < Object.keys(pieces).length;j++)
+			{
+				if (pieces[indexPlay[j]].piece)
 				{
-					wasPlayed = false;
-					break;
+					if (pieces[indexPlay[j]].piece[2] == hand[i][2])
+					{
+						wasPlayed = false;
+						break;
+					}
 				}
 			}
 			if (wasPlayed == true)
 			{
-				play.piece = hand[i].piece;
-				play.place = "up"
+				play.piece = hand[i];
+				play.direction = "up"
 				vPlay.push(play);
 				cont++;
 				//return  play;
@@ -131,19 +166,22 @@ exports.randonPiece = function(pieces, hand) {
 			wasPlayed = true;
 		}
 		play = [];
-		if (hand[i].piece[0] == table.left || hand[i].piece[1] == table.left){
-			for(var j = 0; j < Object.keys(pieces).length;j++) 
+		if (hand[i][0] == table.left || hand[i][1] == table.left){
+			for(var j = 0; j < Object.keys(pieces).length;j++)
 			{
-				if (pieces[indexPlay[j]].piece[2] == hand[i].piece[2])
+				if (pieces[indexPlay[j]].piece)
 				{
-					wasPlayed = false;
-					break;
+					if (pieces[indexPlay[j]].piece[2] == hand[i][2])
+					{
+						wasPlayed = false;
+						break;
+					}
 				}
 			}
 			if (wasPlayed == true)
 			{
-				play.piece = hand[i].piece;
-				play.place = "left"
+				play.piece = hand[i];
+				play.direction = "left"
 				vPlay.push(play);
 				cont++;
 				//return  play;
@@ -151,19 +189,22 @@ exports.randonPiece = function(pieces, hand) {
 			wasPlayed = true;
 		}
 		play = [];
-		if (hand[i].piece[0] == table.down || hand[i].piece[1] == table.down){
-			for(var j = 0; j < Object.keys(pieces).length;j++) 
+		if (hand[i][0] == table.down || hand[i][1] == table.down){
+			for(var j = 0; j < Object.keys(pieces).length;j++)
 			{
-				if (pieces[indexPlay[j]].piece[2] == hand[i].piece[2])
+				if (pieces[indexPlay[j]].piece)
 				{
-					wasPlayed = false;
-					break;
+					if (pieces[indexPlay[j]].piece[2] == hand[i][2])
+					{
+						wasPlayed = false;
+						break;
+					}
 				}
 			}
 			if (wasPlayed == true)
 			{
-				play.piece = hand[i].piece;
-				play.place = "down"
+				play.piece = hand[i];
+				play.direction = "down"
 				vPlay.push(play);
 				cont++;
 				//return  vPlay;
@@ -176,43 +217,48 @@ exports.randonPiece = function(pieces, hand) {
 
 
 	// Montagem v0, quantidade de pecas de cada naipe jogadas
-	for(var i = 0; i < Object.keys(pieces).length;i++) 
+	for(var i = 0; i < Object.keys(pieces).length;i++)
 	{
-		v0[pieces[indexPlay[i]].piece[0]]++;
-		if (pieces[indexPlay[i]].piece[1] != pieces[indexPlay[i]].piece[0])
-			v0[pieces[indexPlay[i]].piece[1]]++;
+		if (pieces[indexPlay[i]].piece)
+		{
+			v0[pieces[indexPlay[i]].piece[0]]++;
+			if (pieces[indexPlay[i]].piece[1] != pieces[indexPlay[i]].piece[0])
+				v0[pieces[indexPlay[i]].piece[1]]++;
+		}
 
 	}
 
 	// Montagem v1
 	// quantidade de pecas de cada naipe na sua mao
-	for(var i = 0; i < Object.keys(hand).length;i++) 
+	for(var i = 0; i < Object.keys(hand).length;i++)
 	{
-		for(var j = 0; j < Object.keys(pieces).length;j++) 
+		for(var j = 0; j < Object.keys(pieces).length;j++)
 		{
-			if (pieces[indexPlay[j]].piece[2] == hand[i].piece[2])
+			if (pieces[indexPlay[j]].piece)
 			{
-				wasPlayed = false;
-				break;
-			}	
+				if (pieces[indexPlay[j]].piece[2] == hand[i][2])
+				{
+					wasPlayed = false;
+					break;
+				}
+			}
 		}
 		if (wasPlayed == true)
 		{
-			v1[hand[i].piece[0]]++;
-			if (hand[i].piece[0]!= hand[i].piece[1])
-				v1[hand[i].piece[1]]++;
-
+			v1[hand[i][0]]++;
+			if (hand[i][0]!= hand[i][1])
+				v1[hand[i][1]]++;
 		}
 		wasPlayed = true;
 	}
 	// Quantidade de pecas de cada naipe nas maos dos demais jogadores
-	for(var i = 0; i < 7;i++) 
+	for(var i = 0; i < 7;i++)
 	{
 		v1[i] = 7 - v0[i] - v1[i];
 	}
 
 
-	//Montagem v2, quantidade de pecas de cada naipe nas estremidades da mesa 
+	//Montagem v2, quantidade de pecas de cada naipe nas estremidades da mesa
 	v2[table.right]++;
 	v2[table.up]++;
 	v2[table.left]++;
@@ -224,19 +270,22 @@ exports.randonPiece = function(pieces, hand) {
 	{
 		turno-=2;
 	}
-	
-	for(var i = turno; i < Object.keys(pieces).length;i=i+4) 
-	{	
-		v3[pieces[indexPlay[i]].piece[0]]++;
-		if (pieces[indexPlay[i]].piece[0] != pieces[indexPlay[i]].piece[1])
-			v3[pieces[indexPlay[i]].piece[1]]++;
+
+	for(var i = turno; i < Object.keys(pieces).length;i=i+4)
+	{
+		if (pieces[indexPlay[i]].piece)
+		{
+			v3[pieces[indexPlay[i]].piece[0]]++;
+			if (pieces[indexPlay[i]].piece[0] != pieces[indexPlay[i]].piece[1])
+				v3[pieces[indexPlay[i]].piece[1]]++;
+		}
 	}
 
     // Calculo para saber qual será a jogada selecionada
-	for(var i = 0; i < Object.keys(vPlay).length;i++) 
+	for(var i = 0; i < Object.keys(vPlay).length;i++)
 	{
-		if (vPlay[i].place == "right")
-		{	
+		if (vPlay[i].direction == "right")
+		{
 			if (table.right == vPlay[i].piece[0] )
 			{
 				L1 = vPlay[i].piece[0];
@@ -248,7 +297,7 @@ exports.randonPiece = function(pieces, hand) {
 				L2 = vPlay[i].piece[0];
 			}
 		}
-		if (vPlay[i].place == "left")
+		if (vPlay[i].direction == "left")
 		{
 			if (table.left == vPlay[i].piece[0] )
 			{
@@ -261,11 +310,11 @@ exports.randonPiece = function(pieces, hand) {
 				L2 = vPlay[i].piece[0];
 			}
 		}
-		if (vPlay[i].place == "up")
+		if (vPlay[i].direction == "up")
 		{
 			if (table.up == vPlay[i].piece[0] )
 			{
-				L1 = vPlay[i].piece[0];	
+				L1 = vPlay[i].piece[0];
 				L2 = vPlay[i].piece[1];
 			}
 			else
@@ -274,7 +323,7 @@ exports.randonPiece = function(pieces, hand) {
 				L2 = vPlay[i].piece[0];
 			}
 		}
-		if (vPlay[i].place == "down")
+		if (vPlay[i].direction == "down")
 		{
 			if (table.down == vPlay[i].piece[0] )
 			{
@@ -299,6 +348,10 @@ exports.randonPiece = function(pieces, hand) {
 		L1 = -1;
 		L2 = -1;
 	}
+
+	if ( Object.keys(vPlay).length == 0)
+		return null;
+
 	return  vPlay[teste];
 }
 

@@ -1,6 +1,6 @@
-var Hand = function(e, t){
+var Hand = function(e){
   this.edges = e;
-  this.turn = t;
+  this.turn;
   this.pieces = [1,2];
   this.group = null;
   this.autoPiece = null;
