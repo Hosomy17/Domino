@@ -12,13 +12,13 @@ exports.randomPiece = function(pieces, hand, start) {
 	var turno;
 	var cont = 0;
 
-	var a1 = 30.6476;
-	var a2 = -20.7642;
-	var a3 = 22.6558;
-	var a4 = 13.9483;
-	var a5 = 1.9962;
-	var a6 = 14.8605;
-	var a7 = 3.4247;
+	var a1 = 8.4468;
+	var a2 = 22.4359;
+	var a3 = 10.7110;
+	var a4 = -0.5575;
+	var a5 = -0.7856;
+	var a6 = 9.1428;
+	var a7 = -4.0481;
 
 	var E1 = 0, E2 = 0, Tp = 0, Tf = -10000;
 	var teste = -1;
